@@ -1,0 +1,38 @@
+{
+  "settings": {
+    "target_books": ["hardrockbet"],
+    "model_weight": 0.15,
+    "bankroll": 2000,
+    "kelly_fraction": 0.25,
+    "stake_cap_units": 2,
+    "nightly_risk_cap": 0.08,
+    "holdout_season": "latest"
+  },
+  "rules": [
+    {"id": "min_edge", "name": "Minimum edge vs. fair price", "status": "confirmed",
+     "kind": "gate", "params": {"min": 0.02},
+     "note": "Only bet when the blended fair price beats the offered price by this much."},
+    {"id": "max_per_player", "name": "Max bets per player per night", "status": "confirmed",
+     "kind": "gate", "params": {"max": 2}},
+    {"id": "max_per_night", "name": "Max bets per night (best edges first)", "status": "confirmed",
+     "kind": "gate", "params": {"max": 12}},
+
+    {"id": "skip_early_season", "name": "Skip players with under 8 games this season", "status": "testing",
+     "kind": "avoid", "params": {"min_games": 8},
+     "note": "Rotations and roles are unsettled in the first weeks."},
+    {"id": "b2b_big_reb_over", "name": "Fade rebound overs for bigs on a back-to-back", "status": "testing",
+     "kind": "avoid", "params": {"min_season_reb": 8},
+     "note": "Big men lose minutes and energy on the second night."},
+    {"id": "role_player_props", "name": "Prefer props on role players (under 15 ppg)", "status": "testing",
+     "kind": "prefer", "params": {"max_season_pts": 15},
+     "note": "Books price stars carefully and role players loosely."},
+    {"id": "minutes_spike", "name": "Prefer overs when minutes are trending up 15%+", "status": "testing",
+     "kind": "prefer", "params": {"min_trend": 1.075},
+     "note": "Books are slow to move lines after a role change. min_trend is shrunk halfway, so 1.075 = a 15% raw rise."},
+    {"id": "model_disagrees", "name": "Avoid bets where our projection disagrees with the market side",
+     "status": "testing", "kind": "avoid", "params": {},
+     "note": "If the market edge says Over but our own projection leans Under, skip."},
+    {"id": "soft_matchup_over", "name": "Prefer overs against bottom-third defenses", "status": "testing",
+     "kind": "prefer", "params": {"min_opp_factor": 1.03}}
+  ]
+}

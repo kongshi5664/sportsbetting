@@ -557,15 +557,19 @@ async def ledger(source: str = "live", strategy: str = "current"):
     paper, waiting = None, []
     if source == "paper":
         from .paper import START_BANKROLL, bankroll, strategies
-        # This strategy's bets still waiting on the game and the box score, so tonight's picks show before grading.
+        # Every strategy's bets still waiting on the game and the box score, so tonight's picks show before
+        # grading: what each pays if it hits, and what it's worth on average (stake x value).
+        names = {st["id"]: st["name"] for st in strategies(cfg())}
         for r in con().execute("SELECT b.*, e.away_team, e.home_team FROM bets b LEFT JOIN events e USING (event_id)"
-                               " WHERE b.paper=1 AND b.strategy=? AND b.status='locked' ORDER BY b.slate_date, b.id",
-                               (strategy,)):
-            waiting.append({"id": r["id"], "date": r["slate_date"],
+                               " WHERE b.paper=1 AND b.status='locked' ORDER BY b.slate_date, b.strategy, b.id"):
+            dec = (1 + r["price"] / 100) if r["price"] > 0 else (1 + 100 / -r["price"])
+            waiting.append({"id": r["id"], "date": r["slate_date"], "strategy": r["strategy"],
+                            "strategy_name": names.get(r["strategy"], r["strategy"]),
                             "game": f"{r['away_team']} @ {r['home_team']}" if r["away_team"] else r["event_id"],
                             "bet": bet_label(r["player"], r["side"], r["point"], stat_of(r["market"])),
                             "side": r["side"], "point": r["point"], "price": r["price"], "edge": r["edge"],
-                            "stake": r["stake"]})
+                            "stake": r["stake"], "to_win": round(r["stake"] * (dec - 1), 2),
+                            "expected": round(r["stake"] * r["edge"], 2)})
         paper = []
         for st in strategies(cfg()):
             clvs = [r[0] for r in con().execute("SELECT clv FROM bets WHERE paper=1 AND strategy=? AND status='graded'"

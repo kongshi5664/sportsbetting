@@ -133,6 +133,10 @@ export type WaitingBet = {
   price: number;
   edge: number;
   stake: number;
+  strategy: string;
+  strategy_name: string;
+  to_win: number;
+  expected: number;
 };
 
 export type LedgerBet = {

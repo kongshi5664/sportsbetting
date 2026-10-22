@@ -100,17 +100,18 @@ export function LedgerView({ onError }: { onError: (e: unknown) => void }) {
               {data.waiting && data.waiting.length > 0 && (
                 <>
                   <h2 className="journal-h">
-                    Waiting on results · {data.paper.find((p) => p.id === strategy)?.name ?? strategy}
+                    Waiting on results
                   </h2>
                   <div className="table-scroll">
                     <table className="plain paper-board">
                       <thead>
                         <tr>
                           <th className="l">Bet</th>
-                          <th className="l wide">Game</th>
+                          <th className="l wide">Strategy</th>
                           <th>Took</th>
-                          <th>Value</th>
                           <th>Stake</th>
+                          <th>To win</th>
+                          <th>Expected</th>
                           <th className="l">Live</th>
                         </tr>
                       </thead>
@@ -119,20 +120,38 @@ export function LedgerView({ onError }: { onError: (e: unknown) => void }) {
                           <tr key={b.id}>
                             <td className="l">
                               {b.bet}
-                              <span className="dim"> · {dayLabel(b.date)}</span>
+                              <span className="dim"> · {b.game} · {dayLabel(b.date)}</span>
                             </td>
-                            <td className="l wide">{b.game}</td>
+                            <td className="l wide dim">{b.strategy_name}</td>
                             <td>{odds(b.price)}</td>
-                            <td className={b.edge >= 0 ? "pos" : "neg"}>{pct(b.edge)}</td>
                             <td>${Math.round(b.stake)}</td>
+                            <td>${Math.round(b.to_win)}</td>
+                            <td className={b.expected >= 0 ? "pos" : "neg"} title={`${pct(b.edge)} value`}>
+                              {signedMoney(b.expected)}
+                            </td>
                             <td className="l">
                               <Progress p={live?.bets[String(b.id)]} point={b.point} side={b.side} />
                             </td>
                           </tr>
                         ))}
                       </tbody>
+                      <tfoot>
+                        <tr className="total">
+                          <td className="l">{data.waiting.length} open {data.waiting.length === 1 ? "bet" : "bets"}</td>
+                          <td className="wide" />
+                          <td />
+                          <td>${Math.round(data.waiting.reduce((s, b) => s + b.stake, 0)).toLocaleString()}</td>
+                          <td>${Math.round(data.waiting.reduce((s, b) => s + b.to_win, 0)).toLocaleString()}</td>
+                          <td className="pos">{signedMoney(data.waiting.reduce((s, b) => s + b.expected, 0))}</td>
+                          <td />
+                        </tr>
+                      </tfoot>
                     </table>
                   </div>
+                  <p className="dim waiting-note">
+                    To win is what a bet pays if it hits. Expected is what it's worth on average (stake × value):
+                    the small, steady number that adds up over hundreds of bets.
+                  </p>
                 </>
               )}
               <h2 className="journal-h">Journal</h2>

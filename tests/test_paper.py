@@ -85,10 +85,10 @@ class PaperTest(unittest.TestCase):
         with mock.patch.dict(api._state, {"con": self.con}), mock.patch("tipoff.api.grade"):
             os.environ.pop("TIPOFF_PASSWORD", None)
             c = TestClient(api.app, client=("127.0.0.1", 5000))
-            r = c.get("/api/ledger", params={"source": "paper", "strategy": "volume"}).json()
-            self.assertEqual([w["stake"] for w in r["waiting"]], [20])
             r = c.get("/api/ledger", params={"source": "paper", "strategy": "current"}).json()
-            self.assertEqual(r["waiting"], [])
+            w = r["waiting"]  # every strategy's open bets, whichever row is selected
+            self.assertEqual([(x["strategy"], x["stake"]) for x in w], [("volume", 20)])
+            self.assertEqual((w[0]["to_win"], w[0]["expected"]), (20.0, 0.8))  # +100 pays even money; 4% value
 
     def test_decision_entry_explains_and_passes(self):
         games = [{"away": "CLE", "home": "PHI"}]

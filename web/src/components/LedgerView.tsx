@@ -3,18 +3,25 @@ import { api } from "../api";
 import { dayLabel, odds, pct, share, signedMoney } from "../format";
 import { Warn } from "../icons";
 import { Term } from "./Term";
-import type { Ledger, LedgerBet } from "../types";
+import type { JournalEntry, Ledger, LedgerBet } from "../types";
+import { Journal } from "./Journal";
 
 const MIN_BETS = 30;
 
 export function LedgerView({ onError }: { onError: (e: unknown) => void }) {
-  const [source, setSource] = useState<"live" | "backtest">("live");
+  const [source, setSource] = useState<"live" | "paper" | "backtest">("live");
+  const [strategy, setStrategy] = useState("current");
   const [data, setData] = useState<Ledger | null>(null);
+  const [entries, setEntries] = useState<JournalEntry[]>([]);
+
+  useEffect(() => {
+    if (source === "paper") api.journal().then((r) => setEntries(r.entries)).catch(onError);
+  }, [source, onError]);
 
   useEffect(() => {
     setData(null);
-    api.ledger(source).then(setData).catch(onError);
-  }, [source, onError]);
+    api.ledger(source, strategy).then(setData).catch(onError);
+  }, [source, strategy, onError]);
 
   const s = data?.summary;
   const few = s && s.n < MIN_BETS;
@@ -27,6 +34,9 @@ export function LedgerView({ onError }: { onError: (e: unknown) => void }) {
           <button aria-pressed={source === "live"} onClick={() => setSource("live")}>
             Live bets
           </button>
+          <button aria-pressed={source === "paper"} onClick={() => setSource("paper")}>
+            Paper
+          </button>
           <button aria-pressed={source === "backtest"} onClick={() => setSource("backtest")}>
             Backtest · simulated
           </button>
@@ -37,6 +47,49 @@ export function LedgerView({ onError }: { onError: (e: unknown) => void }) {
         <p className="dim">Loading the ledger…</p>
       ) : (
         <>
+          {source === "paper" && data.paper && (
+            <>
+              <div className="notice">
+                <Warn />
+                <p>
+                  Pretend money. An hour before every game the paper trader bets by these rules from its own $2,000, and
+                  records every other prop too. The next morning's box scores grade it all.
+                </p>
+              </div>
+              <div className="table-scroll">
+                <table className="plain paper-board">
+                  <thead>
+                    <tr>
+                      <th className="l">Strategy</th>
+                      <th>Bankroll</th>
+                      <th>Graded</th>
+                      <th>Waiting</th>
+                      <th>Vs. the close</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {data.paper.map((p) => (
+                      <tr key={p.id} aria-selected={p.id === strategy}>
+                        <td className="l">
+                          <button className="btn link" onClick={() => setStrategy(p.id)} aria-pressed={p.id === strategy}>
+                            {p.name}
+                          </button>
+                        </td>
+                        <td>
+                          ${Math.round(p.bankroll).toLocaleString()} ({signedMoney(p.bankroll - p.start)})
+                        </td>
+                        <td>{p.graded}</td>
+                        <td>{p.pending}</td>
+                        <td className={(p.avg_clv ?? 0) >= 0 ? "pos" : "neg"}>{pct(p.avg_clv)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <h2 className="journal-h">Journal</h2>
+              <Journal entries={entries} />
+            </>
+          )}
           {source === "backtest" && (
             <div className="notice">
               <Warn />
@@ -49,7 +102,11 @@ export function LedgerView({ onError }: { onError: (e: unknown) => void }) {
           {s.n === 0 ? (
             <div className="empty">
               <h2>No graded bets yet</h2>
-              <p>Lock a card on Tonight. Bets are graded here once the game is final and the closing price is in.</p>
+              <p>
+                {source === "paper"
+                  ? "The paper trader's bets are graded the morning after each game. Check back tomorrow."
+                  : "Lock a card on Tonight. Bets are graded here once the game is final and the closing price is in."}
+              </p>
             </div>
           ) : (
             <>

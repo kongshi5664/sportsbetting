@@ -53,6 +53,28 @@ def grade_bets(con, cfg):
     return n
 
 
+def grade_marks(con, cfg):
+    """Closing-line value for every prop the paper trader recorded at decision time, bet or not."""
+    try:
+        rows = con.execute("SELECT slate_date, market_id, price FROM marks WHERE graded=0").fetchall()
+    except Exception:
+        return 0  # no paper trading yet
+    n = 0
+    for date, mid, price in rows:
+        event_id, market, key, point, side = mid.split("|")
+        point = float(point)
+        p_over = close_over(con, cfg["settings"], event_id, market, key, point)
+        if p_over is None or not game_final(con, event_id):
+            continue
+        result, _ = outcome(box(con, key, date), market, side, point)
+        p_close = p_over if side == "Over" else 1 - p_over
+        con.execute("UPDATE marks SET clv=?, result=?, graded=1 WHERE slate_date=? AND market_id=?",
+                    (None if result == "void" else ev(p_close, price), result, date, mid))
+        n += 1
+    con.commit()
+    return n
+
+
 def grade_notes(con, cfg):
     """Closing-line value for every leg Claude judged, bet or not, at the price it saw: this is how
     the review learns whether "skip" calls actually save money."""

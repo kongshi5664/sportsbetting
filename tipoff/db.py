@@ -83,7 +83,9 @@ CREATE TABLE IF NOT EXISTS bets (
     clv         REAL,
     result      TEXT,                   -- win / loss / push / void
     actual      REAL,
-    context     TEXT                    -- JSON snapshot at add time, read by the weekly review
+    context     TEXT,                   -- JSON snapshot at add time, read by the weekly review
+    paper       INTEGER NOT NULL DEFAULT 0,  -- 1 = placed by the paper trader, never real money
+    strategy    TEXT                    -- which paper strategy made it (null for real bets)
 );
 CREATE INDEX IF NOT EXISTS ix_bets_date ON bets(slate_date, status);
 """
@@ -98,6 +100,9 @@ def connect(path=DEFAULT_DB, **kwargs):
     cols = {r[1] for r in con.execute("PRAGMA table_info(bets)")}
     if "context" not in cols:  # what was true when the bet was taken: features, prices, rules matched
         con.execute("ALTER TABLE bets ADD COLUMN context TEXT")
+    if "paper" not in cols:  # paper-trading bets from tipoff.paper, kept apart from the real card
+        con.execute("ALTER TABLE bets ADD COLUMN paper INTEGER NOT NULL DEFAULT 0")
+        con.execute("ALTER TABLE bets ADD COLUMN strategy TEXT")
     return con
 
 

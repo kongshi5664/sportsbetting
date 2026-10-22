@@ -133,8 +133,21 @@ export type LedgerBet = {
   pnl: number;
 };
 
+export type JournalEntry = { id: number; day: string; at: string; kind: "decision" | "recap"; title: string; body: string };
+
+export type PaperStrategy = {
+  id: string;
+  name: string;
+  graded: number;
+  pending: number;
+  avg_clv: number | null;
+  bankroll: number;
+  start: number;
+};
+
 export type Ledger = {
-  source: "live" | "backtest";
+  source: "live" | "backtest" | "paper";
+  paper: PaperStrategy[] | null;
   summary: Metrics;
   nights: { date: string; bets: number; pnl: number; stake: number; avg_clv: number | null }[];
   bets: LedgerBet[];
@@ -178,13 +191,20 @@ export type Stat = { n: number; avg: number | null; se: number | null; beat: num
 
 export type Finding = {
   id: string;
-  area: "rule" | "setting" | "claude";
+  area: "rule" | "setting" | "claude" | "paper" | "market";
   title: string;
   verdict: string;
   matched?: Stat;
   rest?: Stat;
   groups?: [string, Stat][];
-  proposal: { type: "rule_status" | "setting"; rule?: string; key?: string; value: string | number } | null;
+  proposal: {
+    type: "rule_status" | "setting" | "strategy";
+    rule?: string;
+    key?: string;
+    value?: string | number;
+    strategy?: string;
+    overrides?: Record<string, number>;
+  } | null;
   decided: "applied" | "dismissed" | null;
 };
 

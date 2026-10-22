@@ -90,6 +90,8 @@ def _get(url, params, credits):
         time.sleep(5)
         r = requests.get(url, params=params, timeout=30)
     if r.status_code == 401:
+        if "quota" in r.text.lower() or "credit" in r.text.lower():
+            raise SystemExit("Out of Odds API credits for this month. Upgrade the plan or wait for the reset.")
         raise SystemExit("The Odds API rejected the key (401). Check ODDS_API_KEY in .env.")
     r.raise_for_status()
     credits.note(r)

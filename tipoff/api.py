@@ -124,7 +124,7 @@ def now():
 
 def open_bets(date, statuses=("card", "locked")):
     q = (f"SELECT b.*, e.away_team, e.home_team, e.commence_time FROM bets b LEFT JOIN events e USING (event_id)"
-         f" WHERE b.slate_date=? AND b.status IN ({','.join('?' * len(statuses))}) ORDER BY b.id")
+         f" WHERE b.paper=0 AND b.slate_date=? AND b.status IN ({','.join('?' * len(statuses))}) ORDER BY b.id")
     return [dict(r) for r in con().execute(q, (date, *statuses))]
 
 
@@ -156,7 +156,7 @@ async def meta():
     if os.environ.get("ODDS_API_KEY") and today not in dates:
         dates = [today] + dates  # tonight is pullable even before its first snapshot
     c = cfg()
-    graded = [dict(r) for r in con().execute("SELECT clv FROM bets WHERE status='graded' AND clv IS NOT NULL")]
+    graded = [dict(r) for r in con().execute("SELECT clv FROM bets WHERE paper=0 AND status='graded' AND clv IS NOT NULL")]
     clvs = [g["clv"] for g in graded]
     return {
         "db": DB_PATH.name, "sample": is_sample(), "dates": dates[:60],
@@ -279,6 +279,13 @@ async def injuries(date: str):
     return {"date": date, "players": sorted(players, key=lambda i: i["updated"], reverse=True)}
 
 
+@app.get("/api/journal")
+async def journal_entries(limit: int = 30):
+    """The paper trader's plain-English journal: decisions as they happen, morning recaps."""
+    from . import journal
+    return {"entries": journal.entries(con(), limit)}
+
+
 @app.get("/api/notes")
 async def get_notes(date: str):
     return {"date": date, "notes": claude_notes.load(con(), date),
@@ -381,7 +388,7 @@ async def remove_leg(bet_id: int):
 
 @app.post("/api/card/clear")
 async def clear(body: DateBody):
-    con().execute("DELETE FROM bets WHERE slate_date=? AND status='card'", (body.date,))
+    con().execute("DELETE FROM bets WHERE paper=0 AND slate_date=? AND status='card'", (body.date,))
     con().commit()
     return _card(body.date)
 
@@ -392,7 +399,7 @@ async def lock(body: DateBody):
     if not c["can_lock"]:
         failed = [ch["text"] for ch in c["checks"] if not ch["ok"]]
         raise HTTPException(409, "Can't lock yet: " + ("; ".join(failed) if failed else "the card is empty") + ".")
-    con().execute("UPDATE bets SET status='locked', locked_at=? WHERE slate_date=? AND status='card'",
+    con().execute("UPDATE bets SET status='locked', locked_at=? WHERE paper=0 AND slate_date=? AND status='card'",
                   (now(), body.date))
     con().commit()
     return _card(body.date)
@@ -400,7 +407,7 @@ async def lock(body: DateBody):
 
 @app.post("/api/card/unlock")
 async def unlock(body: DateBody):
-    con().execute("UPDATE bets SET status='card', locked_at=NULL, placed=0 WHERE slate_date=? AND status='locked'",
+    con().execute("UPDATE bets SET status='card', locked_at=NULL, placed=0 WHERE paper=0 AND slate_date=? AND status='locked'",
                   (body.date,))
     con().commit()
     return _card(body.date)
@@ -427,6 +434,7 @@ def grade():
     c = cfg()
     claude_notes.ensure_table(con())
     grading.grade_notes(con(), c)
+    grading.grade_marks(con(), c)
     return grading.grade_bets(con(), c)
 
 
@@ -436,7 +444,7 @@ def _latest(pattern):
 
 
 @app.get("/api/ledger")
-async def ledger(source: str = "live"):
+async def ledger(source: str = "live", strategy: str = "current"):
     if source == "backtest":
         path = REPORTS / "ledger.json"
         if not path.exists():
@@ -448,7 +456,10 @@ async def ledger(source: str = "live"):
     else:
         grade()
         bets = []
-        for r in con().execute("SELECT * FROM bets WHERE status='graded' ORDER BY slate_date, id"):
+        q, args = ("SELECT * FROM bets WHERE paper=1 AND strategy=? AND status='graded' ORDER BY slate_date, id",
+                   (strategy,)) if source == "paper" else (
+                   "SELECT * FROM bets WHERE paper=0 AND status='graded' ORDER BY slate_date, id", ())
+        for r in con().execute(q, args):
             r = dict(r)
             d = (1 + r["price"] / 100) if r["price"] > 0 else (1 + 100 / -r["price"])
             pnl = r["stake"] * (d - 1) if r["result"] == "win" else (-r["stake"] if r["result"] == "loss" else 0)
@@ -467,7 +478,19 @@ async def ledger(source: str = "live"):
             n["clvs"].append(b["clv"])
     by_night = [{"date": n["date"], "bets": n["bets"], "pnl": round(n["pnl"], 2), "stake": round(n["stake"], 2),
                  "avg_clv": sum(n["clvs"]) / len(n["clvs"]) if n["clvs"] else None} for n in nights.values()]
-    return {"source": source, "summary": summary, "nights": by_night, "bets": bets[-200:]}
+    paper = None
+    if source == "paper":
+        from .paper import START_BANKROLL, bankroll, strategies
+        paper = []
+        for st in strategies(cfg()):
+            clvs = [r[0] for r in con().execute("SELECT clv FROM bets WHERE paper=1 AND strategy=? AND status='graded'"
+                                                " AND clv IS NOT NULL", (st["id"],))]
+            pending = con().execute("SELECT COUNT(*) FROM bets WHERE paper=1 AND strategy=? AND status='locked'",
+                                    (st["id"],)).fetchone()[0]
+            paper.append({"id": st["id"], "name": st["name"], "graded": len(clvs), "pending": pending,
+                          "avg_clv": sum(clvs) / len(clvs) if clvs else None,
+                          "bankroll": bankroll(con(), st["id"]), "start": START_BANKROLL})
+    return {"source": source, "paper": paper, "summary": summary, "nights": by_night, "bets": bets[-200:]}
 
 
 # ---------- rulebook ----------
@@ -545,7 +568,14 @@ async def apply_proposal(body: Decision):
     if f is None:
         raise HTTPException(409, "That proposal no longer stands with the latest bets. Reload the review.")
     p, c = f["proposal"], cfg()
-    if p["type"] == "rule_status":
+    if p["type"] == "strategy":  # adopt a paper strategy's overrides for the real card
+        for k, v in p["overrides"].items():
+            rule = next((r for r in c["rules"] if r["id"] == k), None)
+            if rule is not None:
+                rule.setdefault("params", {})["min"] = v
+            else:
+                c["settings"][k] = v
+    elif p["type"] == "rule_status":
         rule = next(r for r in c["rules"] if r["id"] == p["rule"])
         rule["status"] = p["value"]
     elif p.get("rule"):

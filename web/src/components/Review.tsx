@@ -6,7 +6,11 @@ import type { Finding, Review, Stat } from "../types";
 import { Term } from "./Term";
 
 const describe = (p: NonNullable<Finding["proposal"]>) =>
-  p.type === "rule_status"
+  p.type === "strategy"
+    ? `Use this strategy for the real card: ${Object.entries(p.overrides ?? {})
+        .map(([k, v]) => (k === "min_edge" ? `minimum value ${Math.round(v * 100)}%` : `${k.replace("_", " ")} ${v}`))
+        .join(", ")}.`
+    : p.type === "rule_status"
     ? p.value === "confirmed"
       ? "Promote it: it starts shaping tonight's card."
       : p.value === "retired"

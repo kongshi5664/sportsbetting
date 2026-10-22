@@ -96,7 +96,7 @@ def message(con, i, info, day):
     tip_et = datetime.fromisoformat(tip.replace("Z", "+00:00")).astimezone(ET).strftime("%I:%M%p").lstrip("0")
     was = f" (was {i['was']})" if i["was"] else ""
     lines = [f"{i['player']}: {i['status']}{was}", f"{matchup} {tip_et} ET. {i['detail']}".strip()]
-    on_card = con.execute("SELECT COUNT(*) FROM bets WHERE slate_date=? AND name_key=? AND status IN ('card','locked')",
+    on_card = con.execute("SELECT COUNT(*) FROM bets WHERE paper=0 AND slate_date=? AND name_key=? AND status IN ('card','locked')",
                           (day, i["name_key"])).fetchone()[0]
     if on_card and i["status"] in ("Out", "Doubtful"):
         lines.append(f"On your card ({on_card} bet{'s' if on_card > 1 else ''}): Hard Rock voids it if they sit.")

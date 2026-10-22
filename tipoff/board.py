@@ -22,7 +22,7 @@ def slate_dates(con):
     return [r[0] for r in con.execute("SELECT DISTINCT game_date FROM events ORDER BY game_date DESC")]
 
 
-def price_slate(con, fs, cfg, date, card=()):
+def price_slate(con, fs, cfg, date, card=(), both_sides=False):
     """All priced markets on `date`, grouped by game. `card` is the list of open bets (dicts with
     name_key, market, event_id, side, point) so the per-player and per-night caps can be shown."""
     settings, rules = cfg["settings"], cfg["rules"]
@@ -88,7 +88,7 @@ def price_slate(con, fs, cfg, date, card=()):
                     },
                     "f": f,
                 }
-                pk = (key, market)
+                pk = m["id"] if both_sides else (key, market)  # both_sides: the paper trader's marks
                 if pk not in best or m["edge"] > best[pk]["edge"]:
                     best[pk] = m
         markets = sorted(best.values(), key=lambda m: -m["edge"])

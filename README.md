@@ -101,6 +101,14 @@ The **Rulebook** opens with *This week's review* (also `scripts\weekly-review.ba
 
 It judges by closing-line value, never wins and losses; a proposal needs 30+ graded bets on each side of a comparison and a gap about two standard errors clear of the noise. Nothing changes until you press **Apply** (with a confirm), and every decision is logged.
 
+## 9. Paper trading (pretend money, learning every night)
+
+`scripts\paper-trader.bat` (scheduled daily at 4pm as "TipOff Paper Trader") starts the desk and injury alerts, then runs `python -m tipoff.paper`: an hour before each game it re-pulls that game's odds, records every priced prop, and bets pretend money by the real rules. Three strategies run side by side, each from its own $2,000: **Today's rules**, **3% minimum value**, and **Projection back at 15%** (`settings.paper_strategies` in rules.json can change them). Five minutes before tip it takes the closing prices. Paper bets never touch the real card.
+
+It keeps a plain-English **journal**: as it decides each game it writes which bets it took and why (and what it passed on), and every morning `scripts\morning-odds.bat` (scheduled 10am as "TipOff Morning") grades the night and writes a recap: what it made or lost, how the bets went, whether its prices beat the close, and what it's learning. Claude writes the recap from the graded numbers only; it's pushed to your phone when `NTFY_TOPIC` is set. Read it on Tonight (last night's recap) and in the Ledger's **Paper** tab (scoreboard + journal). The weekly review compares the strategies and every recorded prop (by value, stat, over/under) and proposes changes you approve.
+
+Credits: about 10-15 per game per day (opening, decision, close). The free 500 last a few days; the $30 plan covers months.
+
 ## How it avoids fooling itself
 
 - Projections only use games before the bet date (no look-ahead).
@@ -126,7 +134,9 @@ tipoff/notes.py           Claude's news check on each leg (clear / caution / ski
 tipoff/injuries.py        injury watcher and phone alerts (ESPN feed, ntfy)
 tipoff/grading.py         results and closing-line value for bets and Claude's calls
 tipoff/review.py          weekly review: rules, settings, Claude's calls; proposals you apply
-scripts/                  morning-odds.bat, game-day.bat, weekly-review.bat
+tipoff/paper.py           paper trader: decides each game an hour before tip, three strategies
+tipoff/journal.py         plain-English decision notes and the morning recap
+scripts/                  morning-odds.bat, game-day.bat, paper-trader.bat, weekly-review.bat
 tests/                    python -m unittest discover tests
 web/                      the live desk (React + Vite); web/prototype.html is the old mock
 ```

@@ -1,4 +1,4 @@
-import type { Card, Game, Injury, Ledger, Meta, News, Note, Review, Rules, Suggested } from "./types";
+import type { Card, Game, Injury, JournalEntry, Ledger, Meta, News, Note, Review, Rules, Suggested } from "./types";
 
 export class ApiError extends Error {}
 /** The desk has a password and this device isn't signed in (or its session expired). */
@@ -39,9 +39,11 @@ export const api = {
   unlock: (date: string) => call<Card>("/api/card/unlock", post({ date })),
   placed: (id: number, placed: boolean) =>
     call<Card>(`/api/bets/${id}`, { method: "PATCH", body: JSON.stringify({ placed }) }),
-  ledger: (source: "live" | "backtest") => call<Ledger>("/api/ledger" + q({ source })),
+  ledger: (source: "live" | "backtest" | "paper", strategy = "current") =>
+    call<Ledger>("/api/ledger" + q({ source, strategy })),
   rules: () => call<Rules>("/api/rules"),
   review: () => call<Review>("/api/review"),
+  journal: (limit = 30) => call<{ entries: JournalEntry[] }>("/api/journal" + q({ limit: String(limit) })),
   applyProposal: (id: string) => call<Review>("/api/review/apply", post({ id })),
   dismissProposal: (id: string) => call<Review>("/api/review/dismiss", post({ id })),
   setStatus: (id: string, status: string) => call<Rules>(`/api/rules/${id}/status`, post({ status })),

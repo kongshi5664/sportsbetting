@@ -1,7 +1,8 @@
 import { useState, type ReactNode } from "react";
 import { dayLabel, money, odds, tipTime } from "../format";
 import { Check, ChevronRight, Lock, Plus, Warn } from "../icons";
-import type { Card, Game, Injury, Market, Note, Suggested } from "../types";
+import type { Card, Game, Injury, JournalEntry, Market, Note, Suggested } from "../types";
+import { Entry } from "./Journal";
 import { label, Proof, Ramp } from "./EdgeBoard";
 import { NoteLine } from "./Suggest";
 import { Term } from "./Term";
@@ -89,6 +90,7 @@ export function Tonight(props: {
   claudeKey: boolean;
   checkedAt: string | null;
   injuries: Injury[];
+  recap: JournalEntry | null;
   cardPanel: ReactNode;
   onRefresh: () => Promise<void>;
   onAsk: () => Promise<unknown>;
@@ -204,6 +206,13 @@ export function Tonight(props: {
               </button>
             )}
             {checkedAt && <small>News checked {tipTime(checkedAt)} ET</small>}
+          </div>
+        )}
+
+        {props.recap && today && (
+          <div className="recap-card">
+            <Entry e={props.recap} />
+            <a href="#/ledger">Paper trading in the Ledger</a>
           </div>
         )}
 

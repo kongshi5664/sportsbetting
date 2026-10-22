@@ -14,6 +14,7 @@ from datetime import datetime
 from pathlib import Path
 
 from .backtest import ROOT, _rule_matches
+from .pricing import ev
 
 MIN_N = 30   # bets needed on each side of a comparison before proposing anything
 Z = 2.0      # how clear of the noise a gap has to be
@@ -40,7 +41,10 @@ def gap(a, b):
 
 def load_bets(con):
     out = []
-    for r in con.execute("SELECT * FROM bets WHERE status='graded' AND clv IS NOT NULL"):
+    # Real bets plus the paper trader's "current" strategy (the same rules); other paper strategies are
+    # compared separately so one decision isn't counted three times.
+    for r in con.execute("SELECT * FROM bets WHERE status='graded' AND clv IS NOT NULL"
+                         " AND (paper=0 OR strategy='current')"):
         r = dict(r)
         r["ctx"] = json.loads(r["context"]) if r.get("context") else None
         out.append(r)
@@ -137,12 +141,72 @@ def claude_findings(con):
              "groups": [(v, s) for v, s in by.items()], "gap": d, "z": z, "proposal": None}]
 
 
+STAT_NAMES = {"pts": "Points", "reb": "Rebounds", "ast": "Assists", "fg3m": "Threes", "blk": "Blocks"}
+
+
+def strategy_findings(con, cfg):
+    """The paper strategies head to head: same nights, same props, different rules."""
+    from .paper import START_BANKROLL, bankroll, strategies
+    strats = strategies(cfg)
+    by = {}
+    for s in strats:
+        clvs = [r[0] for r in con.execute("SELECT clv FROM bets WHERE paper=1 AND strategy=? AND status='graded'"
+                                          " AND clv IS NOT NULL", (s["id"],))]
+        by[s["id"]] = stats(clvs)
+    if not any(v["n"] for v in by.values()):
+        return []
+    base = by.get("current", stats([]))
+    groups = [(f"{s['name']} (${bankroll(con, s['id']):,.0f} from ${START_BANKROLL:,})", by[s["id"]]) for s in strats]
+    best, proposal = None, None
+    for s in strats:
+        if s["id"] == "current":
+            continue
+        d, z = gap(by[s["id"]], base)
+        if z is not None and z >= Z and (best is None or d > best[1]):
+            best = (s, d)
+    if best:
+        proposal = {"type": "strategy", "strategy": best[0]["id"], "overrides": best[0]["overrides"]}
+        verdict = f"“{best[0]['name']}” beats today's rules against the close: propose switching"
+    elif all(by[s["id"]]["n"] < MIN_N for s in strats):
+        verdict = f"Paper strategies are still collecting bets (want {MIN_N}+ each)"
+    else:
+        verdict = "No paper strategy clearly beats today's rules yet"
+    return [{"id": "paper:strategies", "area": "paper", "title": "Paper strategies head to head", "verdict": verdict,
+             "groups": groups, "proposal": proposal}]
+
+
+def marks_findings(con):
+    """Every prop the paper trader recorded, bet or not: where is Hard Rock softest?"""
+    try:
+        rows = con.execute("SELECT stat, side, price, p_market, clv FROM marks WHERE graded=1 AND clv IS NOT NULL"
+                           ).fetchall()
+    except Exception:
+        return []
+    if not rows:
+        return []
+    value = lambda r: ev(r[3], r[2])
+    by_value = [(name, stats([r[4] for r in rows if lo <= value(r) < hi]))
+                for name, lo, hi in [("below 0%", -9, 0.0), ("0–2%", 0.0, 0.02)] + BUCKETS]
+    by_stat = [(STAT_NAMES.get(s, s), stats([r[4] for r in rows if r[0] == s])) for s in sorted({r[0] for r in rows})]
+    by_side = [(s, stats([r[4] for r in rows if r[1] == s])) for s in ("Over", "Under")]
+    return [
+        {"id": "marks:value", "area": "market", "title": "Every recorded prop, by value at decision time",
+         "verdict": f"{len(rows)} props graded. If value means anything, higher value should beat the close more",
+         "groups": by_value, "proposal": None},
+        {"id": "marks:stat", "area": "market", "title": "Where Hard Rock is softest, by stat",
+         "verdict": "Average vs. the close for Hard Rock's price on each kind of prop", "groups": by_stat, "proposal": None},
+        {"id": "marks:side", "area": "market", "title": "Overs vs. unders",
+         "verdict": "Average vs. the close for Hard Rock's overs and unders", "groups": by_side, "proposal": None},
+    ]
+
+
 def run(con, cfg):
     bets = load_bets(con)
     rules = cfg["rules"]
     min_edge = next((r["params"]["min"] for r in rules if r["id"] == "min_edge"), 0.02)
     overall = stats([b["clv"] for b in bets])
-    findings = rule_findings(bets, rules) + setting_findings(bets, cfg["settings"], min_edge) + claude_findings(con)
+    findings = (strategy_findings(con, cfg) + rule_findings(bets, rules) + setting_findings(bets, cfg["settings"], min_edge)
+                + claude_findings(con) + marks_findings(con))
     return {"generated": datetime.now().isoformat(timespec="seconds"), "bets": overall,
             "first": min((b["slate_date"] for b in bets), default=None),
             "last": max((b["slate_date"] for b in bets), default=None),
@@ -175,7 +239,7 @@ if __name__ == "__main__":
     import sys
 
     from .db import DEFAULT_DB, connect
-    from .grading import grade_bets, grade_notes
+    from .grading import grade_bets, grade_marks, grade_notes
     from .notes import ensure_table
 
     ap = argparse.ArgumentParser()
@@ -186,6 +250,7 @@ if __name__ == "__main__":
     con = connect(a.db)
     ensure_table(con)
     grade_notes(con, cfg)
+    grade_marks(con, cfg)
     grade_bets(con, cfg)
     rep = run(con, cfg)
     sys.stdout.reconfigure(encoding="utf-8")

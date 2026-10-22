@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { api } from "../api";
 import { dayLabel, odds, pct, share, signedMoney } from "../format";
 import { Warn } from "../icons";
+import { Term } from "./Term";
 import type { Ledger, LedgerBet } from "../types";
 
 const MIN_BETS = 30;
@@ -48,7 +49,7 @@ export function LedgerView({ onError }: { onError: (e: unknown) => void }) {
           {s.n === 0 ? (
             <div className="empty">
               <h2>No graded bets yet</h2>
-              <p>Lock a card on the Edge Board. Bets are graded here once the game is final and the closing price is in.</p>
+              <p>Lock a card on Tonight. Bets are graded here once the game is final and the closing price is in.</p>
             </div>
           ) : (
             <>
@@ -63,7 +64,9 @@ export function LedgerView({ onError }: { onError: (e: unknown) => void }) {
               )}
               <div className="lead">
                 <div>
-                  <span>Average CLV</span>
+                  <span>
+                    <Term k="clv">Beat the market</Term> · avg CLV
+                  </span>
                   <div className={"big " + ((s.avg_clv ?? 0) >= 0 ? "pos" : "neg")}>{pct(s.avg_clv)}</div>
                   <small>
                     {s.clv_ci95 ? `95% range ${pct(s.clv_ci95[0])} to ${pct(s.clv_ci95[1])}` : "range needs 2+ bets"}
@@ -77,7 +80,7 @@ export function LedgerView({ onError }: { onError: (e: unknown) => void }) {
                 <div className="secondary">
                   <span>Record</span>
                   <span>Units</span>
-                  <span>Est. edge</span>
+                  <span>Est. value</span>
                   <b>
                     {s.wins}–{s.losses}
                   </b>

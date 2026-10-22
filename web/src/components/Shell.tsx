@@ -4,11 +4,11 @@ import { ChevronLeft, ChevronRight, Mark, Moon, Pictogram, Sun } from "../icons"
 import type { Meta } from "../types";
 import type { Toast } from "../App";
 
-export type Tab = "board" | "card" | "out" | "ledger" | "rules";
+export type Tab = "tonight" | "board" | "out" | "ledger" | "rules";
 
 const NAV: { id: Tab; label: string; short: string }[] = [
-  { id: "board", label: "Edge Board", short: "Board" },
-  { id: "card", label: "Card", short: "Card" },
+  { id: "tonight", label: "Tonight", short: "Tonight" },
+  { id: "board", label: "All markets", short: "Markets" },
   { id: "out", label: "Player out", short: "Player out" },
   { id: "ledger", label: "Ledger", short: "Ledger" },
   { id: "rules", label: "Rulebook", short: "Rules" },
@@ -72,8 +72,8 @@ export function Shell(props: {
   const di = date ? dates.indexOf(date) : -1;
   const s = meta?.settings;
   const count = (id: Tab) =>
-    id === "card" && cardCount > 0 ? (
-      <span className="count" aria-label={`${cardCount} legs${cardLocked ? ", locked" : ""}`}>
+    id === "tonight" && cardCount > 0 ? (
+      <span className="count" aria-label={`${cardCount} ${cardCount === 1 ? "bet" : "bets"} on the card${cardLocked ? ", locked" : ""}`}>
         {cardCount}
       </span>
     ) : null;
@@ -145,7 +145,9 @@ export function Shell(props: {
               <b>{money(s.bankroll / 100)}</b>
             </div>
             <div className="stat">
-              <span title="Average closing-line value of the bets you've locked and had graded">Avg CLV</span>
+              <span title="How much the market moved your way after you bet, on average (closing-line value)">
+                Beat the market
+              </span>
               <b>
                 {meta.live_clv.n ? pct(meta.live_clv.avg) : "—"}
                 <small>n={meta.live_clv.n}</small>

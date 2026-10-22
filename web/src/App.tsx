@@ -8,12 +8,14 @@ import { PlayerOut } from "./components/PlayerOut";
 import { Rulebook } from "./components/Rulebook";
 import { Shell, type Tab } from "./components/Shell";
 import { SuggestBlock } from "./components/Suggest";
+import { Tonight } from "./components/Tonight";
 import type { Card, Game, Meta, Note, Suggested } from "./types";
 
-const TABS: Tab[] = ["board", "card", "out", "ledger", "rules"];
+const TABS: Tab[] = ["tonight", "board", "out", "ledger", "rules"];
 const tabFromHash = (): Tab => {
+  if (location.hash === "#/card") return "tonight"; // the card now lives on Tonight
   const t = location.hash.replace("#/", "") as Tab;
-  return TABS.includes(t) ? t : "board";
+  return TABS.includes(t) ? t : "tonight";
 };
 
 export type Toast = { text: string; err?: boolean } | null;
@@ -174,13 +176,14 @@ export default function App() {
     }
   };
 
-  const cardPanel = (variant: "dock" | "page") =>
+  const cardPanel = (variant: "dock" | "page", withSuggest = true) =>
     card && (
       <CardPanel
         card={card}
         variant={variant}
         notes={notes}
         suggest={
+          withSuggest &&
           !card.locked && (
             <SuggestBlock
               suggested={suggested}
@@ -234,14 +237,28 @@ export default function App() {
           {cardPanel("dock")}
         </div>
       )}
-      {tab === "card" && (
-        <div style={{ maxWidth: 560 }}>
-          <div className="head">
-            <h1>Tonight's Card</h1>
-            <p>Every leg priced at Hard Rock. Lock it, then place each leg by hand.</p>
-          </div>
-          {cardPanel("page")}
-        </div>
+      {tab === "tonight" && (
+        <Tonight
+          date={date}
+          games={games}
+          suggested={suggested}
+          card={card}
+          notes={notes}
+          sample={meta?.sample ?? false}
+          live={!!meta && meta.odds_key && date === meta.today}
+          today={!!meta && date === meta.today}
+          costPerGame={meta?.markets ?? 5}
+          claudeKey={claudeKey}
+          checkedAt={checkedAt}
+          cardPanel={cardPanel("page", false)}
+          onRefresh={handlers.refreshOdds}
+          onAsk={askClaude}
+          onAdd={handlers.add}
+          onAddAll={(exclude) =>
+            date ? act(api.addSuggested(date, exclude), "Added to tonight's card") : Promise.resolve()
+          }
+          onLock={handlers.lock}
+        />
       )}
       {tab === "out" && date && <PlayerOut date={date} games={games} onAdd={handlers.add} onError={fail} />}
       {tab === "ledger" && <LedgerView onError={fail} />}

@@ -7,7 +7,7 @@ related_targets: ["web/src"]
 
 # Tip-Off Desk live app
 
-Scope: the live React app (Edge Board + docked Card, Card, Ledger & CLV, Rulebook, phone Player-out view). Visitor mode: Operate. Code-led.
+Scope: the live React app (Tonight as the home screen with the card beside it, All markets table, Player out, Ledger, Rulebook). Visitor mode: Operate. Code-led.
 
 Audience and job: Kong and a friend. Pregame on laptop (build and lock tonight's card at Hard Rock prices), breaking news on phone (player out, find teammates' unmoved props in under 2 minutes), postgame (CLV for the night), weekly rule review.
 
@@ -23,9 +23,9 @@ THESIS: One identity system built to hold every sport, in the tradition of the M
 
 OWN-WORLD: White ground, ink #1b1d22, flat committed league zones (NBA orange #f28c28; NFL green #3a9a4a, MLB blue #4fa3d8, NHL silver #c7c9c8 waiting). Hanken Grotesk only, tabular figures. 1.5 to 2px ink rules, square corners, no shadows, no gradients. Geometric pictograms on a 45/90 grid. State (pass teal, blocked red, warning ochre) never borrows a league color and always carries a mark or word. A designed dark theme for night use.
 
-STORY: Open the desk, see tonight's priced slate at Hard Rock with the fair price beside every number, add what clears, see exactly why anything is held out, lock the card into a ticket, come back after tip for CLV.
+STORY: Open the desk on Tonight and see the answer first: the bets worth taking, each read as a sentence (who, over or under what, how much to bet at which Hard Rock price, why it's value, Claude's news note). Add them, lock the card into a ticket, place each bet at Hard Rock, come back after tip to see whether you beat the market. The full priced table is one link away for digging.
 
-FIRST VIEWPORT: Left pictogram rail (league switcher, NBA live). League-orange header: brand, slate date, tabs Edge Board / Card / Ledger / Rulebook / Player out, bankroll, unit, Avg CLV with n. Main: Edge Board title line with counts and odds snapshot age, filter row, sortable table grouped by game in orange bands, Hard Rock column boxed between ink rules. Docked right: Tonight's Card with legs, risk capacity bar against the nightly cap, named checks, Lock card primary, Clear set apart.
+FIRST VIEWPORT: Left pictogram rail (league switcher, NBA live). League-orange header: brand, slate date, tabs Tonight / All markets / Player out / Ledger / Rulebook, bankroll, unit, Beat the market with n. Main: title line ("Tonight", or the date on past nights; games, first tip, odds age), news and odds tools, "N bets worth taking" with total and Add all, then bet cards under orange zone bands with the Hard Rock price in heavy figures, the fixed value ramp with a Strong/Solid/Small word, a plain reason and Claude's note. Docked right: Tonight's Card with bets, risk capacity bar against the nightly cap, named checks, Lock card primary, Clear set apart. Past graded nights lead with the beat-the-market figure in the Display size. Phones: one column of bet cards and a lock bar above the tab bar.
 
 FORM: Games System, my top-ranked grounded candidate (rank 1 of 7) from re-roll round 1, chosen as the pick card. Signature move: the league pictogram rail whose active color runs from the header into the game bands. seed:5a8d844a71db3c8a
 

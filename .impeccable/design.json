@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-16T21:15:03+00:00",
+  "generatedAt": "2026-10-22T13:39:49+00:00",
   "title": "Design System: Tip-Off Desk",
   "extensions": {
     "colorMeta": {
@@ -26,7 +26,7 @@
         "displayName": "Sunk",
         "canonical": "#f4f5f5",
         "oklch": "oklch(96.9% 0.001 197.1)",
-        "purpose": "Row hover, expanded proof rows, on-card rows.",
+        "purpose": "Row hover, expanded proof rows, on-card rows, opened bet-card math, term definitions.",
         "tonalRamp": [
           "#0b0b0b",
           "#242525",
@@ -179,7 +179,7 @@
         "displayName": "NBA Court Orange",
         "canonical": "#f28c28",
         "oklch": "oklch(73.5% 0.161 58.8)",
-        "purpose": "Live league zone: rail tile, header, game bands, ticket head, CLV line.",
+        "purpose": "Live league zone: rail tile, header, game bands, bet-card heads, ticket head, beat-the-market chart line.",
         "tonalRamp": [
           "#160700",
           "#3b1c00",
@@ -247,7 +247,7 @@
         "displayName": "Pass Teal",
         "canonical": "#0b6e5f",
         "oklch": "oklch(48.3% 0.086 178.6)",
-        "purpose": "Passing rules, positive edge and CLV, wins.",
+        "purpose": "Passing rules, positive value and beat-the-market, the value ramp, wins.",
         "tonalRamp": [
           "#000f0b",
           "#032c25",
@@ -281,7 +281,7 @@
         "displayName": "Blocked Soft",
         "canonical": "#fbe4e8",
         "oklch": "oklch(93.9% 0.026 5.7)",
-        "purpose": "Failing leg tint, remove hover, confirm strip.",
+        "purpose": "Failing bet tint, remove hover, confirm strip.",
         "tonalRamp": [
           "#14070a",
           "#302023",
@@ -298,7 +298,7 @@
         "displayName": "Warning Ochre",
         "canonical": "#7a5c00",
         "oklch": "oklch(49.2% 0.101 86.4)",
-        "purpose": "Notice border and icon.",
+        "purpose": "Notice border and icon; Not taking mark; Claude caution pill.",
         "tonalRamp": [
           "#110a00",
           "#302300",
@@ -366,7 +366,7 @@
         "displayName": "Sunk (dark)",
         "canonical": "#1a1c20",
         "oklch": "oklch(22.6% 0.008 264.4)",
-        "purpose": "Dark-theme value of sunk. Row hover, expanded proof rows, on-card rows.",
+        "purpose": "Dark-theme value of sunk. Row hover, expanded proof rows, on-card rows, opened bet-card math, term definitions.",
         "tonalRamp": [
           "#090b0f",
           "#232529",
@@ -485,7 +485,7 @@
         "displayName": "Pass Teal (dark)",
         "canonical": "#45c9a9",
         "oklch": "oklch(75.6% 0.124 173.5)",
-        "purpose": "Dark-theme value of pass. Passing rules, positive edge and CLV, wins.",
+        "purpose": "Dark-theme value of pass. Passing rules, positive value and beat-the-market, the value ramp, wins.",
         "tonalRamp": [
           "#000f0a",
           "#032c23",
@@ -519,7 +519,7 @@
         "displayName": "Blocked Soft (dark)",
         "canonical": "#3b1820",
         "oklch": "oklch(26.4% 0.056 7.3)",
-        "purpose": "Dark-theme value of blocked-soft. Failing leg tint, remove hover, confirm strip.",
+        "purpose": "Dark-theme value of blocked-soft. Failing bet tint, remove hover, confirm strip.",
         "tonalRamp": [
           "#1d0107",
           "#3b1820",
@@ -536,7 +536,7 @@
         "displayName": "Warning Ochre (dark)",
         "canonical": "#e7b84a",
         "oklch": "oklch(80.5% 0.136 85.4)",
-        "purpose": "Dark-theme value of warning. Notice border and icon.",
+        "purpose": "Dark-theme value of warning. Notice border and icon; Not taking mark; Claude caution pill.",
         "tonalRamp": [
           "#110a00",
           "#312301",
@@ -586,11 +586,11 @@
     "typographyMeta": {
       "display": {
         "displayName": "Display figure",
-        "purpose": "Lead CLV figure on the Ledger; 44px under 860px."
+        "purpose": "Beat-the-market figure leading the Ledger and a graded night on Tonight; 44px under 860px."
       },
       "headline": {
         "displayName": "Headline",
-        "purpose": "View title line; 24px under 860px."
+        "purpose": "View title line (Tonight or the date, All markets, Player out, Ledger & CLV, Rulebook); 24px under 860px."
       },
       "title": {
         "displayName": "Title",
@@ -602,7 +602,7 @@
       },
       "figure": {
         "displayName": "Figure",
-        "purpose": "Hard Rock price in the board; card leg prices at 16px."
+        "purpose": "Hard Rock price in the All markets table; card bet prices at 16px; bet-card ask price at 20px."
       },
       "body": {
         "displayName": "Body",
@@ -643,6 +643,11 @@
         "name": "focus",
         "value": "outline 2.5px solid var(--focus), offset 2px",
         "purpose": "Keyboard focus on every focusable element."
+      },
+      {
+        "name": "term",
+        "value": "1.5px dotted currentColor (underline)",
+        "purpose": "Marks a tap-to-explain Term."
       }
     ],
     "motion": [
@@ -676,12 +681,12 @@
       {
         "name": "desk",
         "value": "1180px",
-        "purpose": "At or below: docked Card leaves the board, reference books hide, only the Avg CLV stat stays, tabs tighten."
+        "purpose": "At or below: docked Card leaves All markets and drops below the bets on Tonight, bet cards two-up, reference books hide, only the Beat the market stat stays, tabs tighten."
       },
       {
         "name": "phone",
         "value": "860px",
-        "purpose": "At or below: rail and header tabs hide, fixed bottom tab bar, stacked board rows, 44px targets."
+        "purpose": "At or below: rail and header tabs hide, fixed bottom tab bar (Tonight, Markets, Player out, Ledger, Rules), bet cards one column, lock bar above the tab bar, stacked table rows, 44px targets."
       }
     ],
     "layout": {
@@ -690,7 +695,11 @@
       "header": "64px (56px phone)",
       "gutter": "28px (16px phone)",
       "boardRow": "42px",
-      "gameBand": "32px"
+      "gameBand": "32px",
+      "betCardMin": "300px",
+      "betGridGap": "16px",
+      "lockBarOffset": "calc(58px + env(safe-area-inset-bottom))",
+      "defaultScreen": "Tonight"
     }
   },
   "components": [
@@ -746,8 +755,8 @@
       "name": "League Header",
       "kind": "nav",
       "refersTo": "header-zone",
-      "description": "League-zone band with the wordmark, tabs cut into it, and ruled stats.",
-      "html": "<header class=\"ds-top\"><b class=\"ds-brand\">TIP-OFF DESK</b><nav class=\"ds-tabs\"><a href=\"#\" aria-current=\"page\">Edge Board</a><a href=\"#\">Card <span>4</span></a><a href=\"#\">Ledger</a></nav><div class=\"ds-stat\"><small>Avg CLV</small><b>+7.5%</b></div></header>",
+      "description": "League-zone band with the wordmark, tabs cut into it (Tonight default, count badge on Tonight), and ruled stats ending in Beat the market.",
+      "html": "<header class=\"ds-top\"><b class=\"ds-brand\">TIP-OFF DESK</b><nav class=\"ds-tabs\"><a href=\"#\" aria-current=\"page\">Tonight <span>3</span></a><a href=\"#\">All markets</a><a href=\"#\">Player out</a><a href=\"#\">Ledger</a><a href=\"#\">Rulebook</a></nav><div class=\"ds-stat\"><small>Beat the market</small><b>+7.5%</b></div></header>",
       "css": ".ds-top{display:flex;align-items:stretch;min-height:64px;padding-left:28px;background:#f28c28;color:#1b1d22;font-family:'Hanken Grotesk',system-ui,sans-serif}.ds-brand{align-self:center;font-size:21px;font-weight:800;letter-spacing:.16em;padding-right:32px}.ds-tabs{display:flex;align-items:flex-end;gap:2px}.ds-tabs a{display:flex;align-items:center;gap:8px;height:44px;padding:0 18px;font-weight:700;font-size:15px;color:#1b1d22;text-decoration:none}.ds-tabs a:hover{background:rgba(255,255,255,.22)}.ds-tabs a[aria-current=page]{background:#fff}.ds-tabs a:focus-visible{outline:2.5px solid #1f5fd6;outline-offset:2px}.ds-tabs span{display:grid;place-items:center;min-width:20px;height:20px;padding:0 5px;background:#1b1d22;color:#fff;font-size:12px;font-weight:800}.ds-stat{margin-left:auto;align-self:center;padding:0 22px;border-left:2px solid rgba(27,29,34,.45)}.ds-stat small{display:block;font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase}.ds-stat b{display:block;font-size:21px;font-weight:800;line-height:1.1}"
     },
     {
@@ -759,10 +768,10 @@
       "css": ".ds-rail{width:88px;border-right:2px solid #1b1d22}.ds-league{width:100%;height:92px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;border:0;border-bottom:1px solid #fff;border-radius:0;background:color-mix(in srgb,var(--c) 22%,#fff);color:#1b1d22;font:800 11px 'Hanken Grotesk',system-ui,sans-serif;letter-spacing:.1em;cursor:pointer}.ds-league svg{width:38px;height:38px}.ds-league[aria-pressed=true]{background:var(--c)}.ds-league:disabled{color:#474b54;cursor:not-allowed}.ds-league small{font-size:11px;font-weight:600;letter-spacing:.04em;margin-top:-4px}.ds-league:focus-visible{outline:2.5px solid #1f5fd6;outline-offset:-2.5px}"
     },
     {
-      "name": "Board Row",
+      "name": "All Markets Row",
       "kind": "custom",
       "refersTo": "game-band",
-      "description": "Zone game band over a priced row: Hard Rock boxed in 2px ink rules, fair beside it, reference muted, edge ramp.",
+      "description": "Zone game band over a priced row: Hard Rock boxed in 2px ink rules, Worth beside it, reference muted, Value with the ramp.",
       "html": "<table class=\"ds-board\"><tr class=\"ds-game\"><td colspan=\"5\">DEN @ MIA <span>7:30p</span></td></tr><tr class=\"ds-mk\" tabindex=\"0\"><td class=\"l\"><b>Devin Holloway</b> <small>MIA</small></td><td>+147</td><td class=\"ds-hr\">+181</td><td class=\"ds-ref\">+140</td><td class=\"ds-pos\">+13.6%<span class=\"ds-ramp\"><i class=\"on\"></i><i class=\"on\"></i><i class=\"on\"></i><i class=\"on\"></i></span></td></tr></table>",
       "css": ".ds-board{border-collapse:collapse;font:400 14px/1.4 'Hanken Grotesk',system-ui,sans-serif;font-variant-numeric:tabular-nums;color:#1b1d22}.ds-board td{height:42px;padding:0 8px;text-align:right;border-bottom:1px solid #e3e4e5;white-space:nowrap}.ds-board .l{text-align:left}.ds-board small{color:#5f636c;font-size:12px}.ds-game td{height:32px;background:#f28c28;color:#1b1d22;font-weight:800;font-size:13px;letter-spacing:.04em;text-align:left;border:0}.ds-game span{font-weight:600;margin-left:10px;letter-spacing:0}.ds-hr{font-size:17px;font-weight:800;border-left:2px solid #1b1d22;border-right:2px solid #1b1d22;min-width:84px}.ds-ref{color:#5f636c;font-size:13px}.ds-pos{color:#0b6e5f;font-weight:700}.ds-ramp{display:inline-flex;gap:2px;margin-left:8px;vertical-align:middle}.ds-ramp i{width:5px;height:12px;background:#e3e4e5}.ds-ramp i.on{background:#0b6e5f}.ds-mk{cursor:pointer}.ds-mk:hover td:not(.ds-hr){background:#f4f5f5}.ds-mk:focus-visible{outline:2.5px solid #1f5fd6;outline-offset:-2.5px}"
     },
@@ -773,17 +782,50 @@
       "description": "Ruled ochre caveat box with the warning mark, 72ch max.",
       "html": "<div class=\"ds-notice\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"square\" stroke-linejoin=\"miter\" aria-hidden=\"true\"><path d=\"M12 4l9 16H3z\"/><path d=\"M12 10v4M12 17v.5\"/></svg><p>These verdicts come from sample data, a fake world with planted edges.</p></div>",
       "css": ".ds-notice{display:flex;gap:10px;align-items:flex-start;max-width:72ch;padding:10px 14px;border:1.5px solid #7a5c00;background:#f8efd3;color:#1b1d22;font:400 14px/1.4 'Hanken Grotesk',system-ui,sans-serif}.ds-notice svg{color:#7a5c00;flex:none;margin-top:2px}.ds-notice p{margin:0}"
+    },
+    {
+      "name": "Bet Card",
+      "kind": "card",
+      "refersTo": "bet-card",
+      "description": "Tonight's unit: a zone band head, the bet read as a sentence, the strength word on the fixed ramp, a plain reason, Add and Show the math.",
+      "html": "<article class=\"ds-bet\"><header><span>DAL @ ATL</span><span>7:30p</span></header><div class=\"ds-bet-body\"><h3>Marcus Holloway</h3><p class=\"ds-pick\"><b>OVER</b> 2.5 blocks</p><p class=\"ds-ask\">Bet <b>$40</b> at Hard Rock <b class=\"ds-price\">+219</b></p><p class=\"ds-str\"><span class=\"ds-ramp\"><i class=\"on\"></i><i class=\"on\"></i><i class=\"on\"></i><i class=\"on\"></i></span><span>Strong <u>value</u></span></p><p class=\"ds-why\">Hard Rock pays +219; the rest of the market makes it worth about +169. That's about $19 profit per $100 bet, on average over many bets like it.</p></div><footer><button class=\"ds-add\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"square\" stroke-linejoin=\"miter\" aria-hidden=\"true\"><path d=\"M12 5v14M5 12h14\"/></svg>Add to tonight's card</button><button class=\"ds-link\">Show the math</button></footer></article>",
+      "css": ".ds-bet{width:320px;border:2px solid #1b1d22;background:#fff;color:#1b1d22;font:400 14px/1.4 'Hanken Grotesk',system-ui,sans-serif;font-variant-numeric:tabular-nums}.ds-bet>header{display:flex;justify-content:space-between;padding:7px 14px;background:#f28c28;color:#1b1d22;font-size:13px;font-weight:800;letter-spacing:.04em}.ds-bet-body{display:grid;gap:6px;padding:14px 16px 12px}.ds-bet p,.ds-bet h3{margin:0}.ds-bet h3{font-size:22px;font-weight:800;line-height:1.15}.ds-pick{font-size:16px}.ds-pick b{font-weight:800;letter-spacing:.04em}.ds-ask{font-size:15px;margin-top:4px}.ds-ask b{font-weight:800}.ds-price{font-size:20px}.ds-str{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700}.ds-str u{text-decoration:none;border-bottom:1.5px dotted currentColor}.ds-ramp{display:inline-flex;gap:2px}.ds-ramp i{width:7px;height:14px;background:#e3e4e5}.ds-ramp i.on{background:#0b6e5f}.ds-why{font-size:13px;color:#474b54}.ds-bet>footer{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:0 16px 14px}.ds-add{display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:6px 12px;border:1.5px solid #1b1d22;border-radius:0;background:#1b1d22;color:#fff;font:700 13px 'Hanken Grotesk',system-ui,sans-serif;cursor:pointer}.ds-add:hover{background:#33363d}.ds-link{border:0;background:none;padding:4px;color:#474b54;text-decoration:underline;font:600 13px 'Hanken Grotesk',system-ui,sans-serif;cursor:pointer}.ds-link:hover{color:#1b1d22}.ds-add:focus-visible,.ds-link:focus-visible{outline:2.5px solid #1f5fd6;outline-offset:2px}"
+    },
+    {
+      "name": "Term",
+      "kind": "custom",
+      "refersTo": "term-definition",
+      "description": "Tap-to-explain word: dotted underline, definition opens inline below on tap or keypress, never on hover.",
+      "html": "<p class=\"ds-term-p\">Hard Rock pays more than each one is <span class=\"ds-term\"><button type=\"button\" aria-expanded=\"true\">worth</button><span class=\"ds-term-def\" role=\"note\">What the bet is really worth: the other sportsbooks' prices with their built-in cut removed, nudged slightly by our own projection.</span></span></p>",
+      "css": ".ds-term-p{max-width:60ch;color:#474b54;font:400 13px/1.4 'Hanken Grotesk',system-ui,sans-serif}.ds-term button{all:unset;cursor:pointer;border-bottom:1.5px dotted currentColor}.ds-term button:focus-visible{outline:2.5px solid #1f5fd6;outline-offset:2px}.ds-term-def{display:block;margin:6px 0 2px;padding:8px 10px;max-width:46ch;background:#f4f5f5;border:1px solid #e3e4e5;color:#1b1d22;font-size:12px;line-height:1.45;letter-spacing:0;text-transform:none}"
+    },
+    {
+      "name": "Results Lead",
+      "kind": "custom",
+      "refersTo": "results-figure",
+      "description": "A graded night leads Tonight: the Display beat-the-market figure, its caption, one plain sentence, inside a calm state.",
+      "html": "<div class=\"ds-calm\"><h2 class=\"ds-fig\"><span class=\"pos\">+12.1%</span><small><u>beat the market</u>, on average</small></h2><p>3 of 3 bets beat the market, and your prices beat the close by this much on average. That's the number to watch: over a night or two, wins and losses are mostly luck.</p></div>",
+      "css": ".ds-calm{max-width:62ch;border-top:2px solid #1b1d22;padding:22px 0 8px;color:#1b1d22;font-family:'Hanken Grotesk',system-ui,sans-serif;font-variant-numeric:tabular-nums}.ds-calm h2,.ds-calm p{margin:0}.ds-fig{font-size:56px;font-weight:800;line-height:1;letter-spacing:-.02em;margin:4px 0 12px}.ds-fig .pos{color:#0b6e5f}.ds-fig small{display:block;margin-top:8px;font-size:20px;font-weight:700;letter-spacing:0;color:#1b1d22}.ds-fig u{text-decoration:none;border-bottom:1.5px dotted currentColor}.ds-calm p{font-size:15px;color:#474b54;line-height:1.4}"
+    },
+    {
+      "name": "Lock Bar",
+      "kind": "custom",
+      "refersTo": "lock-bar",
+      "description": "Phone only: fixed above the tab bar while the card holds unlocked bets; count and risk left, primary Lock right.",
+      "html": "<div class=\"ds-lockbar\" role=\"region\" aria-label=\"Your card\"><a href=\"#\"><b>2 on your card · $64</b><small>Review</small></a><button class=\"ds-lockbtn\"><svg width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"square\" stroke-linejoin=\"miter\" aria-hidden=\"true\"><rect x=\"5\" y=\"11\" width=\"14\" height=\"10\"/><path d=\"M8 11V7a4 4 0 0 1 8 0v4\"/></svg>Lock</button></div>",
+      "css": ".ds-lockbar{display:flex;align-items:center;gap:12px;width:360px;padding:8px 16px;background:#fff;border-top:2px solid #1b1d22;color:#1b1d22;font-family:'Hanken Grotesk',system-ui,sans-serif}.ds-lockbar a{flex:1;display:grid;align-content:center;min-height:44px;color:#1b1d22;text-decoration:none}.ds-lockbar b{font-weight:800;font-size:14px}.ds-lockbar small{font-size:12px;color:#474b54}.ds-lockbtn{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:8px 22px;border:1.5px solid #1b1d22;border-radius:0;background:#1b1d22;color:#fff;font:700 15px 'Hanken Grotesk',system-ui,sans-serif;cursor:pointer}.ds-lockbtn:hover{background:#33363d}.ds-lockbtn:disabled{background:#fff;border-color:#c7c9c8;color:#5f636c;cursor:not-allowed}.ds-lockbar a:focus-visible,.ds-lockbtn:focus-visible{outline:2.5px solid #1f5fd6;outline-offset:2px}"
     }
   ],
   "narrative": {
     "northStar": "The Games System",
-    "overview": "Tip-Off Desk is one identity built to hold every sport, in the tradition of the Munich 1972 Games: each league owns a geometric pictogram and a flat color zone, and everything else is ink on white on a strict grid. The active league's color runs from the left rail tile, through the header band, into the game bands of the board, so the room is always painted in the color of the sport in play. Nothing else in the interface is decorative; the zone is the only spectacle.\n\nThe desk is dense and precise: a priced table is the primary surface, structure comes from 1.5 to 2px ink rules rather than boxes or shadows, every corner is square, and every number sits in tabular figures from a single typeface, Hanken Grotesk. It refuses the category default of a dark odds terminal with glowing green and red numbers. State (pass, blocked, warning) has its own teal, red and ochre, never borrows a league color, and always carries a mark or a word.\n\nDark is a designed night theme, not an inversion: a near-black ground, light ink rules, and brightened state colors, while the league zone keeps its exact hue so the identity reads the same at midnight.",
+    "overview": "Tip-Off Desk is one identity built to hold every sport, in the tradition of the Munich 1972 Games: each league owns a geometric pictogram and a flat color zone, and everything else is ink on white on a strict grid. The active league's color runs from the left rail tile, through the header band, into the game bands of the board, so the room is always painted in the color of the sport in play. Nothing else in the interface is decorative; the zone is the only spectacle.\n\nThe desk answers first, then shows its work. Tonight, the home screen, reads each bet worth taking as a sentence on a zone-banded card (who, over or under what, how much to bet at which Hard Rock price, why it is value); the full priced table sits one link away under All markets. Beneath that answer the desk is dense and precise: the priced table is the working surface, structure comes from 1.5 to 2px ink rules rather than boxes or shadows, every corner is square, and every number sits in tabular figures from a single typeface, Hanken Grotesk. It refuses the category default of a dark odds terminal with glowing green and red numbers. State (pass, blocked, warning) has its own teal, red and ochre, never borrows a league color, and always carries a mark or a word.\n\nDark is a designed night theme, not an inversion: a near-black ground, light ink rules, and brightened state colors, while the league zone keeps its exact hue so the identity reads the same at midnight.",
     "keyCharacteristics": [
       "White ground, ink #1b1d22, one flat league zone per sport (NBA orange live; NFL, MLB, NHL waiting).",
       "Hanken Grotesk only, weights 400/600/700/800, tabular figures everywhere.",
       "Ink rules (1.5px controls, 2px structure, 1px soft row dividers), square corners, no shadows, no gradients.",
       "Geometric pictograms and icons on a 45/90 grid with square caps and miter joins.",
       "State colors are reserved, always paired with a mark or word.",
+      "Plain words in the interface: Worth, Value, Beat the market, bets; every technical idea can be tapped for a definition.",
       "Motion is small and functional: a ticket settling, a toast rising, a bar filling."
     ],
     "rules": [
@@ -813,30 +855,43 @@
         "section": "typography"
       },
       {
+        "name": "The Plain Words Rule",
+        "body": "The interface speaks in a bettor's plain words: Worth (the fair price), Value (the edge), Beat the market (CLV), and bets (never legs). Each sits on a tappable Term where it first appears. A technical name may follow the plain word as a gloss (\"Beat the market · avg CLV\") or head an evidence table on the Ledger and Rulebook; it never replaces the plain word on Tonight, the card or All markets.",
+        "section": "typography"
+      },
+      {
         "name": "The True Minus Rule",
-        "body": "Numbers are formatted once, in one way: American odds with a true minus sign (+181, −110), signed percents to one decimal (+7.5%, −1.9%), units with a \"u\" (+1.4u), money without cents unless settling ($124, +$12.40), tip times in Eastern as 7:30p, and an em dash for a missing value.",
+        "body": "Numbers are formatted once, in one way: American odds with a true minus sign (+181, −110), signed percents to one decimal (+7.5%, −1.9%), units with a \"u\" (+1.4u), money without cents unless settling ($124, +$12.40), profit per $100 in whole dollars (\"about $19 profit per $100 bet\"), tip times in Eastern as 7:30p, and an em dash for a missing value.",
         "section": "typography"
       },
       {
         "name": "The Rail-To-Band Rule",
-        "body": "The active league's color always runs continuously from the rail tile through the header into the game bands. Any new surface that groups by game or team uses a zone band, not a card.",
+        "body": "The active league's color always runs continuously from the rail tile through the header into the game bands. Any new surface that groups by game or team uses a zone band, not a card; a bet card's head is that same band.",
         "section": "layout"
       },
       {
         "name": "The Rule Not Shadow Rule",
         "body": "If something needs to separate, draw an ink rule or fill it solid. A shadow is never the answer.",
         "section": "elevation"
+      },
+      {
+        "name": "The Fixed Ramp Rule",
+        "body": "The strength word and the ramp come from one scale: Strong at 6% value and up, Solid at 4%, Small below that (nothing under 2% is suggested). The ramp lights its cells at 2, 4, 6 and 10%, the same on a bet card and in the table.",
+        "section": "components"
       }
     ],
     "dos": [
       "Do paint the live league's zone from rail to header to game bands, with ink text on it.",
       "Do set every number in Hanken Grotesk tabular figures, with the true minus sign and one formatting convention (format.ts).",
-      "Do show the fair price beside every Hard Rock price, and box the Hard Rock column in 2px ink rules.",
+      "Do show the Worth price beside every Hard Rock price, and box the Hard Rock column in 2px ink rules.",
       "Do pair every state color with a check, cross, warning mark or word, and name the rule that blocks.",
       "Do separate with ink rules: 2px for structure, 1.5px for controls, 1px Rule Soft for rows.",
       "Do keep targets at 44px or more on phone, and the 2.5px Focus Blue outline on everything focusable.",
       "Do label sample data with the silver Sample tag and keep 1-800-GAMBLER in the footer.",
       "Do write short, plain, specific copy in a bettor's words (\"104 clear the rulebook\", \"Locking freezes these prices\"), sentence case except the brand and 11px labels.",
+      "Do say Worth, Value, Beat the market and bets, and wrap a technical idea in a Term the first time it appears on a screen.",
+      "Do lead Tonight with the answer: bet cards when there is value, a calm state when there is none, the Display beat-the-market figure once the night is graded.",
+      "Do read a bet as a sentence: \"Bet $40 at Hard Rock +219\", a Strong, Solid or Small word on the fixed ramp, and the profit per $100 in whole dollars.",
       "Do draw new icons on the 24px grid with 2.4 strokes, square caps, miter joins and 45/90 angles; new league pictograms on the 32px grid at 3.4 strokes."
     ],
     "donts": [
@@ -847,7 +902,9 @@
       "Don't put sport-specific detail (team colors, sport names, stat vocabulary) into the shell, palette or type; it comes from data.",
       "Don't set text smaller than 11px, or rely on color alone for state.",
       "Don't add small uppercase labels above headings as decoration; uppercase 11px is for column heads, stat names and data labels only.",
-      "Don't animate view changes or celebrate wins."
+      "Don't animate view changes or celebrate wins.",
+      "Don't call a bet a leg, or put edge, fair or CLV in place of Value, Worth or Beat the market on Tonight, the card or All markets.",
+      "Don't describe strength with any word outside Strong, Solid and Small, or with excitement; no casino words."
     ]
   }
 }

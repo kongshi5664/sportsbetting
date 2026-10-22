@@ -3,6 +3,7 @@ import { money, odds, pct, pick, tipTime } from "../format";
 import { Check, Cross, Lock } from "../icons";
 import type { Card, Leg, Note } from "../types";
 import { NoteLine } from "./Suggest";
+import { Term } from "./Term";
 
 const STAT: Record<string, string> = {
   player_points: "Points",
@@ -16,7 +17,7 @@ const matchup = (l: Leg) =>
 const legLabel = (l: Leg) => `${l.player} ${STAT[l.market]?.toLowerCase()} ${pick(l.side, l.point)}`;
 const fairAmerican = (p: number) => (p >= 0.5 ? -Math.round((100 * p) / (1 - p)) : Math.round((100 * (1 - p)) / p));
 
-/** After the games: the night's CLV leads, the record follows. */
+/** After the games: beating the market leads, the record follows. */
 function NightClv({ legs }: { legs: Leg[] }) {
   const priced = legs.filter((l) => l.clv != null);
   const avg = priced.length ? priced.reduce((s, l) => s + l.clv!, 0) / priced.length : null;
@@ -26,11 +27,14 @@ function NightClv({ legs }: { legs: Leg[] }) {
   return (
     <div className="risk">
       <div className="risk-line">
-        <span>Night's CLV</span>
+        <span>
+          <Term k="clv">Beat the market</Term>
+        </span>
         <b className={avg == null ? "" : avg >= 0 ? "pos" : "neg"}>{pct(avg)}</b>
       </div>
       <p>
-        Beat the close on {beat} of {priced.length} · record {w}–{lo} (results are mostly luck; CLV is the score)
+        {beat} of {priced.length} beat the market · record {w}–{lo} (wins and losses are mostly luck; beating the
+        market is the score)
       </p>
     </div>
   );
@@ -76,7 +80,7 @@ export function CardPanel(props: {
     <div className="card-head">
       <h2>{card.locked ? "Tonight's Ticket" : "Tonight's Card"}</h2>
       <span>
-        {n} {n === 1 ? "leg" : "legs"} · Hard Rock prices
+        {n} {n === 1 ? "bet" : "bets"} · Hard Rock prices
       </span>
     </div>
   );
@@ -142,17 +146,26 @@ export function CardPanel(props: {
                 <b>
                   {l.player} · {STAT[l.market]} {pick(l.side, l.point)}
                 </b>
-                <small>
-                  {matchup(l)} ·{" "}
-                  {l.status === "graded"
-                    ? `took ${odds(l.price)} · closed ${odds(l.close_price)}${l.actual != null ? ` · finished ${l.actual}` : ""}`
-                    : `fair ${odds(fairAmerican(l.fair))} · edge ${pct(l.edge)}`}
+                <small className="meta">
+                  <span>{matchup(l)}</span>
+                  {l.status === "graded" ? (
+                    <>
+                      <span>took {odds(l.price)}</span>
+                      <span>closed {odds(l.close_price)}</span>
+                      {l.actual != null && <span>finished {l.actual}</span>}
+                    </>
+                  ) : (
+                    <>
+                      <span>worth {odds(fairAmerican(l.fair))}</span>
+                      <span>value {pct(l.edge)}</span>
+                    </>
+                  )}
                 </small>
               </div>
               {l.status === "graded" ? (
                 <div className="price">
                   <b className={l.clv == null ? "" : l.clv >= 0 ? "pos" : "neg"}>{l.result === "void" ? "Void" : pct(l.clv)}</b>
-                  <small>CLV · {money(l.stake)}</small>
+                  <small>vs. market · {money(l.stake)}</small>
                 </div>
               ) : (
                 <div className="price">
@@ -178,7 +191,7 @@ export function CardPanel(props: {
             </div>
           ) : (
             <p className="reason">
-              Closing prices are captured at tip for CLV.{" "}
+              Closing prices are captured at tip to see whether you beat the market.{" "}
               <button className="btn link" onClick={() => setConfirm("unlock")}>
                 Unlock card
               </button>
@@ -192,7 +205,7 @@ export function CardPanel(props: {
     <aside className={"card " + variant} aria-label="Tonight's card">
       {head}
       {n === 0 ? (
-        <p className="none">No legs yet. Add the suggested legs below, or pick from the Edge Board.</p>
+        <p className="none">No bets on the card yet.</p>
       ) : (
         <ul className="legs">
           {card.legs.map((l) => {
@@ -204,7 +217,7 @@ export function CardPanel(props: {
                     {l.player} · {STAT[l.market]} {pick(l.side, l.point)}
                   </b>
                   <small>
-                    {matchup(l)} · fair {odds(fairAmerican(l.fair))}
+                    {matchup(l)} · worth {odds(fairAmerican(l.fair))}
                   </small>
                 </div>
                 <div className="price">
@@ -251,7 +264,7 @@ export function CardPanel(props: {
       {confirm === "clear" ? (
         <div className="confirm">
           <p>
-            Clear all {n} {n === 1 ? "leg" : "legs"}?
+            Clear all {n} {n === 1 ? "bet" : "bets"}?
           </p>
           <button className="btn danger" onClick={onClear}>
             Clear card
@@ -272,10 +285,10 @@ export function CardPanel(props: {
       )}
       <p className="reason" id="lock-why">
         {n === 0
-          ? "Lock unlocks once the card has a leg."
+          ? "The card can be locked once it has a bet."
           : card.can_lock
-            ? "Locking freezes these prices. You place each leg by hand in Hard Rock Bet."
-            : "Fix the ✕ checks above to lock. Remove a leg with its ✕ button."}
+            ? "Locking freezes these prices. Then place each bet by hand in the Hard Rock app."
+            : "Fix the failed checks above to lock. Use a bet's remove button to take it off."}
       </p>
     </aside>
   );

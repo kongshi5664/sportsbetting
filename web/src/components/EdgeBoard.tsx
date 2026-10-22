@@ -1,6 +1,7 @@
 import { Fragment, useEffect, useMemo, useRef, useState, type KeyboardEvent } from "react";
 import { BOOK_SHORT, odds, pct, pick, tipTime } from "../format";
 import { Check, ChevronDown, Cross, Search, Warn } from "../icons";
+import { Term } from "./Term";
 import type { Game, Market } from "../types";
 
 const REFS = ["draftkings", "fanduel", "betmgm"];
@@ -182,7 +183,7 @@ export function EdgeBoard(props: {
           <td className="fair">{odds(m.fair_american)}</td>
           <td className="hr">
             {odds(m.price)}
-            <small className="fair-m"> fair {odds(m.fair_american)}</small>
+            <small className="fair-m"> worth {odds(m.fair_american)}</small>
           </td>
           {REFS.map((b) => (
             <td key={b} className="ref">
@@ -231,7 +232,7 @@ export function EdgeBoard(props: {
   return (
     <section aria-labelledby="board-h">
       <div className="head">
-        <h1 id="board-h">Edge Board</h1>
+        <h1 id="board-h">All markets</h1>
         {games && (
           <p>
             {games.length} games · {all.length} markets priced · <b>{clears} clear the rulebook</b> · bettable at Hard Rock
@@ -279,7 +280,8 @@ export function EdgeBoard(props: {
             </>
           ) : null}
           <br />
-          Fair = de-vigged DK · FD · MGM, blended with our projection
+          What the words mean: <Term k="worth">Worth</Term> · <Term k="value">Value</Term> ·{" "}
+          <Term k="stake">Stake</Term>
         </div>
       </div>
 
@@ -322,14 +324,14 @@ export function EdgeBoard(props: {
             <tr>
               {th("player", "Player", "l")}
               <th className="l">Market</th>
-              <th>Fair</th>
+              <th>Worth</th>
               {th("price", "Hard Rock", "hr")}
               {REFS.map((b) => (
                 <th key={b} className="ref">
                   {BOOK_SHORT[b]}
                 </th>
               ))}
-              {th("edge", "Edge")}
+              {th("edge", "Value")}
               {th("stake", "Stake")}
               <th className="l">Rules</th>
               <th>
@@ -388,7 +390,7 @@ export function EdgeBoard(props: {
   );
 }
 
-function Proof({ m }: { m: Market }) {
+export function Proof({ m }: { m: Market }) {
   const p = m.proof;
   const dec = m.price > 0 ? 1 + m.price / 100 : 1 + 100 / -m.price;
   const side = m.side === "Over" ? "over" : "under";
@@ -396,7 +398,7 @@ function Proof({ m }: { m: Market }) {
   return (
     <div className="proof-grid">
       <div>
-        <h3>Reference books, de-vigged</h3>
+        <h3>Other books, with their cut removed</h3>
         <table>
           <thead>
             <tr>
@@ -419,17 +421,19 @@ function Proof({ m }: { m: Market }) {
         </table>
       </div>
       <div className="math">
-        <h3>How the edge is priced</h3>
-        Market consensus (median): <b>{(p.p_market * 100).toFixed(1)}%</b>
+        <h3>How the value is worked out</h3>
+        The other books (middle of them) say it hits <b>{(p.p_market * 100).toFixed(1)}%</b> of the time
         <br />
-        Our projection {p.projection} → <b>{(p.p_model * 100).toFixed(1)}%</b>, weighted {Math.round(p.model_weight * 100)}%
+        Our projection ({p.projection}) says <b>{(p.p_model * 100).toFixed(1)}%</b>, counted at{" "}
+        {Math.round(p.model_weight * 100)}%
         <br />
-        Fair {side}: <b>{(m.fair * 100).toFixed(1)}%</b> = {odds(m.fair_american)}
+        Worth ({side}): <b>{(m.fair * 100).toFixed(1)}%</b> chance, a fair price of {odds(m.fair_american)}
         <br />
-        Hard Rock {odds(m.price)} pays {dec.toFixed(3)} → edge {(m.fair * 100).toFixed(1)}% × {dec.toFixed(3)} − 1 ={" "}
-        <b className={m.edge >= 0 ? "pos" : "neg"}>{pct(m.edge)}</b>
+        Hard Rock {odds(m.price)} pays ${(dec * 100).toFixed(0)} back per $100 when it hits, so value ={" "}
+        {(m.fair * 100).toFixed(1)}% × {dec.toFixed(3)} − 1 = <b className={m.edge >= 0 ? "pos" : "neg"}>{pct(m.edge)}</b>
         <br />
-        Stake: quarter Kelly on the bankroll, capped at 2 units = <b>${Math.round(m.stake)}</b>
+        Stake: a quarter of the "ideal" bet size for this value, capped at 2% of the bankroll ={" "}
+        <b>${Math.round(m.stake)}</b>
         {m.flags.some((f) => f.testing) && (
           <>
             <h3>Testing rules that match (not enforced)</h3>

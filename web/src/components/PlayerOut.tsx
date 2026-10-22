@@ -52,7 +52,7 @@ export function PlayerOut(props: {
           <h2 id="out-h">{news.player} is out</h2>
           <span className="pill no">{news.team}</span>
           <p className="dim">
-            {news.teammates.length} teammate markets, best edge first
+            {news.teammates.length} teammate markets, best value first
             {snap ? ` · prices as of ${tipTime(snap)} ET` : ""}
           </p>
         </div>
@@ -76,9 +76,9 @@ export function PlayerOut(props: {
                 <tr>
                   <th className="l">Player</th>
                   <th className="l">Market</th>
-                  <th>Fair</th>
+                  <th>Worth</th>
                   <th className="hr">Hard Rock</th>
-                  <th>Edge</th>
+                  <th>Value</th>
                   <th>Stake</th>
                   <th className="l">Rules</th>
                   <th>
@@ -109,7 +109,7 @@ export function PlayerOut(props: {
                           <td className="fair">{odds(m.fair_american)}</td>
                           <td className="hr">
                             {odds(m.price)}
-                            <small className="fair-m"> fair {odds(m.fair_american)}</small>
+                            <small className="fair-m"> worth {odds(m.fair_american)}</small>
                           </td>
                           <td className="edgec">
                             <span className={m.edge >= 0 ? "pos" : "neg"}>{pct(m.edge)}</span>

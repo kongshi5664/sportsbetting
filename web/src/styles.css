@@ -372,6 +372,74 @@ kbd { font: 700 11px/1 var(--font); border: 1px solid var(--sil); padding: 2px 4
 .empty h2 { font-size: 18px; font-weight: 800; margin-bottom: 4px; }
 .empty p { color: var(--ink-2); }
 
+/* ---------- tonight: the answer first ---------- */
+
+.tonight { display: grid; grid-template-columns: minmax(0, 1fr) var(--dock); gap: 24px; align-items: start; }
+.tonight-card { position: sticky; top: 88px; }
+.tonight-card .card { position: static; }
+.card-hint { display: flex; gap: 6px; align-items: baseline; font-size: 13px; color: var(--ink-2); margin-bottom: 10px; }
+.card-hint svg { width: 13px; height: 13px; color: var(--good); flex: none; }
+.tonight-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin-bottom: 18px; }
+.tonight-tools small { font-size: 12px; color: var(--ink-2); }
+
+.calm { border-top: 2px solid var(--rule); padding: 22px 0 8px; max-width: 62ch; }
+.calm h2 { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+.calm p { color: var(--ink-2); font-size: 15px; }
+.calm .results-figure { font-size: 56px; font-weight: 800; line-height: 1; letter-spacing: -0.02em; margin: 4px 0 12px; }
+.calm .results-figure small { display: block; margin-top: 8px; font-size: 20px; font-weight: 700; letter-spacing: 0; color: var(--ink); }
+.leg .what small.meta { display: flex; flex-wrap: wrap; column-gap: 12px; }
+.leg small.meta span { white-space: nowrap; }
+.stat span, .stat b { white-space: nowrap; }
+
+/* Phones only: the card's lock stays one tap away above the tab bar. */
+.lockbar { display: none; }
+
+.picks-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; border-top: 2px solid var(--rule); padding: 14px 0 16px; }
+.picks-head h2 { font-size: 22px; font-weight: 800; }
+.picks-head h2 > span { display: block; font-size: 13px; font-weight: 400; color: var(--ink-2); margin-top: 2px; }
+.picks-head .btn { min-height: 44px; font-size: 15px; padding: 8px 20px; }
+
+.bets { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+.bet { border: 2px solid var(--rule); background: var(--bg); display: flex; flex-direction: column; }
+.bet > header { background: var(--zone); color: var(--on-zone); display: flex; justify-content: space-between; padding: 7px 14px; font-size: 13px; font-weight: 800; letter-spacing: 0.04em; }
+.bet-body { padding: 14px 16px 12px; display: grid; gap: 6px; flex: 1; align-content: start; }
+.bet-body h3 { font-size: 22px; font-weight: 800; line-height: 1.15; }
+.bet-pick { font-size: 16px; }
+.bet-pick b { font-weight: 800; letter-spacing: 0.04em; }
+.bet-ask { font-size: 15px; margin-top: 4px; }
+.bet-ask b { font-weight: 800; }
+.bet-ask .bet-price { font-size: 20px; margin-left: 2px; }
+.bet-strength { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; }
+.bet-strength .ramp { margin-left: 0; }
+.bet-strength .ramp i { width: 7px; height: 14px; }
+.bet-why { font-size: 13px; color: var(--ink-2); max-width: 60ch; }
+.bet > footer { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 0 16px 14px; flex-wrap: wrap; }
+.bet > footer .btn.primary { min-height: 40px; }
+.bet-math { border-top: 1px solid var(--rule-soft); background: var(--sunk); padding: 4px 16px 14px; }
+.bet-math .proof-grid { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+.bet-math .proof h3, .bet-math h3 { font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-2); margin: 10px 0 6px; }
+.bet-math table { border-collapse: collapse; width: 100%; font-size: 13px; }
+.bet-math td, .bet-math th { padding: 3px 8px 3px 0; text-align: right; border-bottom: 1px solid var(--rule-soft); }
+.bet-math th { font-size: 11px; color: var(--ink-2); }
+.bet-math .l { text-align: left; }
+.bet-math .math { font-size: 13px; line-height: 1.7; }
+
+.skipped { margin-top: 24px; border-top: 1px solid var(--rule-soft); padding-top: 14px; }
+.skipped h2 { font-size: 15px; font-weight: 800; display: flex; gap: 6px; align-items: center; }
+.skipped h2 svg { color: var(--warn); width: 15px; height: 15px; }
+.skipped ul { list-style: none; margin: 8px 0 0; padding: 0; }
+.skipped li { display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; padding: 6px 0; font-size: 13px; }
+.skipped li span { color: var(--ink-2); flex: 1 1 260px; }
+
+.more { display: inline-flex; align-items: center; gap: 6px; margin-top: 24px; font-weight: 700; text-decoration: none; border-bottom: 2px solid var(--rule); padding-bottom: 2px; }
+.more svg { width: 14px; height: 14px; }
+
+/* Tap-to-explain words: a dotted underline, the definition opens inline. */
+.term { display: inline; }
+.term button { all: unset; cursor: pointer; border-bottom: 1.5px dotted currentColor; }
+.term button:focus-visible { outline: 2.5px solid var(--focus); outline-offset: 2px; }
+.term-def { display: block; margin: 6px 0 2px; padding: 8px 10px; max-width: 46ch; background: var(--sunk); border: 1px solid var(--rule-soft); color: var(--ink); font-size: 12px; font-weight: 400; letter-spacing: 0; text-transform: none; line-height: 1.45; }
+
 /* ---------- tonight's card ---------- */
 
 .card { border: 2px solid var(--rule); background: var(--bg); position: sticky; top: 88px; }
@@ -415,7 +483,7 @@ kbd { font: 700 11px/1 var(--font); border: 1px solid var(--sil); padding: 2px 4
 .checks li.y svg { color: var(--good); }
 .checks li.n svg { color: var(--bad); }
 .checks li.n { font-weight: 600; }
-.checks li small { display: block; font-weight: 500; color: var(--ink-2); }
+.checks li small { display: block; font-weight: 400; color: var(--ink-2); }
 
 .card-actions { display: flex; align-items: stretch; }
 .card-actions .lock { flex: 1; border: 0; background: #1b1d22; color: #fff; padding: 14px; font-weight: 800; font-size: 15px; letter-spacing: 0.04em; display: flex; gap: 8px; justify-content: center; align-items: center; min-height: 52px; }
@@ -530,7 +598,7 @@ kbd { font: 700 11px/1 var(--font); border: 1px solid var(--sil); padding: 2px 4
 .team ul { list-style: none; margin: 0; padding: 0; }
 .team button { width: 100%; border: 0; border-bottom: 1px solid var(--rule-soft); background: none; text-align: left; padding: 0 10px; min-height: 44px; font-weight: 600; display: flex; justify-content: space-between; align-items: center; }
 .team button:hover { background: var(--sunk); }
-.team button small { color: var(--mute); font-weight: 500; }
+.team button small { color: var(--mute); font-weight: 400; }
 
 .out-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; border-top: 2px solid var(--rule); padding-top: 12px; margin-bottom: 12px; }
 .out-head h2 { font-size: 22px; font-weight: 800; }
@@ -550,6 +618,10 @@ kbd { font: 700 11px/1 var(--font); border: 1px solid var(--sil); padding: 2px 4
 @media (max-width: 1180px) {
   .desk { grid-template-columns: minmax(0, 1fr); }
   .desk > .card { display: none; }
+  .tonight { grid-template-columns: minmax(0, 1fr); }
+  .tonight-card { position: static; }
+  .bets { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .bets > .bet:last-child:nth-child(odd) { grid-column: 1 / -1; }
   .board .ref { display: none; }
   .stats .stat:not(:last-child) { display: none; }
   .tabs a { padding: 0 12px; }
@@ -609,6 +681,33 @@ kbd { font: 700 11px/1 var(--font); border: 1px solid var(--sil); padding: 2px 4
   .board tr.proof td { display: block; }
 
   .card { position: static; }
+  .bets { grid-template-columns: minmax(0, 1fr); }
+  .bets > .bet:last-child:nth-child(odd) { grid-column: auto; }
+  .calm .results-figure { font-size: 44px; }
+  .slate .tag { display: none; } /* the title line and footer already say sample data */
+  .tonight:has(.lockbar) { padding-bottom: 72px; }
+  .lockbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: calc(58px + env(safe-area-inset-bottom));
+    z-index: 9;
+    background: var(--bg);
+    border-top: 2px solid var(--rule);
+    padding: 8px 16px;
+  }
+  .lockbar a { flex: 1; display: grid; text-decoration: none; min-height: 44px; align-content: center; }
+  .lockbar a b { font-weight: 800; }
+  .lockbar a small { font-size: 12px; color: var(--ink-2); }
+  .lockbar a small svg { width: 11px; height: 11px; vertical-align: -1px; }
+  .lockbar .btn { min-height: 44px; padding: 8px 22px; font-size: 15px; }
+  .lockbar .btn svg { width: 15px; height: 15px; }
+  .bet > footer .btn.primary { flex: 1 1 100%; min-height: 48px; }
+  .picks-head .btn { width: 100%; }
+  .calm h2, .picks-head h2 { font-size: 20px; }
   .lead { grid-template-columns: 1fr 1fr; }
   .lead > div { border-right: 0; padding-right: 0; margin-right: 0; }
   .lead .secondary { grid-column: 1 / -1; grid-template-columns: repeat(3, auto); border-top: 1px solid var(--rule-soft); padding-top: 12px; }

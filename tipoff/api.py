@@ -306,12 +306,12 @@ def _card(date):
     low = [l for l in legs if l["edge"] < min_edge]
     over = [l for l in legs if counts[l["name_key"]] > per_player]
     checks = [
-        {"ok": not low, "text": f"Every leg clears {min_edge:.0%} edge at Hard Rock",
-         "fail": f"Below {min_edge:.0%} edge at Hard Rock", "legs": [l["id"] for l in low]},
-        {"ok": not over, "text": f"No more than {per_player} legs per player",
+        {"ok": not low, "text": f"Every bet has {min_edge:.0%}+ value at Hard Rock",
+         "fail": f"Less than {min_edge:.0%} value at Hard Rock", "legs": [l["id"] for l in low]},
+        {"ok": not over, "text": f"No more than {per_player} bets on one player",
          "fail": f"Over the {per_player}-per-player cap", "legs": [l["id"] for l in over]},
-        {"ok": len(legs) <= per_night, "text": f"No more than {per_night} legs tonight",
-         "fail": f"More than {per_night} legs tonight", "legs": []},
+        {"ok": len(legs) <= per_night, "text": f"No more than {per_night} bets tonight",
+         "fail": f"More than {per_night} bets tonight", "legs": []},
         {"ok": risk <= cap + 1e-9, "text": f"Risk within the nightly cap (${cap:,.0f})",
          "fail": f"Risk over the ${cap:,.0f} nightly cap", "legs": []},
     ]

@@ -70,7 +70,7 @@ export function SuggestBlock(props: {
             <div>
               <h3>Suggested</h3>
               <p>
-                {legs.length} more {legs.length === 1 ? "leg" : "legs"} · {money(suggested!.risk)} · best edges that fit
+                {legs.length} more {legs.length === 1 ? "bet" : "bets"} · {money(suggested!.risk)} · the best value that fits
                 every rule
                 {skipped.length > 0 && ` · Add leaves out the ${skipped.length} Claude flagged skip`}
               </p>
@@ -91,7 +91,7 @@ export function SuggestBlock(props: {
                     {m.player} · {m.stat_label} {pick(m.side, m.point)}
                   </b>
                   <small>
-                    {m.matchup} {tipTime(m.commence_time)} · fair {odds(m.fair_american)}
+                    {m.matchup} {tipTime(m.commence_time)} · worth {odds(m.fair_american)}
                   </small>
                 </div>
                 <div className="price">
@@ -123,7 +123,7 @@ export function SuggestBlock(props: {
               </small>
             </>
           ) : (
-            <small>Add ANTHROPIC_API_KEY to .env and restart the desk to get Claude's news check on each leg.</small>
+            <small>Add ANTHROPIC_API_KEY to .env and restart the desk to get Claude's news check on each bet.</small>
           )}
         </div>
       )}

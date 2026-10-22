@@ -5,7 +5,7 @@ One item per round, highest value first. Each round: build, run tests, screensho
 ## Up next
 - [ ] Capture the live score chips and bet progress once tonight's games tip (CLE @ PHI 7:10p ET). Fix anything that looks wrong in a live state.
 - [x] Live progress on a locked real card (0c7376d)
-- [ ] League dot from data, not hardcoded `--nba`: game rows, quote-card headers and team headings should read the league id (in Meta) and use `var(--<league>)`.
+- [x] League dot from data (6d083e9)
 - [ ] Replace the text glyphs "✓ Hit" / "✗ Missed" in Live.tsx `Progress` with the drawn Check / Cross icons.
 - [ ] Separate "live game" from "below the close": live dot and in-progress score border use their own token (not the coral mood colour).
 - [ ] Clean Games System leftovers: unused `Pictogram`, the pictogram comment in icons.tsx, alias tokens `--rule`, `--rule-soft`, `--zone` and `--on-zone` (migrate usages), and UI icon caps to round so they match the mark.

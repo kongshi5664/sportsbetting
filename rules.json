@@ -2,7 +2,7 @@
   "settings": {
     "target_books": ["hardrockbet"],
     "model_weight": 0.0,
-    "bankroll": 2000,
+    "bankroll": 15000,
     "kelly_fraction": 0.25,
     "stake_cap_units": 2,
     "nightly_risk_cap": 0.08,

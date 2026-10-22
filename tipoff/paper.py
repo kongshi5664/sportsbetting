@@ -54,9 +54,9 @@ DEFAULT_STRATEGIES = [
     # Learning at volume: any positive value, no game or nightly caps, flat $10 so every bet counts the same.
     {"id": "volume", "name": "High volume", "overrides": {
         "min_edge.min": 0.0, "max_per_night.max": 100, "max_per_player.max": 2,
-        "suggest_max_per_game": 100, "nightly_risk_cap": 1.0, "flat_stake": 10}},
+        "suggest_max_per_game": 100, "nightly_risk_cap": 1.0, "flat_stake": 75}},
 ]
-START_BANKROLL = 2000
+START_BANKROLL = 15000
 
 
 def strategies(cfg):

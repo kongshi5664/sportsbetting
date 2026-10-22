@@ -56,7 +56,7 @@ export function LedgerView({ onError }: { onError: (e: unknown) => void }) {
               <div className="notice">
                 <Warn />
                 <p>
-                  Pretend money. An hour before every game the paper trader bets by these rules from its own $2,000, and
+                  Pretend money. An hour before every game the paper trader bets by these rules from its own ${(data.paper[0]?.start ?? 0).toLocaleString()}, and
                   records every other prop too. The next morning's box scores grade it all.
                 </p>
               </div>

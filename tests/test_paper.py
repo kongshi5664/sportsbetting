@@ -56,14 +56,14 @@ class PaperTest(unittest.TestCase):
         c = paper.strategy_cfg(cfg, vol, 2000)
         self.assertEqual(c["rules"][0]["params"]["min"], 0.0)
         self.assertEqual(c["rules"][1]["params"]["max"], 100)
-        self.assertEqual((c["settings"]["flat_stake"], c["settings"]["nightly_risk_cap"]), (10, 1.0))
+        self.assertEqual((c["settings"]["flat_stake"], c["settings"]["nightly_risk_cap"]), (75, 1.0))
 
     def test_bankroll_counts_only_that_strategy(self):
         add_paper(self.con, "current", "win", price=150, stake=20)   # +30
         add_paper(self.con, "current", "loss", stake=10)             # -10
         add_paper(self.con, "min3", "loss", stake=50)
-        self.assertEqual(paper.bankroll(self.con, "current"), 2020.0)
-        self.assertEqual(paper.bankroll(self.con, "min3"), 1950.0)
+        self.assertEqual(paper.bankroll(self.con, "current"), paper.START_BANKROLL + 20.0)
+        self.assertEqual(paper.bankroll(self.con, "min3"), paper.START_BANKROLL - 50.0)
 
     def test_paper_bets_never_touch_the_real_card(self):
         add_paper(self.con, "current", None, status="locked")
@@ -108,7 +108,7 @@ class PaperTest(unittest.TestCase):
         with mock.patch.dict(os.environ, {}, clear=True), mock.patch("tipoff.injuries.notify"):
             title, text = journal.recap(self.con, DAY)
         self.assertIn("+$30", title)
-        self.assertIn("$2,030", title)
+        self.assertIn(f"${paper.START_BANKROLL + 30:,}", title)
         self.assertIn("Too early", text)
 
 

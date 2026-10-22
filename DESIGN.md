@@ -1,5 +1,5 @@
 ---
-name: Tip-Off Desk
+name: HKX
 description: A clean trading-app desk for player props, where every bet is a quote and one mood accent tells you whether the desk is beating the close.
 colors:
   bg: "#f2f4f5"
@@ -187,7 +187,7 @@ components:
     height: "48px"
 ---
 
-# Design System: Tip-Off Desk
+# Design System: HKX
 
 ## Overview
 

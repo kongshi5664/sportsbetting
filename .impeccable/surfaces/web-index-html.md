@@ -5,7 +5,7 @@ primary_target: "web/index.html"
 related_targets: ["web/src"]
 ---
 
-# Tip-Off Desk live app
+# HKX live app
 
 Scope: the live React app (Tonight as the home screen with the card beside it, All markets table, Player out, Ledger with the Paper tab, Rulebook, sign-in). Visitor mode: Operate. Code-led.
 

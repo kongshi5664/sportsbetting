@@ -1,4 +1,4 @@
-# PRODUCT.md — Tip-Off Desk
+# PRODUCT.md — HKX
 
 <!-- impeccable:product-schema 1 -->
 
@@ -18,7 +18,7 @@ Claude is the rules clerk and analyst, not the oracle. Nothing reaches the card 
 
 ## Positioning
 
-The interface is the differentiator. Betting tools are either cluttered odds screens or hype-driven picks apps. Tip-Off Desk is meant to be beautiful and satisfying to use, a tool its two users want to open. The method underneath is the foundation: bet only when Hard Rock's price beats a de-vigged consensus, grade every bet on CLV, and earn rules through backtests. The satisfaction comes from clarity, speed and craft, never from casino stimulation. Using it well should feel good because it makes the disciplined choice the easy one.
+The interface is the differentiator. Betting tools are either cluttered odds screens or hype-driven picks apps. HKX is meant to be beautiful and satisfying to use, a tool its two users want to open. The method underneath is the foundation: bet only when Hard Rock's price beats a de-vigged consensus, grade every bet on CLV, and earn rules through backtests. The satisfaction comes from clarity, speed and craft, never from casino stimulation. Using it well should feel good because it makes the disciplined choice the easy one.
 
 ## Brand commitments
 
@@ -42,7 +42,7 @@ Two people: Kong and a friend. Both are comfortable with data and odds, and both
 
 - Runs on Kong's Windows PC. The data lives in SQLite at `data/tipoff.db`.
 - Odds come from paid historical and live odds feeds. Each request costs credits, so data refreshes are deliberate, not continuous.
-- Bets are placed by hand in the Hard Rock Bet app. Tip-Off Desk never places bets.
+- Bets are placed by hand in the Hard Rock Bet app. HKX never places bets.
 - Game nights run on the NBA schedule. Injury news can land minutes before tip, which is why the breaking-news job is built for speed.
 - **Open decision:** how phones and the friend reach the app (same Wi-Fi only, a private network like Tailscale, or hosted with a login). The breaking-news and postgame jobs depend on the answer.
 
@@ -52,7 +52,7 @@ Two people: Kong and a friend. Both are comfortable with data and odds, and both
 - Rules live in `rules.json` with statuses `confirmed`, `testing` and `retired`. Only confirmed rules affect the card, and a status changes only with the users' approval.
 - The backtest (`python -m tipoff.backtest`) writes `reports/backtest-*.md`, a JSON version, and `reports/ledger.json`.
 - **Multi-sport by design.** The NBA is the first league, used to test the system; other sports will follow. The interface's visual identity must be sport-agnostic. Sport-specific detail (team colors, markets, stat names) comes from data, never from the shell, palette or type.
-- **Open decision:** the name "Tip-Off" is basketball language; whether it stays as the sports expand is undecided.
+- **Name (decided 2026-10-22):** HKX, the Hasan–Kong Exchange, named for its two users. It replaced "Tip-Off Desk", which was basketball-only. The code package stays `tipoff`.
 - Terms: Edge Board, Tonight's Card, Rulebook, Ledger & CLV, Game Plan, fair price, edge, CLV, unit, bankroll.
 - Not yet built: logging real bets placed, live odds snapshots, an injury watcher, and the live front end.
 

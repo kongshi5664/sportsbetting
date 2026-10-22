@@ -88,9 +88,9 @@ export function Shell(props: {
     <div className="app">
       <header className="top">
         <div className="top-row">
-          <a className="brand" href="#/tonight" aria-label="Tip-Off Desk, Tonight">
+          <a className="brand" href="#/tonight" aria-label="HKX, the Hasan–Kong Exchange: Tonight">
             <Mark />
-            <b>Tip-Off Desk</b>
+            <b>HKX</b>
           </a>
           <nav className="leagues" aria-label="Leagues">
             {(meta?.leagues ?? []).map((l) => (
@@ -168,7 +168,7 @@ export function Shell(props: {
         <span>
           Gambling problem? Call <b>1-800-GAMBLER</b>
         </span>
-        <span>21+ · Florida · Tip-Off Desk never places bets</span>
+        <span>21+ · Florida · HKX never places bets</span>
         <span>Other books are price references only; Hard Rock is the one you bet</span>
         {onSignOut && (
           <button className="btn link" onClick={onSignOut}>

@@ -1,4 +1,4 @@
-# CLAUDE.md — Tip-Off Desk
+# CLAUDE.md — HKX
 
 NBA player-prop betting system for Kong and a friend, run locally. Read README.md for commands.
 

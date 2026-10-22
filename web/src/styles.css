@@ -1,4 +1,4 @@
-/* Tip-Off Desk: every bet is a quote. A clean trading-app desk for props: rounded raised panels,
+/* HKX: every bet is a quote. A clean trading-app desk for props: rounded raised panels,
    pill controls, Archivo throughout, and one mood accent that is green while the desk beats the
    closing line and coral when it doesn't. League colour arrives only from data, as a dot. */
 
@@ -1012,3 +1012,6 @@ kbd { font: 700 11px/1 var(--font); border: 1px solid var(--line-2); border-radi
 }
 .leg-live { flex-basis: 100%; }
 .leg-live .prog { font-size: 12px; }
+.brand b { font-size: 21px; letter-spacing: 0.01em; }
+.signin-head b { display: block; font-size: 24px; line-height: 1; letter-spacing: 0.01em; }
+.signin-sub { display: block; margin-top: 3px; font-size: 12px; color: var(--mute); }

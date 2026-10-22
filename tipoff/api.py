@@ -40,7 +40,7 @@ LEAGUES = [
 ]
 
 live.load_env()
-app = FastAPI(title="Tip-Off Desk")
+app = FastAPI(title="HKX")
 
 
 class DateBody(BaseModel):

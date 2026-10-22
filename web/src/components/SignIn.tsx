@@ -26,7 +26,10 @@ export function SignIn() {
       <form onSubmit={submit} aria-labelledby="signin-h">
         <div className="signin-head">
           <Mark />
-          <b id="signin-h">TIP-OFF DESK</b>
+          <span>
+            <b id="signin-h">HKX</b>
+            <small className="signin-sub">Hasan–Kong Exchange</small>
+          </span>
         </div>
         <label htmlFor="pw">Desk password</label>
         <input

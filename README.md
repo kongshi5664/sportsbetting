@@ -1,4 +1,4 @@
-# Tip-Off Desk
+# HKX
 
 A rules-based NBA player-prop system for two people, run locally. Claude is the rules clerk and analyst, not the oracle: every bet needs a priced edge against a fair line, and every rule has to survive a backtest before it's enforced.
 

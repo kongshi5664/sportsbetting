@@ -20,8 +20,10 @@ from .board import STAT_LABEL, price_slate, rule_params, slate_dates, suggest
 from .db import DEFAULT_DB, connect
 from .features import MARKET_STAT, FeatureStore
 from .pricing import consensus, ev, to_american
+from . import grading
 from . import injuries as injury_feed
 from . import notes as claude_notes
+from . import review as weekly
 from . import snapshot as live
 
 DB_PATH = Path(os.environ.get("TIPOFF_DB", DEFAULT_DB))
@@ -252,9 +254,9 @@ async def add_suggested(body: AddSuggested):
             continue
         con().execute(
             "INSERT INTO bets (slate_date, event_id, market, name_key, player, side, point, book, price, fair, edge,"
-            " stake, snapshot_ts, added_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            " stake, snapshot_ts, added_at, context) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
             (body.date, m["event_id"], m["market"], m["name_key"], m["player"], m["side"], m["point"], m["book"],
-             m["price"], m["fair"], m["edge"], m["stake"], snaps[m["event_id"]], now()))
+             m["price"], m["fair"], m["edge"], m["stake"], snaps[m["event_id"]], now(), json.dumps(m["context"])))
     con().commit()
     return _card(body.date)
 
@@ -294,7 +296,7 @@ async def make_notes(body: DateBody):
         notes = claude_notes.ask_claude(ctx, body.date)
     except claude_notes.NotesError as e:
         raise HTTPException(502, str(e))
-    claude_notes.save(con(), body.date, notes)
+    claude_notes.save(con(), body.date, notes, {m["id"]: m["price"] for m in legs})
     return {"date": body.date, "notes": claude_notes.load(con(), body.date), "checked": len(legs)}
 
 
@@ -358,9 +360,9 @@ async def add_leg(body: AddLeg):
     snap = next(g["snapshot_ts"] for g in games if g["event_id"] == m["event_id"])
     con().execute(
         "INSERT INTO bets (slate_date, event_id, market, name_key, player, side, point, book, price, fair, edge,"
-        " stake, snapshot_ts, added_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+        " stake, snapshot_ts, added_at, context) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
         (body.date, m["event_id"], m["market"], m["name_key"], m["player"], m["side"], m["point"], m["book"],
-         m["price"], m["fair"], m["edge"], m["stake"], snap, now()))
+         m["price"], m["fair"], m["edge"], m["stake"], snap, now(), json.dumps(m["context"])))
     con().commit()
     return _card(body.date)
 
@@ -421,35 +423,11 @@ async def mark_placed(bet_id: int, body: Placed):
 # ---------- grading and ledger ----------
 
 def grade():
-    """Grade locked bets whose game has a box score and a closing snapshot. Safe to repeat."""
-    fs, c = features(), cfg()
-    targets = set(c["settings"]["target_books"])
-    n = 0
-    for b in [dict(r) for r in con().execute("SELECT * FROM bets WHERE status='locked'")]:
-        close, _ = _load_snapshot(con(), b["event_id"], "close")
-        books = close.get((b["market"], b["name_key"], b["point"]))
-        s = c["settings"]
-        p_over = consensus({k: v for k, v in books.items() if k not in targets},
-                           sharp=tuple(s.get("sharp_books", ())), sharp_weight=s.get("sharp_weight", 0.0)) if books else None
-        has_box = con().execute("SELECT 1 FROM team_games t JOIN events e ON e.game_date=t.game_date"
-                                " AND t.team=e.home_team WHERE e.event_id=?", (b["event_id"],)).fetchone()
-        if p_over is None or not has_box:
-            continue
-        row = fs.game_row(b["name_key"], b["slate_date"])
-        stat = MARKET_STAT[b["market"]]
-        if row is None or row[stat] is None:
-            result, actual = "void", None  # didn't play: the book voids the bet
-        else:
-            actual = row[stat]
-            result = "push" if actual == b["point"] else (
-                "win" if (actual > b["point"]) == (b["side"] == "Over") else "loss")
-        p_close = p_over if b["side"] == "Over" else 1 - p_over
-        con().execute("UPDATE bets SET status='graded', result=?, actual=?, close_price=?, clv=? WHERE id=?",
-                      (result, actual, to_american(p_close), None if result == "void" else ev(p_close, b["price"]),
-                       b["id"]))
-        n += 1
-    con().commit()
-    return n
+    """Grade finished bets and Claude's judged legs (see tipoff/grading.py)."""
+    c = cfg()
+    claude_notes.ensure_table(con())
+    grading.grade_notes(con(), c)
+    return grading.grade_bets(con(), c)
 
 
 def _latest(pattern):
@@ -526,6 +504,71 @@ async def set_status(rule_id: str, body: Status):
     rule["status"] = body.status
     RULES_PATH.write_text(_dump_rules(c), encoding="utf-8")
     return rules()
+
+
+# ---------- weekly review ----------
+
+REVIEW_LOG = """
+CREATE TABLE IF NOT EXISTS review_log (
+    at         TEXT NOT NULL,
+    finding_id TEXT NOT NULL,
+    proposal   TEXT NOT NULL,
+    decision   TEXT NOT NULL      -- applied / dismissed
+);
+"""
+
+
+def _review():
+    grade()
+    rep = weekly.run(con(), cfg())
+    con().executescript(REVIEW_LOG)
+    recent = {r[0]: r[1] for r in con().execute(
+        "SELECT finding_id, decision FROM review_log WHERE at >= datetime('now', '-7 days') ORDER BY at")}
+    for f in rep["findings"]:
+        f["decided"] = recent.get(f["id"]) if f.get("proposal") else None
+    return rep
+
+
+@app.get("/api/review")
+async def review():
+    return _review()
+
+
+class Decision(BaseModel):
+    id: str
+
+
+@app.post("/api/review/apply")
+async def apply_proposal(body: Decision):
+    """The user applies one proposal from the Rulebook (after confirming it there)."""
+    f = next((f for f in weekly.run(con(), cfg())["findings"] if f["id"] == body.id and f.get("proposal")), None)
+    if f is None:
+        raise HTTPException(409, "That proposal no longer stands with the latest bets. Reload the review.")
+    p, c = f["proposal"], cfg()
+    if p["type"] == "rule_status":
+        rule = next(r for r in c["rules"] if r["id"] == p["rule"])
+        rule["status"] = p["value"]
+    elif p.get("rule"):
+        rule = next(r for r in c["rules"] if r["id"] == p["rule"])
+        rule.setdefault("params", {})[p["key"]] = p["value"]
+    else:
+        c["settings"][p["key"]] = p["value"]
+    RULES_PATH.write_text(_dump_rules(c), encoding="utf-8")
+    _log_decision(body.id, p, "applied")
+    return _review()
+
+
+@app.post("/api/review/dismiss")
+async def dismiss_proposal(body: Decision):
+    f = next((f for f in weekly.run(con(), cfg())["findings"] if f["id"] == body.id), None)
+    _log_decision(body.id, (f or {}).get("proposal") or {}, "dismissed")
+    return _review()
+
+
+def _log_decision(fid, proposal, decision):
+    con().executescript(REVIEW_LOG)
+    con().execute("INSERT INTO review_log VALUES (datetime('now'), ?, ?, ?)", (fid, json.dumps(proposal), decision))
+    con().commit()
 
 
 def _dump_rules(c):

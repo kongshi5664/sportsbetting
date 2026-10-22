@@ -82,7 +82,8 @@ CREATE TABLE IF NOT EXISTS bets (
     close_price INTEGER,
     clv         REAL,
     result      TEXT,                   -- win / loss / push / void
-    actual      REAL
+    actual      REAL,
+    context     TEXT                    -- JSON snapshot at add time, read by the weekly review
 );
 CREATE INDEX IF NOT EXISTS ix_bets_date ON bets(slate_date, status);
 """
@@ -94,6 +95,9 @@ def connect(path=DEFAULT_DB, **kwargs):
     con = sqlite3.connect(path, **kwargs)
     con.row_factory = sqlite3.Row
     con.executescript(SCHEMA)
+    cols = {r[1] for r in con.execute("PRAGMA table_info(bets)")}
+    if "context" not in cols:  # what was true when the bet was taken: features, prices, rules matched
+        con.execute("ALTER TABLE bets ADD COLUMN context TEXT")
     return con
 
 

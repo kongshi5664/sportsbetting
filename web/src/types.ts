@@ -174,6 +174,22 @@ export type Suggested = {
   risk: number;
 };
 
+export type Stat = { n: number; avg: number | null; se: number | null; beat: number | null };
+
+export type Finding = {
+  id: string;
+  area: "rule" | "setting" | "claude";
+  title: string;
+  verdict: string;
+  matched?: Stat;
+  rest?: Stat;
+  groups?: [string, Stat][];
+  proposal: { type: "rule_status" | "setting"; rule?: string; key?: string; value: string | number } | null;
+  decided: "applied" | "dismissed" | null;
+};
+
+export type Review = { generated: string; bets: Stat; first: string | null; last: string | null; min_n: number; findings: Finding[] };
+
 export type Injury = {
   name_key: string;
   player: string;

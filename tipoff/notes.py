@@ -68,9 +68,20 @@ CREATE TABLE IF NOT EXISTS notes (
     sources    TEXT NOT NULL,     -- JSON list of URLs
     model      TEXT NOT NULL,
     created_at TEXT NOT NULL,
+    price      INTEGER,           -- Hard Rock price when Claude judged it
+    clv        REAL,              -- graded later against the close, bet or not
+    graded     INTEGER NOT NULL DEFAULT 0,
     PRIMARY KEY (slate_date, market_id)
 );
 """
+
+
+def ensure_table(con):
+    con.executescript(NOTES_TABLE)
+    cols = {r[1] for r in con.execute("PRAGMA table_info(notes)")}
+    for col, decl in (("price", "INTEGER"), ("clv", "REAL"), ("graded", "INTEGER NOT NULL DEFAULT 0")):
+        if col not in cols:
+            con.execute(f"ALTER TABLE notes ADD COLUMN {col} {decl}")
 
 
 class NotesError(Exception):
@@ -134,17 +145,19 @@ def ask_claude(legs, date, league="NBA"):
     return {n["id"]: n for n in json.loads(text)["notes"] if n["id"] in ids and n["verdict"] in VERDICTS}
 
 
-def save(con, date, notes):
-    con.executescript(NOTES_TABLE)
+def save(con, date, notes, prices=None):
+    """prices: {market_id: Hard Rock price Claude saw}, so each call can be graded later."""
+    ensure_table(con)
     now = datetime.now(timezone.utc).isoformat(timespec="seconds")
-    con.executemany("INSERT OR REPLACE INTO notes VALUES (?,?,?,?,?,?,?)",
-                    [(date, mid, n["verdict"], n["note"], json.dumps(n["sources"]), MODEL, now)
-                     for mid, n in notes.items()])
+    con.executemany("INSERT OR REPLACE INTO notes (slate_date, market_id, verdict, note, sources, model, created_at,"
+                    " price, clv, graded) VALUES (?,?,?,?,?,?,?,?,NULL,0)",
+                    [(date, mid, n["verdict"], n["note"], json.dumps(n["sources"]), MODEL, now,
+                      (prices or {}).get(mid)) for mid, n in notes.items()])
     con.commit()
 
 
 def load(con, date):
-    con.executescript(NOTES_TABLE)
+    ensure_table(con)
     return {r["market_id"]: {"verdict": r["verdict"], "note": r["note"], "sources": json.loads(r["sources"]),
                              "created_at": r["created_at"]}
             for r in con.execute("SELECT * FROM notes WHERE slate_date=?", (date,))}
@@ -164,7 +177,7 @@ if __name__ == "__main__":
     api.DB_PATH = api.Path(a.db)
     legs = _candidates(a.date)
     notes = ask_claude([leg_context(api.con(), api.features(), m, a.date) for m in legs], a.date)
-    save(api.con(), a.date, notes)
+    save(api.con(), a.date, notes, {m["id"]: m["price"] for m in legs})
     for m in legs:
         n = notes.get(m["id"])
         print(f"{m['player']} {m['stat_label']} {m['side'][0]} {m['point']:g}: "

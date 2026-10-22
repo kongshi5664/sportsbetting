@@ -89,6 +89,18 @@ With `ANTHROPIC_API_KEY` in `.env`, **Check news with Claude** sends the card an
 
 **Injury alerts** (`python -m tipoff.injuries --watch`): ESPN's public injury feed, checked every few minutes; when a player with props tonight changes status, you get an alert saying what changed, whether they're on your card, and a link to Player out, and that game's odds are re-pulled (about 5 credits). For phone alerts, install the free **ntfy** app, subscribe to a private topic name, and set `NTFY_TOPIC` in `.env`; without it, alerts print in the watcher window.
 
+## 8. Learning from the bets: the weekly review
+
+Every bet stores what was true when you took it (player features, the prices, whether Pinnacle priced it, the testing rules it matched), and every leg Claude judged stores the price it saw. Once games are final, the desk grades both against the closing line.
+
+The **Rulebook** opens with *This week's review* (also `scripts\weekly-review.bat`, which writes `reports/review-DATE.md`):
+
+- **Rules**: does each testing rule's group of bets beat the close by more (or less) than the rest? Clear evidence becomes a proposal to promote, retire, or move a confirmed rule back to testing.
+- **Settings**: are 2–3% value bets losing to the close (propose a 3% minimum)? Do Pinnacle-priced bets beat the close more (lean on it more or less)?
+- **Claude's calls**: did the legs Claude flagged *skip* actually do worse against the close than the ones it cleared?
+
+It judges by closing-line value, never wins and losses; a proposal needs 30+ graded bets on each side of a comparison and a gap about two standard errors clear of the noise. Nothing changes until you press **Apply** (with a confirm), and every decision is logged.
+
 ## How it avoids fooling itself
 
 - Projections only use games before the bet date (no look-ahead).
@@ -112,7 +124,9 @@ tipoff/api.py             FastAPI server: slate, card, ledger, rulebook, player-
 tipoff/snapshot.py        live odds snapshots (refresh, close, watch)
 tipoff/notes.py           Claude's news check on each leg (clear / caution / skip)
 tipoff/injuries.py        injury watcher and phone alerts (ESPN feed, ntfy)
-scripts/                  morning-odds.bat, game-day.bat
+tipoff/grading.py         results and closing-line value for bets and Claude's calls
+tipoff/review.py          weekly review: rules, settings, Claude's calls; proposals you apply
+scripts/                  morning-odds.bat, game-day.bat, weekly-review.bat
 tests/                    python -m unittest discover tests
 web/                      the live desk (React + Vite); web/prototype.html is the old mock
 ```

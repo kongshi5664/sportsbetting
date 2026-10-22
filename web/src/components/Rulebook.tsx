@@ -3,6 +3,7 @@ import { api } from "../api";
 import { pct } from "../format";
 import { Warn } from "../icons";
 import type { Rule, Rules } from "../types";
+import { ReviewPanel } from "./Review";
 
 const MIN_BETS = 30;
 const GROUPS: { title: string; sub: string; test: (r: Rule) => boolean }[] = [
@@ -43,11 +44,12 @@ export function Rulebook({ onError, say }: { onError: (e: unknown) => void; say:
           </p>
         )}
       </div>
+      <ReviewPanel onError={onError} say={say} onChanged={() => api.rules().then(setData).catch(onError)} />
       {sample && (
         <div className="notice">
           <Warn />
           <p>
-            These verdicts come from sample data, a fake world with planted edges. They prove the harness works; don't
+            The backtest verdicts below come from sample data, a fake world with planted edges. They prove the harness works; don't
             promote rules on them.
           </p>
         </div>

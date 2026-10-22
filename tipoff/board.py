@@ -95,6 +95,7 @@ def price_slate(con, fs, cfg, date, card=()):
             m["on_card"] = m["id"] in card_ids
             m["flags"] = _flags(m, min_edge, per_player, per_night, avoid, testing, legs_by_player, len(card))
             m["blocked"] = any(fl["blocks"] for fl in m["flags"])
+            m["context"] = context(m)
             m.pop("f")
         games.append({
             "event_id": e["event_id"], "away": e["away_team"], "home": e["home_team"],
@@ -152,6 +153,18 @@ def suggest(games, card, cfg):
         players[m["name_key"]] = players.get(m["name_key"], 0) + 1
         events[m["event_id"]] = events.get(m["event_id"], 0) + 1
     return picks
+
+
+CONTEXT_FEATURES = ("games_played", "b2b", "season_pts", "season_reb", "min_trend", "opp_factor", "home", "rest_days")
+
+
+def context(m):
+    """What was true when this market was priced: enough for the weekly review to re-run any rule
+    on a bet later (rule predicates read f, stat, side and p_model) without look-ahead."""
+    return {"f": {k: m["f"].get(k) for k in CONTEXT_FEATURES}, "stat": m["stat"], "side": m["side"],
+            "p_model": m["proof"]["p_model"], "p_market": m["proof"]["p_market"],
+            "sharp": "pinnacle" in m["proof"]["books"], "open_price": m.get("open_price"),
+            "testing": [f["rule"] for f in m["flags"] if f.get("testing")]}
 
 
 def _bet_id(b):

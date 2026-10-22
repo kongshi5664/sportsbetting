@@ -1,11 +1,16 @@
 """Small FastAPI server for the live desk. Reads the SQLite DB and rules.json; never places bets.
 
     python -m tipoff.api --db data/sample.db      # http://127.0.0.1:8000 (serves web/dist if built)
+
+One server for every live league. Each request picks its league with an `X-League` header (or a
+`league` query parameter); without one it is the NBA, exactly as before. Each league has its own
+database and rules file (tipoff/leagues.py), so switching leagues on the desk never mixes bets.
 """
 import argparse
 import json
 import os
 import re
+from contextvars import ContextVar
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
@@ -14,11 +19,12 @@ from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from . import auth
-from .backtest import ROOT, _load_snapshot, metrics
+from . import auth, leagues
+from .backtest import ROOT, _load_snapshot, metrics, reports_dir
 from .board import STAT_LABEL, price_slate, rule_params, slate_dates, suggest
 from .db import DEFAULT_DB, connect
 from .features import MARKET_STAT, FeatureStore
+from .leagues import stat_name, stat_of
 from .pricing import consensus, ev, to_american
 from . import grading
 from . import injuries as injury_feed
@@ -34,13 +40,54 @@ REPORTS = ROOT / "reports"
 DIST = ROOT / "web" / "dist"
 LEAGUES = [
     {"id": "nba", "label": "NBA", "live": True},
-    {"id": "nfl", "label": "NFL", "live": False},
+    {"id": "nfl", "label": "NFL", "live": True},
     {"id": "mlb", "label": "MLB", "live": False},
     {"id": "nhl", "label": "NHL", "live": False},
 ]
 
 live.load_env()
 app = FastAPI(title="HKX")
+
+# The league this request is about (set per request by LeagueRouting, read by con() and cfg()).
+_league = ContextVar("league", default="nba")
+LIVE_LEAGUES = {l["id"] for l in LEAGUES if l["live"]}
+
+
+def league():
+    return leagues.get(_league.get())
+
+
+def _requested_league(scope):
+    from urllib.parse import parse_qs
+    for k, v in scope.get("headers", []):
+        if k == b"x-league" and v:
+            return v.decode("latin-1").strip().lower()
+    q = parse_qs(scope.get("query_string", b"").decode("latin-1")).get("league")
+    return q[0].strip().lower() if q else "nba"
+
+
+class LeagueRouting:
+    """Plain ASGI middleware: the request's league is set before any endpoint (async or threaded)
+    runs, and reset after. Unknown or not-yet-live leagues are refused rather than shown as NBA."""
+
+    def __init__(self, app):
+        self.app = app
+
+    async def __call__(self, scope, receive, send):
+        if scope["type"] != "http":
+            return await self.app(scope, receive, send)
+        lid = _requested_league(scope)
+        if lid not in LIVE_LEAGUES:
+            resp = JSONResponse({"detail": f"'{lid}' isn't a live league on this desk."}, status_code=400)
+            return await resp(scope, receive, send)
+        token = _league.set(lid)
+        try:
+            await self.app(scope, receive, send)
+        finally:
+            _league.reset(token)
+
+
+app.add_middleware(LeagueRouting)
 
 
 class DateBody(BaseModel):
@@ -102,22 +149,44 @@ async def logout():
 _state = {}
 
 
+def _key(name):
+    """Per-league cache keys; the NBA keeps the original ones ("con", "fs")."""
+    lg = league()
+    return name if lg.id == "nba" else f"{name}:{lg.id}"
+
+
+def db_path():
+    lg = league()
+    return DB_PATH if lg.id == "nba" else lg.db_path
+
+
+def rules_path():
+    lg = league()
+    return RULES_PATH if lg.id == "nba" else lg.rules_path
+
+
 def con():
     # Endpoints are async with no awaits inside, so requests run one at a time on the event
     # loop; the connection only needs to tolerate the loop thread differing from its creator.
-    if "con" not in _state:
-        _state["con"] = connect(DB_PATH, check_same_thread=False)
-    return _state["con"]
+    k = _key("con")
+    if k not in _state:
+        _state[k] = connect(db_path(), league=league(), check_same_thread=False)
+    return _state[k]
 
 
 def features():
-    if "fs" not in _state:
-        _state["fs"] = FeatureStore(con())
-    return _state["fs"]
+    k = _key("fs")
+    if k not in _state:
+        _state[k] = FeatureStore(con(), league())
+    return _state[k]
 
 
 def cfg():
-    return json.loads(RULES_PATH.read_text(encoding="utf-8"))
+    return json.loads(rules_path().read_text(encoding="utf-8"))
+
+
+def reports():
+    return REPORTS if league().id == "nba" else reports_dir(league())
 
 
 def now():
@@ -141,7 +210,7 @@ def is_sample():
 
 def bet_label(player, side, point, stat):
     """'Kel Reid · Threes O 1.5', the same words the board and ticket use."""
-    return f"{player} · {STAT_LABEL.get(stat, stat)} {side[0].upper()} {point:g}"
+    return f"{player} · {stat_name(stat)} {side[0].upper()} {point:g}"
 
 
 _BACKTEST_BET = re.compile(r"^(.*) ([ou])([\d.]+) (\w+)$")
@@ -160,12 +229,14 @@ async def meta():
     c = cfg()
     graded = [dict(r) for r in con().execute("SELECT clv FROM bets WHERE paper=0 AND status='graded' AND clv IS NOT NULL")]
     clvs = [g["clv"] for g in graded]
+    lg = league()
     return {
-        "db": DB_PATH.name, "sample": is_sample(), "dates": dates[:60],
+        "db": Path(db_path()).name, "sample": is_sample(), "dates": dates[:60],
         "default_date": dates[0] if dates else None, "settings": c["settings"], "leagues": LEAGUES,
+        "league": lg.id, "stat_labels": lg.stat_label,
         "live_clv": {"n": len(clvs), "avg": sum(clvs) / len(clvs) if clvs else None},
         "odds_key": bool(os.environ.get("ODDS_API_KEY")), "today": today,
-        "credits_remaining": _state.get("credits_remaining"), "markets": len(live.DEFAULT_MARKETS),
+        "credits_remaining": _state.get("credits_remaining"), "markets": len(lg.markets),
     }
 
 
@@ -178,7 +249,8 @@ async def refresh(body: DateBody):
         raise HTTPException(400, "Live odds can only be pulled for today's slate.")
     credits = live.Credits()
     try:
-        n = live.refresh(con(), datetime.fromisoformat(body.date).date(), os.environ["ODDS_API_KEY"], credits)
+        n = live.refresh(con(), datetime.fromisoformat(body.date).date(), os.environ["ODDS_API_KEY"], credits,
+                         league=league())
     except SystemExit as e:
         raise HTTPException(400, str(e))
     except Exception as e:
@@ -268,10 +340,11 @@ async def injuries(date: str):
     """Injury statuses for players with props on this slate. Read straight from the feed (cached a few
     minutes); the watcher (python -m tipoff.injuries) keeps its own records for alerts."""
     import time as _t
-    cached = _state.get("injury_feed")
+    k = _key("injury_feed")
+    cached = _state.get(k)
     if not cached or _t.time() - cached[0] > 180:
         try:
-            _state["injury_feed"] = cached = (_t.time(), injury_feed.fetch())
+            _state[k] = cached = (_t.time(), injury_feed.fetch(league()))
         except Exception:
             if not cached:
                 return {"date": date, "players": [], "error": "The injury feed didn't answer. Try again shortly."}
@@ -302,7 +375,7 @@ async def make_notes(body: DateBody):
         raise HTTPException(400, "Nothing to check yet: the card is empty and nothing is suggested.")
     ctx = [claude_notes.leg_context(con(), features(), m, body.date) for m in legs]
     try:
-        notes = claude_notes.ask_claude(ctx, body.date)
+        notes = claude_notes.ask_claude(ctx, body.date, league().label)
     except claude_notes.NotesError as e:
         raise HTTPException(502, str(e))
     claude_notes.save(con(), body.date, notes, {m["id"]: m["price"] for m in legs})
@@ -441,14 +514,14 @@ def grade():
 
 
 def _latest(pattern):
-    files = sorted(REPORTS.glob(pattern))
+    files = sorted(reports().glob(pattern))
     return files[-1] if files else None
 
 
 @app.get("/api/ledger")
 async def ledger(source: str = "live", strategy: str = "current"):
     if source == "backtest":
-        path = REPORTS / "ledger.json"
+        path = reports() / "ledger.json"
         if not path.exists():
             raise HTTPException(404, "No backtest ledger yet. Run python -m tipoff.backtest first.")
         rows = json.loads(path.read_text(encoding="utf-8"))
@@ -466,7 +539,7 @@ async def ledger(source: str = "live", strategy: str = "current"):
             d = (1 + r["price"] / 100) if r["price"] > 0 else (1 + 100 / -r["price"])
             pnl = r["stake"] * (d - 1) if r["result"] == "win" else (-r["stake"] if r["result"] == "loss" else 0)
             bets.append({"date": r["slate_date"], "game": r["event_id"], "id": r["id"],
-                         "bet": bet_label(r["player"], r["side"], r["point"], MARKET_STAT[r["market"]]),
+                         "bet": bet_label(r["player"], r["side"], r["point"], stat_of(r["market"])),
                          "price": r["price"], "close_price": r["close_price"], "clv": r["clv"], "edge": r["edge"],
                          "result": r["result"], "stake": r["stake"], "pnl": round(pnl, 2), "actual": r["actual"]})
     summary = metrics([b for b in bets if b["result"] != "void"]) if bets else metrics([])
@@ -489,7 +562,7 @@ async def ledger(source: str = "live", strategy: str = "current"):
                                (strategy,)):
             waiting.append({"id": r["id"], "date": r["slate_date"],
                             "game": f"{r['away_team']} @ {r['home_team']}" if r["away_team"] else r["event_id"],
-                            "bet": bet_label(r["player"], r["side"], r["point"], MARKET_STAT[r["market"]]),
+                            "bet": bet_label(r["player"], r["side"], r["point"], stat_of(r["market"])),
                             "side": r["side"], "point": r["point"], "price": r["price"], "edge": r["edge"],
                             "stake": r["stake"]})
         paper = []
@@ -519,8 +592,9 @@ def desk_status(date: str):
     from .paper import DECIDE_MINUTES
     st = job_status.read()
     now = datetime.now(timezone.utc)
-    seen = st.get("trader_at")
-    running = bool(seen) and st.get("trader_day") == date and         now - datetime.fromisoformat(seen) < timedelta(minutes=3)
+    lg = league()
+    seen = st.get(lg.status_key("trader_at"))
+    running = bool(seen) and st.get(lg.status_key("trader_day")) == date and         now - datetime.fromisoformat(seen) < timedelta(minutes=3)
     last_pull = con().execute("SELECT MAX(p.snapshot_ts) FROM prop_odds p JOIN events e USING (event_id)"
                               " WHERE e.game_date=?", (date,)).fetchone()[0]
     try:
@@ -547,8 +621,8 @@ def live_scores(date: str):
         "SELECT b.id, b.name_key, b.market, b.side, b.point, e.away_team AS away, e.home_team AS home"
         " FROM bets b JOIN events e USING (event_id) WHERE b.slate_date=? AND b.status='locked'", (date,))]
     for r in rows:
-        r["stat"] = MARKET_STAT[r["market"]]
-    return scores.track(date, rows)
+        r["stat"] = stat_of(r["market"])
+    return scores.track(date, rows, league())
 
 
 @app.get("/api/paper/history")
@@ -615,7 +689,7 @@ async def set_status(rule_id: str, body: Status):
     if rule["kind"] == "gate":
         raise HTTPException(409, "Gate rules are always on; change their numbers in rules.json.")
     rule["status"] = body.status
-    RULES_PATH.write_text(_dump_rules(c), encoding="utf-8")
+    rules_path().write_text(_dump_rules(c), encoding="utf-8")
     return rules()
 
 
@@ -673,7 +747,7 @@ async def apply_proposal(body: Decision):
         rule.setdefault("params", {})[p["key"]] = p["value"]
     else:
         c["settings"][p["key"]] = p["value"]
-    RULES_PATH.write_text(_dump_rules(c), encoding="utf-8")
+    rules_path().write_text(_dump_rules(c), encoding="utf-8")
     _log_decision(body.id, p, "applied")
     return _review()
 

@@ -29,6 +29,8 @@ const readTheme = (): Theme => {
 
 export function Shell(props: {
   meta: Meta | null;
+  league: string;
+  onLeague: (id: string) => void;
   date: string | null;
   onDate: (d: string) => void;
   tab: Tab;
@@ -38,7 +40,7 @@ export function Shell(props: {
   onSignOut?: () => void;
   children: ReactNode;
 }) {
-  const { meta, date, onDate, tab, cardCount, cardLocked, toast, onSignOut, children } = props;
+  const { meta, league: leagueId, onLeague, date, onDate, tab, cardCount, cardLocked, toast, onSignOut, children } = props;
   const [theme, setTheme] = useState<Theme>(readTheme);
 
   useEffect(() => {
@@ -46,11 +48,10 @@ export function Shell(props: {
   }, [theme]);
 
   // The mood accent: green while the desk beats the closing line (or has no record yet), coral below it.
-  // League colour comes from data: the live league's own token drives every league dot.
-  const liveLeague = meta?.leagues.find((l) => l.live)?.id;
+  // League colour comes from data: the selected league's own token drives every league dot.
   useEffect(() => {
-    if (liveLeague) document.documentElement.style.setProperty("--league", `var(--${liveLeague})`);
-  }, [liveLeague]);
+    document.documentElement.style.setProperty("--league", `var(--${leagueId})`);
+  }, [leagueId]);
 
   const clv = meta?.live_clv;
   useEffect(() => {
@@ -80,7 +81,7 @@ export function Shell(props: {
   }, []);
 
   const dates = meta?.dates ?? [];
-  const league = meta?.leagues.find((l) => l.live)?.label ?? "";
+  const league = meta?.leagues.find((l) => l.id === leagueId)?.label ?? "";
   const di = date ? dates.indexOf(date) : -1;
   const s = meta?.settings;
   const count = (id: Tab) =>
@@ -98,15 +99,20 @@ export function Shell(props: {
             <Mark />
             <b>HKX</b>
           </a>
-          <nav className="leagues" aria-label="Leagues">
+          <nav
+            className="leagues"
+            aria-label="Leagues"
+            data-single={(meta?.leagues ?? []).filter((l) => l.live).length < 2 || undefined}
+          >
             {(meta?.leagues ?? []).map((l) => (
               <button
                 key={l.id}
                 className="league"
                 style={{ ["--c" as string]: `var(--${l.id})` }}
-                aria-pressed={l.live}
+                aria-pressed={l.id === leagueId}
                 disabled={!l.live}
-                title={l.live ? l.label : `${l.label} is coming later`}
+                onClick={() => l.id !== leagueId && onLeague(l.id)}
+                title={l.live ? (l.id === leagueId ? `Showing ${l.label}` : `Switch to ${l.label}`) : `${l.label} is coming later`}
               >
                 <i aria-hidden="true" />
                 {l.label}

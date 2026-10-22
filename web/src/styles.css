@@ -861,7 +861,10 @@ kbd { font: 700 11px/1 var(--font); border: 1px solid var(--line-2); border-radi
 @media (max-width: 860px) {
   .top-row { padding: 0 16px; min-height: 56px; gap: 10px; padding-top: env(safe-area-inset-top); }
   .brand b { display: none; }
-  .leagues { display: none; }
+  /* With more than one live league the pills take their own row under the brand; otherwise they go. */
+  .top-row { flex-wrap: wrap; }
+  .leagues { order: 3; width: 100%; padding-bottom: 10px; }
+  .leagues[data-single] { display: none; }
   .tabs { display: none; }
   .top-right { gap: 8px; }
   .slate { height: 34px; }

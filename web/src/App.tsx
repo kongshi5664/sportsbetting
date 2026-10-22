@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { api, ApiError, SignInError } from "./api";
+import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
+import { api, ApiError, currentLeague, setLeague, SignInError } from "./api";
 import { SignIn } from "./components/SignIn";
 import { CardPanel } from "./components/CardPanel";
 import { EdgeBoard } from "./components/EdgeBoard";
@@ -22,6 +22,7 @@ export type Toast = { text: string; err?: boolean } | null;
 
 export default function App() {
   const [meta, setMeta] = useState<Meta | null>(null);
+  const [league, setLeagueState] = useState(currentLeague);
   const [date, setDate] = useState<string | null>(null);
   const [tab, setTab] = useState<Tab>(tabFromHash);
   const [games, setGames] = useState<Game[] | null>(null);
@@ -66,10 +67,18 @@ export default function App() {
           setNeedSignIn(true);
           return;
         }
-        return api.meta().then((m) => {
-          setMeta(m);
-          const asked = new URLSearchParams(location.search).get("date");
-          setDate(asked && m.dates.includes(asked) ? asked : m.default_date);
+        const load = () =>
+          api.meta().then((m) => {
+            setMeta(m);
+            const asked = new URLSearchParams(location.search).get("date");
+            setDate(asked && m.dates.includes(asked) ? asked : m.default_date);
+          });
+        // A league remembered on this device that the desk no longer runs falls back to the NBA.
+        return load().catch((e) => {
+          if (e instanceof SignInError || currentLeague() === "nba") throw e;
+          setLeague("nba");
+          setLeagueState("nba");
+          return load();
         });
       })
       .catch((e) =>
@@ -104,6 +113,30 @@ export default function App() {
     setGames(null);
     refresh(date);
   }, [date, refresh]);
+
+  // Switching league: everything on screen belongs to the old league, so clear it and load the
+  // new league's slates (its own database and rules on the server).
+  const switchLeague = useCallback(
+    async (id: string) => {
+      setLeague(id);
+      setLeagueState(id);
+      setDate(null);
+      setGames(null);
+      setCard(null);
+      setSuggested(null);
+      setNotes({});
+      setInjuries([]);
+      setRecap(null);
+      try {
+        const m = await api.meta();
+        setMeta(m);
+        setDate(m.default_date);
+      } catch (e) {
+        fail(e);
+      }
+    },
+    [fail],
+  );
 
   // Every card change can move a cap, so the board is re-priced after it.
   const act = useCallback(
@@ -218,6 +251,8 @@ export default function App() {
   return (
     <Shell
       meta={meta}
+      league={league}
+      onLeague={switchLeague}
       date={date}
       onDate={setDate}
       tab={tab}
@@ -226,6 +261,7 @@ export default function App() {
       toast={toast}
       onSignOut={passwordSet ? () => api.logout().finally(() => location.reload()) : undefined}
     >
+      <Fragment key={league}>
       {tab === "board" && (
         <div className="desk">
           <EdgeBoard
@@ -273,6 +309,7 @@ export default function App() {
       {tab === "out" && date && <PlayerOut date={date} games={games} onAdd={handlers.add} onError={fail} />}
       {tab === "ledger" && <LedgerView onError={fail} />}
       {tab === "rules" && <Rulebook onError={fail} say={say} />}
+      </Fragment>
     </Shell>
   );
 }

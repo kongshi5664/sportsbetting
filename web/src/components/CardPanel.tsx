@@ -6,16 +6,11 @@ import { Progress, useLive } from "./Live";
 import { NoteLine } from "./Suggest";
 import { Term } from "./Term";
 
-const STAT: Record<string, string> = {
-  player_points: "Points",
-  player_rebounds: "Rebounds",
-  player_assists: "Assists",
-  player_threes: "Threes",
-  player_blocks: "Blocks",
-};
+// Each leg names its own stat (from the server, for any league); market keys are the fallback.
+const statOf = (l: Leg) => l.stat_label ?? l.market;
 const matchup = (l: Leg) =>
   l.away_team ? `${l.away_team} @ ${l.home_team}${l.commence_time ? " " + tipTime(l.commence_time) : ""}` : "";
-const legLabel = (l: Leg) => `${l.player} ${STAT[l.market]?.toLowerCase()} ${pick(l.side, l.point)}`;
+const legLabel = (l: Leg) => `${l.player} ${statOf(l).toLowerCase()} ${pick(l.side, l.point)}`;
 const fairAmerican = (p: number) => (p >= 0.5 ? -Math.round((100 * p) / (1 - p)) : Math.round((100 * (1 - p)) / p));
 
 /** After the games: beating the market leads, the record follows. */
@@ -147,7 +142,7 @@ export function CardPanel(props: {
               )}
               <div className="what">
                 <b>
-                  {l.player} · {STAT[l.market]} {pick(l.side, l.point)}
+                  {l.player} · {statOf(l)} {pick(l.side, l.point)}
                 </b>
                 <small className="meta">
                   <span>{matchup(l)}</span>
@@ -222,7 +217,7 @@ export function CardPanel(props: {
               <li key={l.id} className={"leg" + (why ? " fail" : "")}>
                 <div className="what">
                   <b>
-                    {l.player} · {STAT[l.market]} {pick(l.side, l.point)}
+                    {l.player} · {statOf(l)} {pick(l.side, l.point)}
                   </b>
                   <small>
                     {matchup(l)} · worth {odds(fairAmerican(l.fair))}

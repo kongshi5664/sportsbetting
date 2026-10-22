@@ -196,7 +196,8 @@ def now():
 def open_bets(date, statuses=("card", "locked")):
     q = (f"SELECT b.*, e.away_team, e.home_team, e.commence_time FROM bets b LEFT JOIN events e USING (event_id)"
          f" WHERE b.paper=0 AND b.slate_date=? AND b.status IN ({','.join('?' * len(statuses))}) ORDER BY b.id")
-    return [dict(r) for r in con().execute(q, (date, *statuses))]
+    # Each leg carries its stat's label, so the desk names any league's markets from data.
+    return [dict(r) | {"stat_label": stat_name(stat_of(r["market"]))} for r in con().execute(q, (date, *statuses))]
 
 
 # ---------- meta and slate ----------

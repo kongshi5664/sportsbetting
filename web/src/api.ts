@@ -19,12 +19,34 @@ export class ApiError extends Error {}
 /** The desk has a password and this device isn't signed in (or its session expired). */
 export class SignInError extends ApiError {}
 
+/** The league the desk is showing. Every call carries it (X-League); the server picks that league's
+ * database and rules. Remembered on this device; NBA until another is chosen. */
+const LEAGUE_KEY = "hkx-league";
+let league = (() => {
+  try {
+    return localStorage.getItem(LEAGUE_KEY) || "nba";
+  } catch {
+    return "nba";
+  }
+})();
+
+export const currentLeague = () => league;
+
+export function setLeague(id: string) {
+  league = id;
+  try {
+    localStorage.setItem(LEAGUE_KEY, id);
+  } catch {
+    /* fine: it just won't be remembered */
+  }
+}
+
 async function call<T>(path: string, init?: RequestInit): Promise<T> {
   let res: Response;
   try {
     res = await fetch(path, {
       ...init,
-      headers: init?.body ? { "Content-Type": "application/json" } : undefined,
+      headers: { "X-League": league, ...(init?.body ? { "Content-Type": "application/json" } : {}) },
     });
   } catch {
     throw new ApiError("Can't reach the desk server. Start it with: python -m tipoff.api");

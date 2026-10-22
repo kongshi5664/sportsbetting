@@ -16,6 +16,8 @@ export type Meta = {
   default_date: string | null;
   settings: Settings;
   leagues: League[];
+  league: string;
+  stat_labels: Record<string, string>;
   live_clv: { n: number; avg: number | null };
   odds_key: boolean;
   today: string;
@@ -73,6 +75,7 @@ export type Leg = {
   slate_date: string;
   event_id: string;
   market: string;
+  stat_label?: string;
   name_key: string;
   player: string;
   side: "Over" | "Under";

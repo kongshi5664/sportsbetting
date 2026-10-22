@@ -92,6 +92,40 @@ export function LedgerView({ onError }: { onError: (e: unknown) => void }) {
                   </tbody>
                 </table>
               </div>
+              {data.waiting && data.waiting.length > 0 && (
+                <>
+                  <h2 className="journal-h">
+                    Waiting on results · {data.paper.find((p) => p.id === strategy)?.name ?? strategy}
+                  </h2>
+                  <div className="table-scroll">
+                    <table className="plain paper-board">
+                      <thead>
+                        <tr>
+                          <th className="l">Bet</th>
+                          <th className="l wide">Game</th>
+                          <th>Took</th>
+                          <th>Value</th>
+                          <th>Stake</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {data.waiting.map((b) => (
+                          <tr key={b.id}>
+                            <td className="l">
+                              {b.bet}
+                              <span className="dim"> · {dayLabel(b.date)}</span>
+                            </td>
+                            <td className="l wide">{b.game}</td>
+                            <td>{odds(b.price)}</td>
+                            <td className={b.edge >= 0 ? "pos" : "neg"}>{pct(b.edge)}</td>
+                            <td>${Math.round(b.stake)}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </>
+              )}
               <h2 className="journal-h">Journal</h2>
               <Journal entries={entries} />
             </>

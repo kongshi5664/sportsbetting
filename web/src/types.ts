@@ -120,6 +120,8 @@ export type Metrics = {
   avg_edge: number | null;
 };
 
+export type WaitingBet = { id: number; date: string; game: string; bet: string; price: number; edge: number; stake: number };
+
 export type LedgerBet = {
   date: string;
   game: string;
@@ -148,6 +150,7 @@ export type PaperStrategy = {
 export type Ledger = {
   source: "live" | "backtest" | "paper";
   paper: PaperStrategy[] | null;
+  waiting?: WaitingBet[];
   summary: Metrics;
   nights: { date: string; bets: number; pnl: number; stake: number; avg_clv: number | null }[];
   bets: LedgerBet[];

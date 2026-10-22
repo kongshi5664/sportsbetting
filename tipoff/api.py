@@ -478,9 +478,17 @@ async def ledger(source: str = "live", strategy: str = "current"):
             n["clvs"].append(b["clv"])
     by_night = [{"date": n["date"], "bets": n["bets"], "pnl": round(n["pnl"], 2), "stake": round(n["stake"], 2),
                  "avg_clv": sum(n["clvs"]) / len(n["clvs"]) if n["clvs"] else None} for n in nights.values()]
-    paper = None
+    paper, waiting = None, []
     if source == "paper":
         from .paper import START_BANKROLL, bankroll, strategies
+        # This strategy's bets still waiting on the game and the box score, so tonight's picks show before grading.
+        for r in con().execute("SELECT b.*, e.away_team, e.home_team FROM bets b LEFT JOIN events e USING (event_id)"
+                               " WHERE b.paper=1 AND b.strategy=? AND b.status='locked' ORDER BY b.slate_date, b.id",
+                               (strategy,)):
+            waiting.append({"id": r["id"], "date": r["slate_date"],
+                            "game": f"{r['away_team']} @ {r['home_team']}" if r["away_team"] else r["event_id"],
+                            "bet": bet_label(r["player"], r["side"], r["point"], MARKET_STAT[r["market"]]),
+                            "price": r["price"], "edge": r["edge"], "stake": r["stake"]})
         paper = []
         for st in strategies(cfg()):
             clvs = [r[0] for r in con().execute("SELECT clv FROM bets WHERE paper=1 AND strategy=? AND status='graded'"
@@ -498,7 +506,8 @@ async def ledger(source: str = "live", strategy: str = "current"):
         paper.append({"id": "_all", "name": "Every prop, no picking (control)", "graded": len(clvs),
                       "pending": pending, "avg_clv": sum(clvs) / len(clvs) if clvs else None,
                       "bankroll": None, "start": None})
-    return {"source": source, "paper": paper, "summary": summary, "nights": by_night, "bets": bets[-200:]}
+    return {"source": source, "paper": paper, "waiting": waiting, "summary": summary, "nights": by_night,
+            "bets": bets[-200:]}
 
 
 # ---------- rulebook ----------

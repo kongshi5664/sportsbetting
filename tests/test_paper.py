@@ -77,6 +77,19 @@ class PaperTest(unittest.TestCase):
             c.post("/api/card/unlock", json={"date": DAY})
         self.assertEqual(self.con.execute("SELECT status FROM bets WHERE paper=1").fetchone()[0], "locked")
 
+    def test_ledger_lists_bets_waiting_on_results(self):
+        add_paper(self.con, "volume", None, status="locked")
+        from fastapi.testclient import TestClient
+
+        from tipoff import api
+        with mock.patch.dict(api._state, {"con": self.con}), mock.patch("tipoff.api.grade"):
+            os.environ.pop("TIPOFF_PASSWORD", None)
+            c = TestClient(api.app, client=("127.0.0.1", 5000))
+            r = c.get("/api/ledger", params={"source": "paper", "strategy": "volume"}).json()
+            self.assertEqual([w["stake"] for w in r["waiting"]], [20])
+            r = c.get("/api/ledger", params={"source": "paper", "strategy": "current"}).json()
+            self.assertEqual(r["waiting"], [])
+
     def test_decision_entry_explains_and_passes(self):
         games = [{"away": "CLE", "home": "PHI"}]
         taken = market()

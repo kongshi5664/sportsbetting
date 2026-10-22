@@ -7,26 +7,24 @@ related_targets: ["web/src"]
 
 # Tip-Off Desk live app
 
-Scope: the live React app (Tonight as the home screen with the card beside it, All markets table, Player out, Ledger, Rulebook). Visitor mode: Operate. Code-led.
+Scope: the live React app (Tonight as the home screen with the card beside it, All markets table, Player out, Ledger with the Paper tab, Rulebook, sign-in). Visitor mode: Operate. Code-led.
 
-Audience and job: Kong and a friend. Pregame on laptop (build and lock tonight's card at Hard Rock prices), breaking news on phone (player out, find teammates' unmoved props in under 2 minutes), postgame (CLV for the night), weekly rule review.
+Audience and job: Kong and a friend. Pregame on laptop (build and lock tonight's card at Hard Rock prices), breaking news on phone (player out, find teammates' unmoved props in under 2 minutes), during games on phone (follow open bets live), postgame (CLV for the night), weekly rule review, watching the paper trader learn.
 
-Constraints: sport-agnostic shell (league detail only from data); Hard Rock is the only bettable book, edge and stake from its price only; rules hard, blocking rule always named, no overrides; CLV leads every results view; sample data labeled; 1-800-GAMBLER footer; WCAG AA contrast, 11px label floor, keyboard complete.
+Constraints: sport-agnostic shell (league detail only from data); Hard Rock is the only bettable book, edge and stake from its price only; rules hard, blocking rule always named, no overrides; CLV leads every results view; sample data labeled; 1-800-GAMBLER footer; WCAG AA contrast, 11px label floor, keyboard complete; calm, not casino (no confetti, streaks, countdown pressure).
 
-Critique carry-over (2026-10-16, 19/40): per-leg remove and failing legs named; HR-only pricing; phone stacked board, 44px targets, bottom tabs; Ledger leads with CLV and gates verdicts under 30 bets; lock settles into a ticket.
-
-Unresolved: how phones reach the app; whether the "Tip-Off" name survives multi-sport.
+User feedback (2026-10-22): the Games System look read as plain and spreadsheet-like, busy, unappealing colour and type, not like a betting app. User pinned "clean modern sportsbook" at Robinhood's level of polish (the standing exit, taken by the user; no roll).
 
 ## Direction contract
 
-THESIS: One identity system built to hold every sport, in the tradition of the Munich 1972 Games: a pictogram and a color zone per league on a strict grid. It refuses the category default of a dark odds terminal with green and red numbers.
+THESIS: Every bet is a quote. The desk reads like a clean trading app for props: the player is the ticker, Hard Rock's price is the quote you can take, the fair price is the market, value is the day's change. It refuses the cluttered odds screen and the ink-ruled spreadsheet that came before.
 
-OWN-WORLD: White ground, ink #1b1d22, flat committed league zones (NBA orange #f28c28; NFL green #3a9a4a, MLB blue #4fa3d8, NHL silver #c7c9c8 waiting). Hanken Grotesk only, tabular figures. 1.5 to 2px ink rules, square corners, no shadows, no gradients. Geometric pictograms on a 45/90 grid. State (pass teal, blocked red, warning ochre) never borrows a league color and always carries a mark or word. A designed dark theme for night use.
+OWN-WORLD: Dark-first for game nights (ground #0e1113, raised #171b1e, line #262c30), a designed light theme (white cards on #f3f5f6). Archivo variable only: UI at normal width, player names and headline figures at wdth 112, weight 800, tabular figures. Rounded 14px cards, pill buttons and quote chips, soft shadow only in light. One mood accent: green when beating the close (or no data), coral when below. League colour appears only as a small dot from data.
 
-STORY: Open the desk on Tonight and see the answer first: the bets worth taking, each read as a sentence (who, over or under what, how much to bet at which Hard Rock price, why it's value, Claude's news note). Add them, lock the card into a ticket, place each bet at Hard Rock, come back after tip to see whether you beat the market. The full priced table is one link away for digging.
+STORY: Open on Tonight: a status line that says the machinery is working, live score chips once games tip, then the bets worth taking as quote cards (player, over or under the line, the Hard Rock quote chip, worth, value meter, why). Add, lock into a ticket, place at Hard Rock, follow it live, judge it by the close.
 
-FIRST VIEWPORT: Left pictogram rail (league switcher, NBA live). League-orange header: brand, slate date, tabs Tonight / All markets / Player out / Ledger / Rulebook, bankroll, unit, Beat the market with n. Main: title line ("Tonight", or the date on past nights; games, first tip, odds age), news and odds tools, "N bets worth taking" with total and Add all, then bet cards under orange zone bands with the Hard Rock price in heavy figures, the fixed value ramp with a Strong/Solid/Small word, a plain reason and Claude's note. Docked right: Tonight's Card with bets, risk capacity bar against the nightly cap, named checks, Lock card primary, Clear set apart. Past graded nights lead with the beat-the-market figure in the Display size. Phones: one column of bet cards and a lock bar above the tab bar.
+FIRST VIEWPORT: Slim top bar: brand mark and wordmark, league pills (NBA live, others soon), tabs with a mood underline, slate date pill, bankroll and a Beat-the-market chip on the right. Main: large "Tonight" title with games and first tip, status line, score chips, the picks head with Add all, a two-column grid of quote cards. Docked right: Tonight's Card as a raised panel with the risk bar and checks, Lock card as the mood pill. Phones: compact bar, one column of cards, lock bar above a bottom tab bar.
 
-FORM: Games System, my top-ranked grounded candidate (rank 1 of 7) from re-roll round 1, chosen as the pick card. Signature move: the league pictogram rail whose active color runs from the header into the game bands. seed:5a8d844a71db3c8a
+FORM: Clean modern sportsbook at Robinhood polish, pinned by the user (standing exit, no roll). Signature move: the mood accent, every primary action, the active tab and the headline figures turn green or coral with whether the desk is beating the closing line. seed: none (unavailable)
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance

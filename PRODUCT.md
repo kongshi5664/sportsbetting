@@ -20,7 +20,10 @@ Claude is the rules clerk and analyst, not the oracle. Nothing reaches the card 
 
 The interface is the differentiator. Betting tools are either cluttered odds screens or hype-driven picks apps. Tip-Off Desk is meant to be beautiful and satisfying to use, a tool its two users want to open. The method underneath is the foundation: bet only when Hard Rock's price beats a de-vigged consensus, grade every bet on CLV, and earn rules through backtests. The satisfaction comes from clarity, speed and craft, never from casino stimulation. Using it well should feel good because it makes the disciplined choice the easy one.
 
-## Users
+## Brand commitments
+
+- **Look and feel (chosen by Kong, 2026-10-22):** a clean, modern sportsbook at the polish level of Robinhood. Card-based, bold player names, a bright accent, dark-first for game nights with a designed light theme. It replaced the earlier ink-ruled "Games System" look, which read as plain and spreadsheet-like.
+
 
 Two people: Kong and a friend. Both are comfortable with data and odds, and both use the app on laptops and phones.
 

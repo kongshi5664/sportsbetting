@@ -126,9 +126,8 @@ export const Pictogram = ({ league, ...p }: P & { league: string }) => {
 
 export const Mark = (p: P) => (
   <svg viewBox="0 0 32 32" aria-hidden {...p}>
-    <rect x="4" y="4" width="11" height="11" fill="#f28c28" />
-    <rect x="17" y="4" width="11" height="11" fill="#3a9a4a" />
-    <rect x="4" y="17" width="11" height="11" fill="#4fa3d8" />
-    <rect x="17" y="17" width="11" height="11" fill="#c7c9c8" />
+    <rect width="32" height="32" rx="9" fill="var(--mood)" />
+    <path d="M7.5 21.5 13 16l4 3.5 7.5-8" fill="none" stroke="var(--on-mood)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+    <circle cx="24.5" cy="11.5" r="2.2" fill="var(--on-mood)" />
   </svg>
 );

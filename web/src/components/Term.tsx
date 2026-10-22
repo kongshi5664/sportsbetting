@@ -3,7 +3,7 @@ import { useId, useState, type ReactNode } from "react";
 /** Plain-language definitions for the desk's few technical words. */
 export const GLOSSARY = {
   worth:
-    "What the bet is really worth: the other sportsbooks' prices with their built-in cut removed, nudged slightly by our own projection.",
+    "What the bet is really worth: the other sportsbooks' prices with their built-in cut removed.",
   value:
     "How much better Hard Rock pays than the bet is worth. +4% means about $4 profit per $100 bet, on average over many bets like it. Only bets at +2% or more are suggested.",
   clv: "Beat the market (closing-line value): whether the price moved your way after you bet. The best sign you're doing this right, long before wins and losses settle down.",

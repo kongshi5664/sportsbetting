@@ -43,9 +43,22 @@ function BetCard({ m, note, injury, onAdd }: { m: Pick; note?: Note; injury?: In
         <p className="bet-pick">
           <b>{side}</b> {m.point} {m.stat_label.toLowerCase()}
         </p>
-        <p className="bet-ask">
-          Bet <b>{money(m.stake)}</b> at Hard Rock <b className="bet-price">{odds(m.price)}</b>
-        </p>
+        <div className="bet-quote">
+          <div className="hr-quote">
+            <small>Hard Rock pays</small>
+            <b>{odds(m.price)}</b>
+          </div>
+          <div>
+            <small>
+              <Term k="worth">Worth</Term>
+            </small>
+            <b>{odds(m.fair_american)}</b>
+          </div>
+          <div>
+            <small>Bet</small>
+            <b>{money(m.stake)}</b>
+          </div>
+        </div>
         <p className="bet-strength">
           <Ramp edge={m.edge} />
           <span>

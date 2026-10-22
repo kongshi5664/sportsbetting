@@ -77,7 +77,7 @@ export function StrategyChart() {
           <line className="zero" x1={PAD.l} x2={W - PAD.r} y1={y(0)} y2={y(0)} />
           {dates.map((d, i) =>
             i === 0 || i === dates.length - 1 || dates.length <= 7 ? (
-              <text key={d} className="xlab" x={x(i)} y={H - 6} textAnchor="middle">
+              <text key={d} className="xlab" x={x(i)} y={H - 6} textAnchor={dates.length > 1 && i === dates.length - 1 ? "end" : dates.length > 1 && i === 0 ? "start" : "middle"}>
                 {dayLabel(d)}
               </text>
             ) : null,

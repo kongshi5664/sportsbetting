@@ -990,7 +990,7 @@ kbd { font: 700 11px/1 var(--font); border: 1px solid var(--line-2); border-radi
 .paper-board .clv-lead { font-size: 16px; font-weight: 800; font-stretch: 112%; }
 @media (max-width: 1500px) {
   .board td.rules { min-width: 0; }
-  .board td.rules .pill.test { display: none; }
+  .board td.rules .pill.test { font-size: 11px; padding: 1px 7px; }
 }
 @media (max-width: 860px) {
   .board td.edgec .ramp { display: none; }
@@ -1006,3 +1006,7 @@ kbd { font: 700 11px/1 var(--font); border: 1px solid var(--line-2); border-radi
 .board .ref { display: none; }
 @media (min-width: 861px) { .board td, .board th { padding-left: 6px; padding-right: 6px; } .add { width: 72px; } }
 @media (max-width: 1320px) and (min-width: 1181px) { :root { --dock: 300px; } .desk { gap: 18px; } }
+@media (max-width: 860px) {
+  .board td.who { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+  .board td.who small { margin-left: 4px; }
+}

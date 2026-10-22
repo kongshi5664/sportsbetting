@@ -45,6 +45,7 @@ export type Market = {
   edge: number;
   stake: number;
   refs: Record<string, number | undefined>;
+  open_price?: number | null;
   proof: {
     books: Record<string, BookQuote>;
     p_market: number;
@@ -171,6 +172,16 @@ export type Suggested = {
   date: string;
   legs: (Market & { matchup: string; commence_time: string })[];
   risk: number;
+};
+
+export type Injury = {
+  name_key: string;
+  player: string;
+  team: string;
+  status: string;
+  detail: string;
+  updated: string;
+  matchup: string;
 };
 
 export type News = {

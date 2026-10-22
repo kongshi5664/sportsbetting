@@ -47,6 +47,7 @@ def price_slate(con, fs, cfg, date, card=()):
         label = "live" if con.execute("SELECT 1 FROM prop_odds WHERE event_id=? AND label='live' LIMIT 1",
                                       (e["event_id"],)).fetchone() else "bet"
         lines, names = _load_snapshot(con, e["event_id"], label)
+        opening, _ = _load_snapshot(con, e["event_id"], "open")
         snap = con.execute("SELECT MAX(snapshot_ts) FROM prop_odds WHERE event_id=? AND label=?",
                            (e["event_id"], label)).fetchone()[0]
         best = {}
@@ -75,6 +76,8 @@ def price_slate(con, fs, cfg, date, card=()):
                     "stake": round(kelly_stake(fair, price, bankroll, settings["kelly_fraction"],
                                                settings["stake_cap_units"]), 2),
                     "refs": {b: s.get(side) for b, s in refs.items()},
+                    # Hard Rock's price on this side at the day's first pull, to show how far it has moved.
+                    "open_price": opening.get((market, key, point), {}).get(book, {}).get(side),
                     "proof": {
                         "books": {b: {"over": s.get("Over"), "under": s.get("Under"),
                                       "p_over": round(devig_pair(s["Over"], s["Under"])[0], 4)}

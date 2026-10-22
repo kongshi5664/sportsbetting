@@ -1,4 +1,4 @@
-import type { Card, Game, Ledger, Meta, News, Note, Rules, Suggested } from "./types";
+import type { Card, Game, Injury, Ledger, Meta, News, Note, Rules, Suggested } from "./types";
 
 export class ApiError extends Error {}
 /** The desk has a password and this device isn't signed in (or its session expired). */
@@ -43,6 +43,7 @@ export const api = {
   rules: () => call<Rules>("/api/rules"),
   setStatus: (id: string, status: string) => call<Rules>(`/api/rules/${id}/status`, post({ status })),
   news: (date: string, player: string) => call<News>("/api/news" + q({ date, player })),
+  injuries: (date: string) => call<{ players: Injury[]; error?: string }>("/api/injuries" + q({ date })),
   suggest: (date: string) => call<Suggested>("/api/suggest" + q({ date })),
   addSuggested: (date: string, exclude: string[]) => call<Card>("/api/card/suggested", post({ date, exclude })),
   notes: (date: string) =>

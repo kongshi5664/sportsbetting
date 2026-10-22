@@ -1,7 +1,7 @@
 import { useState, type ReactNode } from "react";
 import { dayLabel, money, odds, tipTime } from "../format";
 import { Check, ChevronRight, Lock, Plus, Warn } from "../icons";
-import type { Card, Game, Market, Note, Suggested } from "../types";
+import type { Card, Game, Injury, Market, Note, Suggested } from "../types";
 import { label, Proof, Ramp } from "./EdgeBoard";
 import { NoteLine } from "./Suggest";
 import { Term } from "./Term";
@@ -11,12 +11,23 @@ type Pick = Suggested["legs"][number];
 /** Strength in words, from the same fixed ramp the board draws. */
 export const strength = (edge: number) => (edge >= 0.06 ? "Strong" : edge >= 0.04 ? "Solid" : "Small");
 
+const implied = (p: number) => (p > 0 ? 100 / (p + 100) : -p / (-p + 100));
+
+/** How Hard Rock's price has moved since the day's first pull, in words; null when it hasn't. */
+export const movement = (m: Market) => {
+  if (m.open_price == null || m.open_price === m.price) return null;
+  const from = `Hard Rock moved from ${odds(m.open_price)} to ${odds(m.price)} since the first prices today`;
+  return implied(m.price) > implied(m.open_price)
+    ? `${from}: the market is leaning your way, so the value has shrunk a little.`
+    : `${from}: it pays more now. Worth checking the news before betting.`;
+};
+
 /** One sentence a non-bettor can follow: what Hard Rock pays, what it's worth, what that means. */
 export const reason = (m: Market) =>
   `Hard Rock pays ${odds(m.price)}; the rest of the market makes it worth about ${odds(m.fair_american)}. ` +
   `That's about $${Math.round(m.edge * 100)} profit per $100 bet, on average over many bets like it.`;
 
-function BetCard({ m, note, onAdd }: { m: Pick; note?: Note; onAdd: () => void }) {
+function BetCard({ m, note, injury, onAdd }: { m: Pick; note?: Note; injury?: Injury; onAdd: () => void }) {
   const [math, setMath] = useState(false);
   const side = m.side === "Over" ? "OVER" : "UNDER";
   return (
@@ -40,6 +51,12 @@ function BetCard({ m, note, onAdd }: { m: Pick; note?: Note; onAdd: () => void }
           </span>
         </p>
         <p className="bet-why">{reason(m)}</p>
+        {movement(m) && <p className="bet-moved">{movement(m)}</p>}
+        {injury && (
+          <p className="bet-injury">
+            <Warn /> <b>{injury.status}:</b> {injury.detail}
+          </p>
+        )}
         <NoteLine note={note} />
       </div>
       <footer>
@@ -71,6 +88,7 @@ export function Tonight(props: {
   costPerGame: number;
   claudeKey: boolean;
   checkedAt: string | null;
+  injuries: Injury[];
   cardPanel: ReactNode;
   onRefresh: () => Promise<void>;
   onAsk: () => Promise<unknown>;
@@ -97,6 +115,7 @@ export function Tonight(props: {
   const ageMin = snap ? Math.max(0, Math.round((Date.now() - Date.parse(snap)) / 60000)) : null;
   const upcoming = (games ?? []).filter((g) => Date.parse(g.commence_time) > Date.now()).length;
   const onCard = card?.legs.length ?? 0;
+  const hurt = new Map(props.injuries.map((i) => [i.name_key, i]));
   const graded = (card?.legs ?? []).filter((l) => l.status === "graded");
   const clvs = graded.filter((l) => l.clv != null).map((l) => l.clv!);
   const priced = clvs.length;
@@ -190,6 +209,28 @@ export function Tonight(props: {
 
         {state}
 
+        {props.injuries.length > 0 && !card?.locked && (
+          <section className="injury-report" aria-labelledby="inj-h">
+            <h2 id="inj-h">
+              <Warn /> Injury report for tonight's players
+            </h2>
+            <ul>
+              {props.injuries.map((i) => (
+                <li key={i.name_key}>
+                  <span className={"pill " + (i.status === "Out" ? "no" : "warn")}>{i.status}</span>
+                  <b>
+                    {i.player} <small>{i.team}</small>
+                  </b>
+                  <span>{i.detail}</span>
+                  {(i.status === "Out" || i.status === "Doubtful") && (
+                    <a href="#/out">Teammates' props</a>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
         {!card?.locked && picks.length > 0 && (
           <>
             <div className="picks-head">
@@ -209,7 +250,13 @@ export function Tonight(props: {
             </div>
             <div className="bets">
               {picks.map((m) => (
-                <BetCard key={m.id} m={m} note={notes[m.id]} onAdd={() => props.onAdd(m.id, label(m))} />
+                <BetCard
+                  key={m.id}
+                  m={m}
+                  note={notes[m.id]}
+                  injury={hurt.get(m.name_key)}
+                  onAdd={() => props.onAdd(m.id, label(m))}
+                />
               ))}
             </div>
           </>

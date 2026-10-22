@@ -164,7 +164,7 @@ export function Shell(props: {
           Gambling problem? Call <b>1-800-GAMBLER</b>
         </span>
         <span>21+ · Florida · Tip-Off Desk never places bets</span>
-        <span>DK, FD and MGM are price references, not bettable</span>
+        <span>Other books are price references only; Hard Rock is the one you bet</span>
         {onSignOut && (
           <button className="btn link" onClick={onSignOut}>
             Sign out

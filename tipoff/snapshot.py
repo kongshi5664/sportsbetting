@@ -130,11 +130,23 @@ def save_event(con, e):
 
 
 def snapshot(con, e, label, key, credits, markets=DEFAULT_MARKETS, books=DEFAULT_BOOKS):
-    """Pull one game's props now and replace its `label` snapshot. Returns rows saved."""
+    """Pull one game's props now and replace its `label` snapshot. Returns rows saved.
+
+    The day's first live pull is also kept as the game's 'open' snapshot (never overwritten), so
+    the desk can show how far Hard Rock has moved since the morning. Costs nothing extra."""
     params = {"apiKey": key, "markets": ",".join(markets), "bookmakers": ",".join(books), "oddsFormat": "american"}
     data = _get(f"{BASE}/events/{e['id']}/odds", params, credits)
     rows = odds_rows(e["id"], label, _iso(datetime.now(timezone.utc)), data)
     save_event(con, e)
+    if label == "live" and not con.execute("SELECT 1 FROM prop_odds WHERE event_id=? AND label='open' LIMIT 1",
+                                           (e["id"],)).fetchone():
+        earlier = con.execute("SELECT 1 FROM prop_odds WHERE event_id=? AND label='live' LIMIT 1", (e["id"],)).fetchone()
+        if earlier:  # an earlier live pull exists: that one is the opening line
+            con.execute("INSERT OR IGNORE INTO prop_odds SELECT event_id, 'open', snapshot_ts, book, market, player,"
+                        " name_key, side, point, price FROM prop_odds WHERE event_id=? AND label='live'", (e["id"],))
+        else:
+            con.executemany("INSERT OR REPLACE INTO prop_odds VALUES (?,?,?,?,?,?,?,?,?,?)",
+                            [(r[0], "open") + r[2:] for r in rows])
     con.execute("DELETE FROM prop_odds WHERE event_id=? AND label=?", (e["id"], label))
     con.executemany("INSERT OR REPLACE INTO prop_odds VALUES (?,?,?,?,?,?,?,?,?,?)", rows)
     con.commit()

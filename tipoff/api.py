@@ -20,6 +20,7 @@ from .board import STAT_LABEL, price_slate, rule_params, slate_dates, suggest
 from .db import DEFAULT_DB, connect
 from .features import MARKET_STAT, FeatureStore
 from .pricing import consensus, ev, to_american
+from . import injuries as injury_feed
 from . import notes as claude_notes
 from . import snapshot as live
 
@@ -256,6 +257,24 @@ async def add_suggested(body: AddSuggested):
              m["price"], m["fair"], m["edge"], m["stake"], snaps[m["event_id"]], now()))
     con().commit()
     return _card(body.date)
+
+
+@app.get("/api/injuries")
+async def injuries(date: str):
+    """Injury statuses for players with props on this slate. Read straight from the feed (cached a few
+    minutes); the watcher (python -m tipoff.injuries) keeps its own records for alerts."""
+    import time as _t
+    cached = _state.get("injury_feed")
+    if not cached or _t.time() - cached[0] > 180:
+        try:
+            _state["injury_feed"] = cached = (_t.time(), injury_feed.fetch())
+        except Exception:
+            if not cached:
+                return {"date": date, "players": [], "error": "The injury feed didn't answer. Try again shortly."}
+    tonight = injury_feed.slate(con(), date)
+    players = [i | {"matchup": tonight[i["name_key"]][2]} for i in cached[1]
+               if i["name_key"] in tonight and i["status"] != "Active"]
+    return {"date": date, "players": sorted(players, key=lambda i: i["updated"], reverse=True)}
 
 
 @app.get("/api/notes")

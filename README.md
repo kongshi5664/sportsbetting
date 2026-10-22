@@ -82,6 +82,13 @@ The card panel suggests tonight's legs: every market that clears the rules, bigg
 
 With `ANTHROPIC_API_KEY` in `.env`, **Check news with Claude** sends the card and suggested legs to Claude (Opus 5.5 with web search). It looks for injury, lineup and minutes news and marks each leg *clear*, *caution* or *skip* with a one-line reason and its sources. Notes are advice: they never add a bet or override a rule, and **Add all** leaves out any leg Claude flagged *skip* (you can still add it by hand). Each check costs roughly $0.10–0.30. From the terminal: `python -m tipoff.notes --date 2026-10-20`.
 
+## 7. Game days in one double-click
+
+- `scripts\morning-odds.bat`: one odds pull for today's games; it becomes the **opening line**, and the desk shows when Hard Rock has moved since. Schedule it around 10am in Windows Task Scheduler (Start in: this folder).
+- `scripts\game-day.bat`: starts the desk, the odds watcher (every 30 minutes, closing prices just before each tip) and the injury watcher (every 3 minutes), then opens Tonight. The watchers stop after the last tip.
+
+**Injury alerts** (`python -m tipoff.injuries --watch`): ESPN's public injury feed, checked every few minutes; when a player with props tonight changes status, you get an alert saying what changed, whether they're on your card, and a link to Player out, and that game's odds are re-pulled (about 5 credits). For phone alerts, install the free **ntfy** app, subscribe to a private topic name, and set `NTFY_TOPIC` in `.env`; without it, alerts print in the watcher window.
+
 ## How it avoids fooling itself
 
 - Projections only use games before the bet date (no look-ahead).
@@ -104,6 +111,8 @@ tipoff/board.py           prices one slate for the live desk (Hard Rock edge vs.
 tipoff/api.py             FastAPI server: slate, card, ledger, rulebook, player-out, refresh
 tipoff/snapshot.py        live odds snapshots (refresh, close, watch)
 tipoff/notes.py           Claude's news check on each leg (clear / caution / skip)
+tipoff/injuries.py        injury watcher and phone alerts (ESPN feed, ntfy)
+scripts/                  morning-odds.bat, game-day.bat
 tests/                    python -m unittest discover tests
 web/                      the live desk (React + Vite); web/prototype.html is the old mock
 ```

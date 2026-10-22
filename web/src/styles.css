@@ -413,6 +413,17 @@ kbd { font: 700 11px/1 var(--font); border: 1px solid var(--sil); padding: 2px 4
 .bet-strength .ramp { margin-left: 0; }
 .bet-strength .ramp i { width: 7px; height: 14px; }
 .bet-why { font-size: 13px; color: var(--ink-2); max-width: 60ch; }
+.bet-injury { font-size: 13px; display: flex; gap: 6px; align-items: baseline; color: var(--ink); }
+.bet-injury svg { width: 13px; height: 13px; color: var(--warn); flex: none; align-self: center; }
+.injury-report { border-top: 1px solid var(--rule-soft); padding: 12px 0 18px; }
+.injury-report h2 { font-size: 15px; font-weight: 800; display: flex; gap: 6px; align-items: center; margin-bottom: 6px; }
+.injury-report h2 svg { color: var(--warn); width: 15px; height: 15px; }
+.injury-report ul { list-style: none; margin: 0; padding: 0; }
+.injury-report li { display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; padding: 6px 0; font-size: 13px; border-bottom: 1px solid var(--rule-soft); }
+.injury-report li span:not(.pill) { color: var(--ink-2); flex: 1 1 280px; }
+.injury-report li small { color: var(--mute); font-weight: 600; }
+.injury-report a { font-weight: 700; }
+.bet-moved { font-size: 13px; color: var(--ink); border-left: 0; padding: 6px 8px; background: var(--sunk); max-width: 60ch; }
 .bet > footer { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 0 16px 14px; flex-wrap: wrap; }
 .bet > footer .btn.primary { min-height: 40px; }
 .bet-math { border-top: 1px solid var(--rule-soft); background: var(--sunk); padding: 4px 16px 14px; }

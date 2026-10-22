@@ -9,7 +9,7 @@ import { Rulebook } from "./components/Rulebook";
 import { Shell, type Tab } from "./components/Shell";
 import { SuggestBlock } from "./components/Suggest";
 import { Tonight } from "./components/Tonight";
-import type { Card, Game, Meta, Note, Suggested } from "./types";
+import type { Card, Game, Injury, Meta, Note, Suggested } from "./types";
 
 const TABS: Tab[] = ["tonight", "board", "out", "ledger", "rules"];
 const tabFromHash = (): Tab => {
@@ -29,6 +29,7 @@ export default function App() {
   const [suggested, setSuggested] = useState<Suggested | null>(null);
   const [notes, setNotes] = useState<Record<string, Note>>({});
   const [claudeKey, setClaudeKey] = useState(false);
+  const [injuries, setInjuries] = useState<Injury[]>([]);
   const [toast, setToast] = useState<Toast>(null);
   const [fatal, setFatal] = useState<string | null>(null);
   const [needSignIn, setNeedSignIn] = useState(false);
@@ -84,6 +85,8 @@ export default function App() {
         setSuggested(sg);
         setNotes(n.notes);
         setClaudeKey(n.claude_key);
+        // Injury news is a nice-to-have: a slow or failed feed never blocks the desk.
+        api.injuries(d).then((r) => setInjuries(r.players)).catch(() => setInjuries([]));
       } catch (e) {
         fail(e);
       }
@@ -250,6 +253,7 @@ export default function App() {
           costPerGame={meta?.markets ?? 5}
           claudeKey={claudeKey}
           checkedAt={checkedAt}
+          injuries={injuries}
           cardPanel={cardPanel("page", false)}
           onRefresh={handlers.refreshOdds}
           onAsk={askClaude}

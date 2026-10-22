@@ -84,7 +84,7 @@ With `ANTHROPIC_API_KEY` in `.env`, **Check news with Claude** sends the card an
 
 ## 7. Game days in one double-click
 
-- `scripts\morning-odds.bat`: one odds pull for today's games; it becomes the **opening line**, and the desk shows when Hard Rock has moved since. Schedule it around 10am in Windows Task Scheduler (Start in: this folder).
+- `scripts\morning-odds.bat`: loads last night's box scores (free; grading and projections need them), then one odds pull for today's games; it becomes the **opening line**, and the desk shows when Hard Rock has moved since. Schedule it around 10am in Windows Task Scheduler (Start in: this folder).
 - `scripts\game-day.bat`: starts the desk, the odds watcher (every 30 minutes, closing prices just before each tip) and the injury watcher (every 3 minutes), then opens Tonight. The watchers stop after the last tip.
 
 **Injury alerts** (`python -m tipoff.injuries --watch`): ESPN's public injury feed, checked every few minutes; when a player with props tonight changes status, you get an alert saying what changed, whether they're on your card, and a link to Player out, and that game's odds are re-pulled (about 5 credits). For phone alerts, install the free **ntfy** app, subscribe to a private topic name, and set `NTFY_TOPIC` in `.env`; without it, alerts print in the watcher window.

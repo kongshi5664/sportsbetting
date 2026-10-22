@@ -99,6 +99,7 @@ def build_candidates(con, fs, settings):
                     "market": market, "stat": stat, "side": side, "point": point, "price": price, "book": book,
                     "p_market": p_mkt, "p_model": p_model, "fair": fair, "edge": ev(fair, price),
                     "clv": None if p_close is None else ev(p_close, price),
+                    "n_refs": sum(1 for s in others.values() if "Over" in s and "Under" in s),
                     "close_price": None if p_close is None else to_american(p_close),
                     "actual": actual, "result": result, "f": f,
                 }
@@ -118,7 +119,9 @@ def apply_card_rules(cands, rules):
     per_night = by_id.get("max_per_night", {}).get("params", {}).get("max", 12)
     confirmed_avoid = [r for r in rules if r["status"] == "confirmed" and r["kind"] == "avoid"]
 
-    pool = [c for c in cands if c["edge"] >= min_edge and not any(_rule_matches(r, c) for r in confirmed_avoid)]
+    min_refs = by_id.get("min_ref_books", {}).get("params", {}).get("min", 1)
+    pool = [c for c in cands if c["edge"] >= min_edge and c.get("n_refs", min_refs) >= min_refs
+            and not any(_rule_matches(r, c) for r in confirmed_avoid)]
     nights = defaultdict(list)
     for c in pool:
         nights[c["date"]].append(c)

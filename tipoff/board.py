@@ -31,6 +31,7 @@ def price_slate(con, fs, cfg, date, card=()):
     sharp = dict(sharp=tuple(settings.get("sharp_books", ())), sharp_weight=settings.get("sharp_weight", 0.0))
     bankroll = settings["bankroll"]
     min_edge = rule_params(rules, "min_edge", "min", 0.02)
+    min_refs = rule_params(rules, "min_ref_books", "min", 1)
     per_player = rule_params(rules, "max_per_player", "max", 2)
     per_night = rule_params(rules, "max_per_night", "max", 12)
     avoid = [r for r in rules if r["status"] == "confirmed" and r["kind"] == "avoid"]
@@ -93,7 +94,7 @@ def price_slate(con, fs, cfg, date, card=()):
         markets = sorted(best.values(), key=lambda m: -m["edge"])
         for m in markets:
             m["on_card"] = m["id"] in card_ids
-            m["flags"] = _flags(m, min_edge, per_player, per_night, avoid, testing, legs_by_player, len(card))
+            m["flags"] = _flags(m, min_edge, min_refs, per_player, per_night, avoid, testing, legs_by_player, len(card))
             m["blocked"] = any(fl["blocks"] for fl in m["flags"])
             m["context"] = context(m)
             m.pop("f")
@@ -104,11 +105,15 @@ def price_slate(con, fs, cfg, date, card=()):
     return games
 
 
-def _flags(m, min_edge, per_player, per_night, avoid, testing, legs_by_player, n_card):
+def _flags(m, min_edge, min_refs, per_player, per_night, avoid, testing, legs_by_player, n_card):
     b = {"f": m["f"], "stat": m["stat"], "side": m["side"], "p_model": m["proof"]["p_model"]}
     flags = []
     if m["edge"] < min_edge:
-        flags.append({"rule": "min_edge", "text": f"HR edge below {min_edge:.0%}", "blocks": True})
+        flags.append({"rule": "min_edge", "text": f"Less than {min_edge:.0%} value at Hard Rock", "blocks": True})
+    n_refs = len(m["proof"]["books"])
+    if n_refs < min_refs:
+        flags.append({"rule": "min_ref_books", "blocks": True,
+                      "text": f"Only {n_refs} other book prices this" if n_refs else "No other book prices this"})
     for r in avoid:
         if _rule_matches(r, b):
             flags.append({"rule": r["id"], "text": r["name"], "blocks": True})

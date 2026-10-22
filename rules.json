@@ -1,7 +1,7 @@
 {
   "settings": {
     "target_books": ["hardrockbet"],
-    "model_weight": 0.15,
+    "model_weight": 0.0,
     "bankroll": 2000,
     "kelly_fraction": 0.25,
     "stake_cap_units": 2,
@@ -15,6 +15,9 @@
     {"id": "min_edge", "name": "Minimum edge vs. fair price", "status": "confirmed",
      "kind": "gate", "params": {"min": 0.02},
      "note": "Only bet when the blended fair price beats the offered price by this much."},
+    {"id": "min_ref_books", "name": "At least 2 other books price the line", "status": "confirmed",
+     "kind": "gate", "params": {"min": 2},
+     "note": "One soft book is not a market. Fair prices need at least two reference books (Pinnacle counts)."},
     {"id": "max_per_player", "name": "Max bets per player per night", "status": "confirmed",
      "kind": "gate", "params": {"max": 2}},
     {"id": "max_per_night", "name": "Max bets per night (best edges first)", "status": "confirmed",

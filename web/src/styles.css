@@ -1010,3 +1010,5 @@ kbd { font: 700 11px/1 var(--font); border: 1px solid var(--line-2); border-radi
   .board td.who { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
   .board td.who small { margin-left: 4px; }
 }
+.leg-live { flex-basis: 100%; }
+.leg-live .prog { font-size: 12px; }

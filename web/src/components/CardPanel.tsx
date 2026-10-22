@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import { money, odds, pct, pick, tipTime } from "../format";
 import { Check, Cross, Lock } from "../icons";
 import type { Card, Leg, Note } from "../types";
+import { Progress, useLive } from "./Live";
 import { NoteLine } from "./Suggest";
 import { Term } from "./Term";
 
@@ -75,6 +76,8 @@ export function CardPanel(props: {
   const n = card.legs.length;
   const graded = card.legs.filter((l) => l.status === "graded");
   const placed = card.legs.filter((l) => l.placed).length;
+  // Once locked, follow each open leg live from the box score until it is graded.
+  const live = useLive(card.locked && graded.length < n ? card.date : null);
 
   const head = (
     <div className="card-head">
@@ -158,6 +161,11 @@ export function CardPanel(props: {
                     <>
                       <span>worth {odds(fairAmerican(l.fair))}</span>
                       <span>value {pct(l.edge)}</span>
+                      {live?.bets[String(l.id)] && live.bets[String(l.id)].state !== "pre" && (
+                        <span className="leg-live">
+                          <Progress p={live.bets[String(l.id)]} point={l.point} side={l.side} />
+                        </span>
+                      )}
                     </>
                   )}
                 </small>

@@ -48,6 +48,16 @@ class PaperTest(unittest.TestCase):
         self.assertEqual(c["settings"]["model_weight"], 0.15)
         self.assertEqual(CFG["rules"][0]["params"]["min"], 0.02, "the real rules are never modified")
 
+    def test_volume_strategy_overrides(self):
+        cfg = {"settings": {"bankroll": 2000, "nightly_risk_cap": 0.08},
+               "rules": [{"id": "min_edge", "kind": "gate", "status": "confirmed", "params": {"min": 0.02}},
+                         {"id": "max_per_night", "kind": "gate", "status": "confirmed", "params": {"max": 12}}]}
+        vol = next(st for st in paper.DEFAULT_STRATEGIES if st["id"] == "volume")
+        c = paper.strategy_cfg(cfg, vol, 2000)
+        self.assertEqual(c["rules"][0]["params"]["min"], 0.0)
+        self.assertEqual(c["rules"][1]["params"]["max"], 100)
+        self.assertEqual((c["settings"]["flat_stake"], c["settings"]["nightly_risk_cap"]), (10, 1.0))
+
     def test_bankroll_counts_only_that_strategy(self):
         add_paper(self.con, "current", "win", price=150, stake=20)   # +30
         add_paper(self.con, "current", "loss", stake=10)             # -10

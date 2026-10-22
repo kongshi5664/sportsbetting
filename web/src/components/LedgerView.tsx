@@ -71,12 +71,18 @@ export function LedgerView({ onError }: { onError: (e: unknown) => void }) {
                     {data.paper.map((p) => (
                       <tr key={p.id} aria-selected={p.id === strategy}>
                         <td className="l">
-                          <button className="btn link" onClick={() => setStrategy(p.id)} aria-pressed={p.id === strategy}>
-                            {p.name}
-                          </button>
+                          {p.bankroll === null ? (
+                            <span className="dim">{p.name}</span>
+                          ) : (
+                            <button className="btn link" onClick={() => setStrategy(p.id)} aria-pressed={p.id === strategy}>
+                              {p.name}
+                            </button>
+                          )}
                         </td>
                         <td>
-                          ${Math.round(p.bankroll).toLocaleString()} ({signedMoney(p.bankroll - p.start)})
+                          {p.bankroll === null || p.start === null
+                            ? "—"
+                            : `$${Math.round(p.bankroll).toLocaleString()} (${signedMoney(p.bankroll - p.start)})`}
                         </td>
                         <td>{p.graded}</td>
                         <td>{p.pending}</td>

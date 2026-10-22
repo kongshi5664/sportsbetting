@@ -141,8 +141,8 @@ export type PaperStrategy = {
   graded: number;
   pending: number;
   avg_clv: number | null;
-  bankroll: number;
-  start: number;
+  bankroll: number | null; // null for the "every prop" control row
+  start: number | null;
 };
 
 export type Ledger = {

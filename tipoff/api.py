@@ -490,6 +490,14 @@ async def ledger(source: str = "live", strategy: str = "current"):
             paper.append({"id": st["id"], "name": st["name"], "graded": len(clvs), "pending": pending,
                           "avg_clv": sum(clvs) / len(clvs) if clvs else None,
                           "bankroll": bankroll(con(), st["id"]), "start": START_BANKROLL})
+        try:  # the control group: every prop recorded at decision time, picked or not
+            clvs = [r[0] for r in con().execute("SELECT clv FROM marks WHERE graded=1 AND clv IS NOT NULL")]
+            pending = con().execute("SELECT COUNT(*) FROM marks WHERE graded=0").fetchone()[0]
+        except Exception:
+            clvs, pending = [], 0
+        paper.append({"id": "_all", "name": "Every prop, no picking (control)", "graded": len(clvs),
+                      "pending": pending, "avg_clv": sum(clvs) / len(clvs) if clvs else None,
+                      "bankroll": None, "start": None})
     return {"source": source, "paper": paper, "summary": summary, "nights": by_night, "bets": bets[-200:]}
 
 

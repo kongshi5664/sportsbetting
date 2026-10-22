@@ -51,6 +51,10 @@ DEFAULT_STRATEGIES = [
     {"id": "current", "name": "Today's rules", "overrides": {}},
     {"id": "min3", "name": "3% minimum value", "overrides": {"min_edge": 0.03}},
     {"id": "model15", "name": "Projection back at 15%", "overrides": {"model_weight": 0.15}},
+    # Learning at volume: any positive value, no game or nightly caps, flat $10 so every bet counts the same.
+    {"id": "volume", "name": "High volume", "overrides": {
+        "min_edge.min": 0.0, "max_per_night.max": 100, "max_per_player.max": 2,
+        "suggest_max_per_game": 100, "nightly_risk_cap": 1.0, "flat_stake": 10}},
 ]
 START_BANKROLL = 2000
 
@@ -64,9 +68,10 @@ def strategy_cfg(cfg, strat, bankroll):
     c = copy.deepcopy(cfg)
     c["settings"]["bankroll"] = bankroll
     for k, v in strat["overrides"].items():
-        rule = next((r for r in c["rules"] if r["id"] == k), None)
+        rule_id, _, param = k.partition(".")  # "rule.param" sets a rule's parameter; a bare rule id sets "min"
+        rule = next((r for r in c["rules"] if r["id"] == rule_id), None)
         if rule is not None:
-            rule.setdefault("params", {})["min"] = v
+            rule.setdefault("params", {})[param or "min"] = v
         else:
             c["settings"][k] = v
     return c

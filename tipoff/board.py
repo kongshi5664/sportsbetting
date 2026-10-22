@@ -74,8 +74,9 @@ def price_slate(con, fs, cfg, date, card=(), both_sides=False):
                     "player": names.get(key, key), "name_key": key, "team": f["team"],
                     "side": side, "point": point, "book": book, "price": price,
                     "fair": fair, "fair_american": to_american(fair), "edge": ev(fair, price),
-                    "stake": round(kelly_stake(fair, price, bankroll, settings["kelly_fraction"],
-                                               settings["stake_cap_units"]), 2),
+                    # A flat stake (the paper trader's volume strategy) or quarter Kelly, capped in units.
+                    "stake": settings.get("flat_stake") or round(kelly_stake(
+                        fair, price, bankroll, settings["kelly_fraction"], settings["stake_cap_units"]), 2),
                     "refs": {b: s.get(side) for b, s in refs.items()},
                     # Hard Rock's price on this side at the day's first pull, to show how far it has moved.
                     "open_price": opening.get((market, key, point), {}).get(book, {}).get(side),

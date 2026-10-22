@@ -25,6 +25,6 @@ STORY: Open on Tonight: a status line that says the machinery is working, live s
 
 FIRST VIEWPORT: Slim top bar: brand mark and wordmark, league pills (NBA live, others soon), tabs with a mood underline, slate date pill, bankroll and a Beat-the-market chip on the right. Main: large "Tonight" title with games and first tip, status line, score chips, the picks head with Add all, a two-column grid of quote cards. Docked right: Tonight's Card as a raised panel with the risk bar and checks, Lock card as the mood pill. Phones: compact bar, one column of cards, lock bar above a bottom tab bar.
 
-FORM: Clean modern sportsbook at Robinhood polish, pinned by the user (standing exit, no roll). Signature move: the mood accent, every primary action, the active tab and the headline figures turn green or coral with whether the desk is beating the closing line. seed: none (unavailable)
+FORM: Clean modern sportsbook at Robinhood polish, pinned by the user (standing exit, no roll). Signature move: the mood accent, every primary action, the active tab and the headline figures turn green or coral with whether the desk is beating the closing line. seed: none (user-pinned direction, no roll was run)
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance

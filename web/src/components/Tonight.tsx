@@ -24,10 +24,6 @@ export const movement = (m: Market) => {
     : `${from}: it pays more now. Worth checking the news before betting.`;
 };
 
-/** One sentence a non-bettor can follow: what Hard Rock pays, what it's worth, what that means. */
-export const reason = (m: Market) =>
-  `Hard Rock pays ${odds(m.price)}; the rest of the market makes it worth about ${odds(m.fair_american)}. ` +
-  `That's about $${Math.round(m.edge * 100)} profit per $100 bet, on average over many bets like it.`;
 
 function BetCard({ m, note, injury, onAdd }: { m: Pick; note?: Note; injury?: Injury; onAdd: () => void }) {
   const [math, setMath] = useState(false);
@@ -62,10 +58,10 @@ function BetCard({ m, note, injury, onAdd }: { m: Pick; note?: Note; injury?: In
         <p className="bet-strength">
           <Ramp edge={m.edge} />
           <span>
-            {strength(m.edge)} <Term k="value">value</Term>
+            <b className="bet-edge">+{(m.edge * 100).toFixed(1)}%</b> {strength(m.edge)} <Term k="value">value</Term>
           </span>
         </p>
-        <p className="bet-why">{reason(m)}</p>
+        <p className="bet-why">About ${Math.round(m.edge * 100)} profit per $100 bet, on average over many bets like it.</p>
         {movement(m) && <p className="bet-moved">{movement(m)}</p>}
         {injury && (
           <p className="bet-injury">
@@ -75,7 +71,7 @@ function BetCard({ m, note, injury, onAdd }: { m: Pick; note?: Note; injury?: In
         <NoteLine note={note} />
       </div>
       <footer>
-        <button className="btn primary" onClick={onAdd}>
+        <button className="btn soft" onClick={onAdd}>
           <Plus /> Add to tonight's card
         </button>
         <button className="btn link" aria-expanded={math} onClick={() => setMath(!math)}>

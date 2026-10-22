@@ -13,10 +13,10 @@
   --line-2: #d2d8db;
   --sil: #b9c1c5;
 
-  --up: #08804a;
-  --up-fill: #0a8a50;
+  --up: #06733f;
+  --up-fill: #077a45;
   --up-soft: #e2f5eb;
-  --down: #c9361f;
+  --down: #b8311c;
   --down-fill: #d43c25;
   --down-soft: #fce9e5;
   --warn: #855600;
@@ -46,7 +46,7 @@
 
   --shadow: 0 1px 2px rgb(15 20 23 / 0.05), 0 6px 20px rgb(15 20 23 / 0.06);
   --shadow-up: 0 2px 6px rgb(15 20 23 / 0.08), 0 14px 32px rgb(15 20 23 / 0.1);
-  --r: 16px;
+  --r: 14px;
   --r-sm: 10px;
 
   --font: "Archivo Variable", "Archivo", system-ui, sans-serif;
@@ -980,3 +980,29 @@ kbd { font: 700 11px/1 var(--font); border: 1px solid var(--line-2); border-radi
 .paper-board { margin-bottom: 0; }
 .table-scroll:has(.paper-board) { margin-bottom: 20px; }
 @media (max-width: 1500px) { .board .ref { display: none; } }
+
+/* fixes from the finish review */
+.btn.soft { background: var(--mood-soft); color: var(--mood-ink); border-color: transparent; }
+.btn.soft:hover:not(:disabled) { background: var(--mood-soft); box-shadow: 0 0 0 3px var(--mood-soft); }
+.bet-edge { color: var(--mood-ink); font-weight: 800; font-stretch: 112%; margin-right: 4px; }
+.bet-quote .hr-quote b { font-size: 26px; }
+.bet-quote > div:not(.hr-quote) b { font-size: 17px; }
+.paper-board .clv-lead { font-size: 16px; font-weight: 800; font-stretch: 112%; }
+@media (max-width: 1500px) {
+  .board td.rules { min-width: 0; }
+  .board td.rules .pill.test { display: none; }
+}
+@media (max-width: 860px) {
+  .board td.edgec .ramp { display: none; }
+  .board td.mkt { white-space: normal; }
+  .board td.rules .pill.test { display: inline-flex; }
+}
+@media (min-width: 861px) {
+  .board td.rules { width: 150px; max-width: 160px; }
+  .board td.rules .pill { white-space: normal; line-height: 1.25; }
+  .board td.who { max-width: 200px; overflow: hidden; text-overflow: ellipsis; }
+}
+/* The other books' prices live in "Show the math"; the row keeps Hard Rock vs. worth. */
+.board .ref { display: none; }
+@media (min-width: 861px) { .board td, .board th { padding-left: 6px; padding-right: 6px; } .add { width: 72px; } }
+@media (max-width: 1320px) and (min-width: 1181px) { :root { --dock: 300px; } .desk { gap: 18px; } }

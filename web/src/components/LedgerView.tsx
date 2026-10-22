@@ -65,10 +65,10 @@ export function LedgerView({ onError }: { onError: (e: unknown) => void }) {
                   <thead>
                     <tr>
                       <th className="l">Strategy</th>
+                      <th>Vs. the close</th>
                       <th>Bankroll</th>
                       <th>Graded</th>
                       <th>Waiting</th>
-                      <th>Vs. the close</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -83,14 +83,14 @@ export function LedgerView({ onError }: { onError: (e: unknown) => void }) {
                             </button>
                           )}
                         </td>
-                        <td>
+                        <td className={"clv-lead " + ((p.avg_clv ?? 0) >= 0 ? "pos" : "neg")}>{pct(p.avg_clv)}</td>
+                        <td className="dim">
                           {p.bankroll === null || p.start === null
                             ? "—"
                             : `$${Math.round(p.bankroll).toLocaleString()} (${signedMoney(p.bankroll - p.start)})`}
                         </td>
                         <td>{p.graded}</td>
                         <td>{p.pending}</td>
-                        <td className={(p.avg_clv ?? 0) >= 0 ? "pos" : "neg"}>{pct(p.avg_clv)}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -148,7 +148,7 @@ export function LedgerView({ onError }: { onError: (e: unknown) => void }) {
               </p>
             </div>
           )}
-          {s.n === 0 ? (
+          {s.n === 0 && source === "paper" ? null : s.n === 0 ? (
             <div className="empty">
               <h2>No graded bets yet</h2>
               <p>

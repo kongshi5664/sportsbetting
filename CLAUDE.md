@@ -13,6 +13,7 @@ NBA player-prop betting system for Kong and a friend, run locally. Read README.m
 ## Conventions
 
 - Python 3.11+, standard library plus requests/pandas/nba_api. SQLite at `data/tipoff.db` (`data/sample.db` for fake data).
+- Leagues: everything sport-specific lives in `tipoff/leagues.py`. The NFL has its own `data/nfl.db` and `rules.nfl.json`; CLI tools take `--league`, the API reads the `X-League` header. Default is always NBA.
 - Odds API historical calls cost credits: always support and run `--estimate` before a backfill, and keep requests narrow.
 - Player names are matched across sources with `db.name_key`; log and fix mismatches rather than dropping them silently.
 - Reports go in `reports/`; don't commit `data/` or `reports/`.

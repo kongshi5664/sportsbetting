@@ -421,6 +421,17 @@ class JournalReviewTest(TempDB):
         push.assert_not_called()
         self.assertEqual(journal.entries(self.con), [])
 
+    def test_catch_up_waits_for_every_bet_to_be_graded(self):
+        paper_bet(self.con, "current", "win")
+        paper_bet(self.con, "current", None)  # Sunday's late game: box score not in yet
+        self.con.commit()
+        self.assertEqual(journal.days_to_recap(self.con, "2026-10-27"), [])
+        self.con.execute("UPDATE bets SET status='graded', result='loss'")
+        self.con.commit()
+        self.assertEqual(journal.days_to_recap(self.con, "2026-10-27"), [DAY])
+        journal.add(self.con, DAY, "recap", "t", "b")
+        self.assertEqual(journal.days_to_recap(self.con, "2026-10-27"), [], "each game day is recapped once")
+
     def test_review_findings_by_nfl_stat_and_strategy(self):
         self.con.execute("CREATE TABLE IF NOT EXISTS marks (slate_date TEXT, market_id TEXT, event_id TEXT, player TEXT,"
                          " stat TEXT, side TEXT, price INTEGER, p_market REAL, p_model REAL, n_refs INTEGER,"

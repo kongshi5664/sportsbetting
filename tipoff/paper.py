@@ -25,7 +25,7 @@ from . import leagues
 from .board import price_slate, suggest
 from .db import connect
 from .features import FeatureStore
-from .snapshot import CLOSE_MINUTES, ET, Credits, api_key, games_on, load_env, snapshot
+from .snapshot import CLOSE_MINUTES, ET, Credits, api_key, games_on, load_env, save_event, snapshot
 
 DECIDE_MINUTES = 60
 MARKS = """
@@ -182,6 +182,13 @@ def run(day, once=False, db=None, league=None):
             print(f"{now.astimezone(ET):%I:%M%p} couldn't list games ({e}); retrying")
             time.sleep(60)
             continue
+        if lg.id != "nba" and games and not con.execute("SELECT 1 FROM events WHERE game_date=? LIMIT 1",
+                                                        (str(day),)).fetchone():
+            # No morning odds pull for this league: keep today's games (free listing) so the desk's
+            # status strip and the injury watcher know the slate before the first decision pull.
+            for e in games:
+                save_event(con, e, lg)
+            con.commit()
         upcoming = [e for e in games if _tip(e) > now]
         due = [e for e in upcoming if e["id"] not in decided
                and (once or _tip(e) - now <= timedelta(minutes=DECIDE_MINUTES))]

@@ -109,6 +109,35 @@ It keeps a plain-English **journal**: as it decides each game it writes which be
 
 Credits: about 10-15 per game per day (opening, decision, close). The free 500 last a few days; the $30 plan covers months.
 
+## 10. NFL
+
+The NFL runs on the same machinery with its own database (`data/nfl.db`) and rulebook (`rules.nfl.json`), so NBA data and the NBA paper trader are never touched. Every tool takes `--league nfl` (the default is `nba`); the desk switches with the **NFL** pill in the header (remembered per device).
+
+- **Markets:** Hard Rock's six NFL over/unders: pass yards, pass attempts, rush yards, rush attempts, receiving yards, receptions. Touchdown-scorer props are Yes-only (no Under to de-vig), so they're left out. Reference books are the same as the NBA's.
+- **Projection:** last 6 games blended with the season, scaled by what the opponent's defense has allowed over its last 8 games; at least 3 games of history before a player is priced. Yards use a normal with a spread floor, receptions and attempts a negative binomial. With `model_weight` at 0 the fair price is still the de-vigged market; the projection only feeds the "Projection back at 15%" paper strategy and the review.
+- **Rules:** the NBA's settings and confirmed gates, bankroll $15,000. Testing rules that need NBA-only data (back-to-backs, minutes, points per game) are left out.
+
+```bash
+# box scores, free (nflverse weekly stats; seconds per season)
+python -m tipoff.backfill_stats --league nfl --seasons 2023 2024 2025 2026
+
+python -m tipoff.snapshot --league nfl --estimate      # today's games and the credit cost; spends nothing
+python -m tipoff.paper --league nfl                    # decide each game an hour before kickoff, take closes
+python -m tipoff.journal --league nfl --recap --catch-up   # recap each fully graded game day once
+python -m tipoff.review --league nfl                   # weekly review, writes reports/nfl/
+python -m tipoff.backtest --league nfl                 # once there are historical NFL odds
+```
+
+**Credits:** about 6 per game per pull (6 markets, one region). The paper trader pulls each game once to decide and once for the close, so about 12 per game, and a full week of about 16 games costs roughly 200 credits. Historical NFL odds cost the same 10 x markets per snapshot as the NBA's: always `--estimate` first.
+
+**Box-score timing:** nflverse rebuilds the current season from play-by-play, usually within a day of the games, so NFL grading (and Sunday's recap) can land Monday or Tuesday. `--catch-up` recaps each game day once all of its paper bets are graded, and skips days without NFL games.
+
+**Scheduling (Windows Task Scheduler, Start in: this folder):**
+
+- `scripts\paper-trader-nfl.bat` daily at 8am (London games kick off at 9:30am ET; it exits at once on days without games). It starts the desk only if nothing is on port 8000 yet, plus the NFL injury watcher.
+- `scripts\morning-nfl.bat` daily around 10am: this season's NFL box scores, grading, and the recap.
+- `scripts\weekly-review-nfl.bat` weekly (Tuesday suits the NFL week).
+
 ## How it avoids fooling itself
 
 - Projections only use games before the bet date (no look-ahead).
@@ -119,14 +148,17 @@ Credits: about 10-15 per game per day (opening, decision, close). The free 500 l
 ## Layout
 
 ```
+tipoff/leagues.py         one config per league (markets, stats, teams, feeds, database, rules file)
 tipoff/db.py              SQLite schema + name matching
-tipoff/backfill_stats.py  nba_api box scores
+tipoff/backfill_stats.py  nba_api box scores (NFL: --league nfl, see backfill_nfl.py)
+tipoff/backfill_nfl.py    nflverse weekly player and team stats for the NFL
 tipoff/backfill_odds.py   The Odds API historical props
 tipoff/pricing.py         de-vig, EV, Kelly, P(over) from a projection
 tipoff/features.py        point-in-time player features and projection
 tipoff/backtest.py        rulebook replay, CLV, rule verdicts, ledger
 tipoff/sample_data.py     fake two-season world for testing
 rules.json                settings + rulebook (statuses: confirmed / testing / retired)
+rules.nfl.json            the NFL's settings + rulebook
 tipoff/board.py           prices one slate for the live desk (Hard Rock edge vs. fair)
 tipoff/api.py             FastAPI server: slate, card, ledger, rulebook, player-out, refresh
 tipoff/snapshot.py        live odds snapshots (refresh, close, watch)
@@ -136,7 +168,7 @@ tipoff/grading.py         results and closing-line value for bets and Claude's c
 tipoff/review.py          weekly review: rules, settings, Claude's calls; proposals you apply
 tipoff/paper.py           paper trader: decides each game an hour before tip, three strategies
 tipoff/journal.py         plain-English decision notes and the morning recap
-scripts/                  morning-odds.bat, game-day.bat, paper-trader.bat, weekly-review.bat
+scripts/                  morning-odds.bat, game-day.bat, paper-trader.bat, weekly-review.bat (+ *-nfl.bat)
 tests/                    python -m unittest discover tests
 web/                      the live desk (React + Vite); web/prototype.html is the old mock
 ```

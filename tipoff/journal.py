@@ -183,6 +183,22 @@ def _weekday(day):
     return date.fromisoformat(day).strftime("%A")
 
 
+def days_to_recap(con, today, back=4):
+    """Recent game days whose paper bets are all graded and that have no recap yet. The NFL's box
+    scores (nflverse) can land a day or more after the games, so the morning job recaps each game
+    day once it is fully graded instead of on a fixed "yesterday"."""
+    con.executescript(TABLE)
+    out = []
+    for i in range(back, 0, -1):
+        d = str(date.fromisoformat(str(today)) - timedelta(days=i))
+        bets = con.execute("SELECT COUNT(*), SUM(status='locked') FROM bets WHERE paper=1 AND slate_date=?",
+                           (d,)).fetchone()
+        done = con.execute("SELECT 1 FROM journal WHERE day=? AND kind='recap'", (d,)).fetchone()
+        if bets[0] and not bets[1] and not done:
+            out.append(d)
+    return out
+
+
 def claude_recap(nums):
     import anthropic
     try:
@@ -226,6 +242,8 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--recap", action="store_true")
     ap.add_argument("--date", default=str(datetime.now(ET).date() - timedelta(days=1)))
+    ap.add_argument("--catch-up", action="store_true",
+                    help="recap every recent game day that is fully graded and not yet recapped (NFL mornings)")
     ap.add_argument("--db", default=None)
     leagues.add_argument(ap)
     a = ap.parse_args()
@@ -235,7 +253,14 @@ if __name__ == "__main__":
     ensure_table(con)
     grade_notes(con, cfg), grade_marks(con, cfg), grade_bets(con, cfg)
     sys.stdout.reconfigure(encoding="utf-8")
-    if a.recap:
+    if a.recap and a.catch_up:
+        days = days_to_recap(con, datetime.now(ET).date())
+        if not days:
+            print(f"No {lg.label} game day is waiting for a recap (or its box scores aren't in yet).")
+        for d in days:
+            title, text = recap(con, d, league=lg)
+            print(title or "", "\n", text, "\n", sep="")
+    elif a.recap:
         title, text = recap(con, a.date, league=lg)
         print(title or "", "\n", text, sep="")
     else:

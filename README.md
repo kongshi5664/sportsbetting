@@ -52,6 +52,36 @@ What the report tells you:
 - **Model vs. market Brier score** — whether our own projection beats the market. If it doesn't, keep `model_weight` low and let price differences do the work.
 - **Testing rules** — each one is checked on earlier seasons and again on the held-out latest season, and gets a recommendation: promote, keep testing, or retire. Nothing changes until you edit `rules.json`.
 
+## 4. Run the desk
+
+```bash
+cd web && npm install && npm run build && cd ..   # once, and after front-end changes
+python -m tipoff.api --db data/sample.db          # open http://127.0.0.1:8000
+```
+
+Without `--db` it reads `data/tipoff.db`. The board prices the latest slate in the database (pick another with the date in the header). Add markets that clear the rulebook, lock the card, then place each leg by hand in Hard Rock Bet and tick it off. Locked bets are graded on the Ledger once the game's box score and closing prices are in.
+
+For front-end work, run the API as above and `npm run dev` in `web/` (http://localhost:5173, proxies `/api`).
+
+## 5. Live odds on game days
+
+Put your key in `.env` (`ODDS_API_KEY=...`). Live calls work on The Odds API's free tier: each game costs about 5 credits per refresh (5 prop markets, our books count as one region), and listing the night's games is free.
+
+```bash
+python -m tipoff.snapshot --estimate              # tonight's games and the cost of one refresh; spends nothing
+python -m tipoff.snapshot --watch --every 30      # refresh every 30 min, take each game's close 5 min before tip
+```
+
+`--watch` stops by itself after the last tip and won't pass `--max-credits` (600 by default) in one run. The desk also has a **Refresh odds** button on tonight's board for breaking news. To run it unattended, point Windows Task Scheduler at `.venv\Scripts\python.exe -m tipoff.snapshot --watch --every 30` with the project folder as "Start in", daily around 3pm.
+
+First night: compare a few props against the Hard Rock app. The Odds API lists `hardrockbet` as its Indiana feed ("same odds as several other states"), so confirm Florida matches before trusting it.
+
+## 6. Suggested card and Claude's notes
+
+The card panel suggests tonight's legs: every market that clears the rules, biggest Hard Rock edge first, at most `suggest_max_per_game` legs from one game (`rules.json` settings), within the night's risk cap. **Add all** takes them in one tap.
+
+With `ANTHROPIC_API_KEY` in `.env`, **Check news with Claude** sends the card and suggested legs to Claude (Opus 5.5 with web search). It looks for injury, lineup and minutes news and marks each leg *clear*, *caution* or *skip* with a one-line reason and its sources. Notes are advice: they never add a bet or override a rule, and **Add all** leaves out any leg Claude flagged *skip* (you can still add it by hand). Each check costs roughly $0.10–0.30. From the terminal: `python -m tipoff.notes --date 2026-10-20`.
+
 ## How it avoids fooling itself
 
 - Projections only use games before the bet date (no look-ahead).
@@ -70,13 +100,18 @@ tipoff/features.py        point-in-time player features and projection
 tipoff/backtest.py        rulebook replay, CLV, rule verdicts, ledger
 tipoff/sample_data.py     fake two-season world for testing
 rules.json                settings + rulebook (statuses: confirmed / testing / retired)
-web/index.html            the clickable prototype
+tipoff/board.py           prices one slate for the live desk (Hard Rock edge vs. fair)
+tipoff/api.py             FastAPI server: slate, card, ledger, rulebook, player-out, refresh
+tipoff/snapshot.py        live odds snapshots (refresh, close, watch)
+tipoff/notes.py           Claude's news check on each leg (clear / caution / skip)
+tests/                    python -m unittest discover tests
+web/                      the live desk (React + Vite); web/prototype.html is the old mock
 ```
 
 ## Next steps (in Claude Code)
 
 1. Run the real backfills and the first real backtest.
-2. Turn `web/index.html` into the live front end reading `reports/ledger.json` and today's odds.
+2. ~~Turn the prototype into the live front end~~ (done: `web/` + `tipoff/api.py`).
 3. Add the live loop: odds snapshots every few minutes on game days, injury-report watcher, and a Claude agent that builds the nightly card under the confirmed rules.
 
 Must be 21+ and in a legal jurisdiction. In Florida, Hard Rock Bet is the regulated sportsbook. Gambling problem? Call 1-800-GAMBLER.

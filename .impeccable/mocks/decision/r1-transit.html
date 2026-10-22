@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Tip-Off Desk — Edge Board (Line Map)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--en:#0f1f44;--en2:#162a57;--en3:#1f3569;--po:#f4f2ec;--po2:#ebe8df;--rule:#dcd8cc;--ink:#14213d;--mu:#5d6680;--dim:#666d80;--sc:#d8352a;--co:#2c5fd1;--am:#f2a33a;--gr:#2f9a5b;--onen:#c9d2e6;--onen2:#8796b8}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1440px;height:900px;overflow:hidden;background:var(--en);color:var(--ink);font:400 13px/1.35 "Source Sans 3",system-ui,sans-serif;font-variant-numeric:tabular-nums lining-nums;-webkit-font-smoothing:antialiased}
+.top{height:56px;display:flex;align-items:center;padding:0 24px;color:var(--po);border-bottom:1px solid var(--en3)}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:15px;letter-spacing:.14em;margin-right:22px}
+.brand svg{display:block}
+.lg{display:flex;gap:6px;margin-right:26px}.chip{height:24px;padding:0 10px;border-radius:12px;display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;letter-spacing:.06em;border:1px solid var(--en3);color:var(--onen2)}
+.chip.on{background:var(--po);color:var(--en);border-color:var(--po)}.chip i{font-style:normal;font-weight:500;letter-spacing:0;font-size:11px}
+.tabs{display:flex;height:100%}.tab{display:flex;align-items:center;padding:0 15px;color:var(--onen2);font-weight:600;font-size:14px;border-bottom:3px solid transparent}
+.tab.on{color:var(--po);border-color:var(--sc)}
+.stats{margin-left:auto;display:flex;gap:26px}.st{display:flex;flex-direction:column;align-items:flex-end}
+.st small{font-size:11px;color:var(--onen2);font-weight:600;letter-spacing:.08em;text-transform:uppercase}.st b{font-size:16px;font-weight:700;color:var(--po)}
+.st b em{font-style:normal;color:var(--onen2);font-weight:500;font-size:12px;margin-left:5px}.st b.g{color:#7fd3a0}
+.wrap{display:grid;grid-template-columns:1fr 360px;gap:16px;padding:14px 24px 0;height:814px}
+.col{display:flex;flex-direction:column;gap:10px;min-width:0}
+.map{height:186px;background:var(--en2);border:1px solid var(--en3);border-radius:10px;color:var(--po);padding:12px 18px 0}
+.mh{display:flex;align-items:baseline;gap:12px}.mh .k{font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--onen2)}
+.mh b{font-size:15px;font-weight:700}.mh span{color:var(--onen)}
+.key{margin-left:auto;display:flex;gap:16px;font-size:12px;color:var(--onen)}.key i{display:inline-block;width:18px;height:5px;border-radius:3px;vertical-align:2px;margin-right:6px}
+.map svg text{font-family:"Source Sans 3",sans-serif;font-variant-numeric:tabular-nums}
+.flt{height:36px;display:flex;align-items:center;gap:8px}
+.ctl{height:32px;display:flex;align-items:center;gap:7px;padding:0 12px;border-radius:7px;background:var(--en2);border:1px solid var(--en3);color:var(--po);font-weight:600}
+.ctl span{color:var(--onen2);font-weight:500}.ctl .cv{color:var(--onen2);font-size:9px}
+.ctl .cb{width:15px;height:15px;border-radius:4px;background:var(--po);color:var(--en);display:grid;place-items:center;font-size:11px;font-weight:800}
+.ctl.q{width:220px;color:var(--onen2);font-weight:400}
+.fm{margin-left:auto;color:var(--onen2);font-size:12px}.fm b{color:var(--onen);font-weight:600}
+.board{flex:1;background:var(--po);border-radius:10px;overflow:hidden;box-shadow:0 1px 0 rgba(255,255,255,.06) inset}
+table{width:100%;border-collapse:collapse;table-layout:fixed}
+th{height:32px;font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--mu);text-align:right;padding:0 9px;border-bottom:2px solid var(--ink)}
+th.l,td.l{text-align:left}
+td{height:44px;padding:0 9px;text-align:right;border-bottom:1px solid var(--rule);white-space:nowrap;overflow:hidden}
+tr.g td{height:28px;background:var(--po2);text-align:left;font-size:12px;color:var(--mu);font-weight:600;border-bottom:1px solid var(--rule)}
+tr.g td b{color:var(--ink);font-weight:800;letter-spacing:.04em;margin-right:10px}
+.pl{font-weight:700;font-size:13.5px}.mk{color:var(--mu)}.pk{font-weight:700}.fair{color:var(--co);font-weight:600}
+.hr{background:#fff;font-weight:800;font-size:15px;box-shadow:inset 1px 0 var(--rule),inset -1px 0 var(--rule)}th.hr{background:var(--en);color:var(--po);box-shadow:none}
+.ref{color:var(--dim);font-size:12px}th.ref{font-size:11px}
+.ed{font-weight:800;color:var(--gr)}.ed.lo{color:var(--dim);font-weight:600}
+.pill{display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 9px;border-radius:11px;font-size:12px;font-weight:700}
+.ok{background:#e3f1e8;color:#21703f}.no{background:#fbe5e2;color:#a8261d}
+tr.x td{color:var(--dim)}tr.x .hr{color:var(--mu)}tr.x .pl{color:var(--mu)}
+tr.f td{background:#fbf7ec}tr.f td:first-child{box-shadow:inset 4px 0 var(--sc)}tr.f .hr{background:#fff}
+.mv{display:inline-flex;align-items:center;gap:6px;color:var(--mu);font-size:11px}
+.add{width:30px;height:26px;border-radius:7px;border:1.5px solid var(--ink);display:inline-grid;place-items:center;font-weight:800;font-size:15px;color:var(--ink)}
+.add.in{background:var(--en);border-color:var(--en);color:var(--po);font-size:12px}.add.off{border-color:var(--rule);color:var(--rule)}
+.card{background:var(--po);border-radius:10px;display:flex;flex-direction:column;overflow:hidden}
+.ch{padding:16px 18px 12px;border-bottom:2px solid var(--ink);display:flex;align-items:baseline;justify-content:space-between}.ch h2{font-size:18px;font-weight:800}.ch span{color:var(--mu);font-size:12px}
+.leg{display:grid;grid-template-columns:22px 1fr auto;column-gap:10px;row-gap:3px;padding:15px 18px;border-bottom:1px solid var(--rule)}
+.leg .r{text-align:right;font-weight:800;font-size:15px}.leg .s{grid-column:2;color:var(--mu);font-size:12px}.leg .s.r{grid-column:3;font-weight:500;font-size:12px}
+.dot{grid-row:1/3;width:16px;height:16px;margin-top:3px;border-radius:50%;border:4px solid var(--sc);background:#fff}
+.risk{padding:14px 18px;border-bottom:1px solid var(--rule)}.risk .t{display:flex;justify-content:space-between;font-size:12px;color:var(--mu);font-weight:600}.risk .t b{color:var(--ink);font-size:16px;font-weight:800}
+.trk{position:relative;height:8px;margin-top:9px;border-radius:4px;background:var(--po2);box-shadow:inset 0 0 0 1px var(--rule)}.trk i{position:absolute;left:0;top:0;bottom:0;width:38%;background:var(--en);border-radius:4px}
+.cks{padding:16px 18px;display:flex;flex-direction:column;gap:13px;flex:1}.cks h3,.cl h3{font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--mu)}.cl{margin:0 18px 16px;padding:12px 14px;border-radius:8px;background:var(--en);color:var(--onen);font-size:12px;display:flex;align-items:center;gap:12px}.cl h3{color:var(--onen2)}.cl b{color:var(--po)}.ck{display:grid;grid-template-columns:18px 1fr;gap:9px;font-size:12.5px}
+.ck i{font-style:normal;width:18px;height:18px;border-radius:50%;display:grid;place-items:center;font-size:10px;font-weight:800;color:#fff;background:var(--gr)}.ck.n i{background:var(--sc)}.ck small{display:block;color:var(--mu);font-size:11.5px}
+.lock{margin:0 18px;height:42px;border-radius:8px;background:var(--en);color:var(--po);font-weight:800;font-size:14px;letter-spacing:.04em;display:grid;place-items:center}
+.nt{margin:8px 18px 12px;font-size:11.5px;color:var(--mu);text-align:center}
+.clr{border-top:1px solid var(--rule);padding:11px 18px;display:flex;justify-content:space-between;font-size:12px;color:var(--mu)}.clr b{color:var(--sc);font-weight:700}
+.foot{height:30px;display:flex;align-items:center;gap:18px;padding:0 24px;color:var(--onen2);font-size:11.5px;margin-top:0}
+.foot b{color:var(--po);font-weight:700}.sd{padding:1px 8px;border-radius:4px;background:var(--am);color:var(--en);font-weight:800;letter-spacing:.06em;font-size:10.5px}.foot .r{margin-left:auto}
+</style></head><body>
+<svg width="0" height="0" style="position:absolute"><defs>
+<symbol id="ff" viewBox="0 0 40 14"><path d="M4 3H8L12 7H24L28 11H36" fill="none" stroke="#d8352a" stroke-width="2.5"/><circle cx="4" cy="3" r="2.6" fill="#fff" stroke="#14213d" stroke-width="1.4"/><circle cx="20" cy="7" r="2.6" fill="#fff" stroke="#14213d" stroke-width="1.4"/><circle cx="36" cy="11" r="3" fill="#14213d"/></symbol>
+<symbol id="rr" viewBox="0 0 40 14"><path d="M4 11H8L12 7H24L28 3H36" fill="none" stroke="#d8352a" stroke-width="2.5"/><circle cx="4" cy="11" r="2.6" fill="#fff" stroke="#14213d" stroke-width="1.4"/><circle cx="20" cy="7" r="2.6" fill="#fff" stroke="#14213d" stroke-width="1.4"/><circle cx="36" cy="3" r="3" fill="#14213d"/></symbol>
+<symbol id="fl" viewBox="0 0 40 14"><path d="M4 7H36" fill="none" stroke="#d8352a" stroke-width="2.5"/><circle cx="4" cy="7" r="2.6" fill="#fff" stroke="#14213d" stroke-width="1.4"/><circle cx="20" cy="7" r="2.6" fill="#fff" stroke="#14213d" stroke-width="1.4"/><circle cx="36" cy="7" r="3" fill="#14213d"/></symbol>
+<symbol id="fx" viewBox="0 0 40 14"><path d="M4 4H8L12 9H36" fill="none" stroke="#d8352a" stroke-width="2.5"/><circle cx="4" cy="4" r="2.6" fill="#fff" stroke="#14213d" stroke-width="1.4"/><circle cx="20" cy="9" r="2.6" fill="#fff" stroke="#14213d" stroke-width="1.4"/><circle cx="36" cy="9" r="3" fill="#14213d"/></symbol>
+</defs></svg>
+<header class="top">
+  <div class="brand"><svg width="26" height="26" viewBox="0 0 26 26"><path d="M3 18H9L17 10H23" fill="none" stroke="#d8352a" stroke-width="4"/><circle cx="13" cy="14" r="5" fill="#f4f2ec" stroke="#0f1f44" stroke-width="2.5"/></svg>TIP-OFF DESK</div>
+  <div class="lg"><span class="chip on">NBA</span><span class="chip">NFL <i>soon</i></span><span class="chip">MLB <i>soon</i></span></div>
+  <nav class="tabs"><a class="tab on">Edge Board</a><a class="tab">Card</a><a class="tab">Ledger</a><a class="tab">Rulebook</a></nav>
+  <div class="stats"><div class="st"><small>Bankroll</small><b>$2,000</b></div><div class="st"><small>Unit</small><b>$20</b></div><div class="st"><small>Avg CLV</small><b class="g">+2.1%<em>n=48</em></b></div></div>
+</header>
+<div class="wrap"><div class="col">
+<section class="map" aria-label="Price journey for the focused market">
+  <div class="mh"><span class="k">FOCUSED LINE</span><b>Victor Wembanyama · Blocks Over 3.5</b><span>SAS @ DET · 7:00p</span>
+  <div class="key"><span><i style="background:var(--sc)"></i>Hard Rock price</span><span><i style="background:var(--co)"></i>Fair (de-vigged consensus)</span><span><i style="background:var(--am)"></i>Edge</span></div></div>
+  <svg width="994" height="146" viewBox="0 0 994 146">
+    <g stroke="#2a4180" stroke-width="1" stroke-dasharray="2 4"><path d="M80 14V122M330 14V122M600 14V122M880 14V122"/></g>
+    <path d="M80 22H180L220 62H520L568 110H600" fill="none" stroke="#f4f2ec" stroke-width="10" stroke-linejoin="round"/>
+    <path d="M80 22H180L220 62H520L568 110H600" fill="none" stroke="#2c5fd1" stroke-width="6" stroke-linejoin="round"/>
+    <path d="M80 34H230L250 54H560L580 74H600" fill="none" stroke="#f4f2ec" stroke-width="10" stroke-linejoin="round"/>
+    <path d="M80 34H230L250 54H560L580 74H600" fill="none" stroke="#d8352a" stroke-width="6" stroke-linejoin="round"/>
+    <path d="M600 74H880M600 110H880" fill="none" stroke="#8796b8" stroke-width="3" stroke-dasharray="3 6"/>
+    <rect x="182" y="24" width="20" height="20" rx="10" fill="#fff" stroke="#0f1f44" stroke-width="4"/>
+    <path d="M204 34H252" stroke="#f2a33a" stroke-width="1.5" stroke-dasharray="2 2"/><text x="258" y="31" fill="#f2a33a" font-size="12" font-weight="700">Interchange 12:40p · HR price passes fair</text>
+    <g fill="#fff" stroke="#0f1f44" stroke-width="3"><circle cx="80" cy="34" r="6"/><circle cx="330" cy="54" r="6"/><circle cx="80" cy="22" r="6"/><circle cx="330" cy="62" r="6"/><circle cx="600" cy="110" r="6"/></g>
+    <circle cx="600" cy="74" r="10" fill="#fff" stroke="#d8352a" stroke-width="5"/>
+    <g fill="none" stroke="#8796b8" stroke-width="2" stroke-dasharray="3 3"><circle cx="880" cy="74" r="7"/><circle cx="880" cy="110" r="7"/></g>
+    <path d="M622 76V108M616 76H628M616 108H628" stroke="#f2a33a" stroke-width="2.5" fill="none"/>
+    <text x="636" y="88" fill="#f2a33a" font-size="15" font-weight="800">+4.6% edge</text><text x="636" y="103" fill="#c9d2e6" font-size="11.5">HR +105 vs fair −104 · stake $22</text>
+    <g font-size="12.5" font-weight="700" fill="#f4f2ec"><text x="68" y="39" text-anchor="end">+115</text><text x="340" y="48">+110</text><text x="600" y="57" text-anchor="middle">+105</text></g>
+    <g font-size="12" font-weight="600" fill="#9db7f5"><text x="68" y="26" text-anchor="end">+118 fair</text><text x="340" y="78">+108 fair</text><text x="588" y="126" text-anchor="end">−104 fair</text></g>
+    <g font-size="12" fill="#8796b8" font-weight="600"><text x="80" y="140" text-anchor="middle">OPEN 9:05a</text><text x="330" y="140" text-anchor="middle">2:00p</text><text x="880" y="140" text-anchor="middle">CLOSE 7:00p · pending</text></g>
+    <rect x="596" y="129" width="140" height="17" rx="8.5" fill="#d8352a"/><text x="666" y="141.5" text-anchor="middle" font-size="11" font-weight="800" fill="#fff" letter-spacing=".04em">YOU ARE HERE · 6:42p</text>
+    <text x="900" y="96" fill="#8796b8" font-size="11.5">CLV graded</text><text x="900" y="110" fill="#8796b8" font-size="11.5">at close</text>
+  </svg>
+</section>
+<div class="flt">
+  <div class="ctl"><span>Market</span>All props<b class="cv">▼</b></div><div class="ctl"><span>Min edge</span>2.0%<b class="cv">▼</b></div>
+  <div class="ctl"><span class="cb">✓</span>Show blocked</div><div class="ctl q">Search player…</div>
+  <div class="fm">Thu Oct 22 · 3 games · <b>Odds 6:42p ET</b> · Fair = de-vigged DK · FD · MGM</div>
+</div>
+<section class="board"><table>
+<colgroup><col style="width:184px"><col style="width:76px"><col style="width:54px"><col style="width:62px"><col style="width:84px"><col style="width:48px"><col style="width:48px"><col style="width:52px"><col style="width:90px"><col style="width:64px"><col style="width:56px"><col><col style="width:50px"></colgroup>
+<thead><tr><th class="l">Player</th><th class="l">Market</th><th class="l">Pick</th><th>Fair</th><th class="hr">Hard Rock</th><th class="ref">Ref DK</th><th class="ref">FD</th><th class="ref">MGM</th><th class="l">Move</th><th>Edge</th><th>Stake</th><th class="l">Rules</th><th>Add</th></tr></thead>
+<tbody>
+<tr class="g"><td colspan="13"><b>SAS @ DET</b>7:00p ET · tips in 18 min</td></tr>
+<tr class="f"><td class="l pl">Victor Wembanyama</td><td class="l mk">Blocks</td><td class="l pk">O 3.5</td><td class="fair">−104</td><td class="hr">+105</td><td class="ref">−110</td><td class="ref">−112</td><td class="ref">−105</td><td class="l"><span class="mv"><svg width="40" height="14"><use href="#ff"/></svg>+115</span></td><td class="ed">+4.6%</td><td>$22</td><td class="l"><span class="pill ok">✓ Clears rules</span></td><td><span class="add in">✓</span></td></tr>
+<tr><td class="l pl">Cade Cunningham</td><td class="l mk">Assists</td><td class="l pk">O 8.5</td><td class="fair">−120</td><td class="hr">−110</td><td class="ref">−125</td><td class="ref">−122</td><td class="ref">−130</td><td class="l"><span class="mv"><svg width="40" height="14"><use href="#ff"/></svg>−105</span></td><td class="ed">+4.1%</td><td>$20</td><td class="l"><span class="pill ok">✓ Clears rules</span></td><td><span class="add in">✓</span></td></tr>
+<tr class="x"><td class="l pl">Victor Wembanyama</td><td class="l mk">Points</td><td class="l pk">U 24.5</td><td class="fair">+100</td><td class="hr">+106</td><td class="ref">−108</td><td class="ref">−104</td><td class="ref">−110</td><td class="l"><span class="mv"><svg width="40" height="14"><use href="#rr"/></svg>+100</span></td><td class="ed lo">+3.0%</td><td>—</td><td class="l"><span class="pill no">✕ Player cap</span></td><td><span class="add off">+</span></td></tr>
+<tr class="g"><td colspan="13"><b>MIA @ ORL</b>7:30p ET</td></tr>
+<tr><td class="l pl">Paolo Banchero</td><td class="l mk">Rebounds</td><td class="l pk">O 7.5</td><td class="fair">−108</td><td class="hr">+100</td><td class="ref">−115</td><td class="ref">−112</td><td class="ref">−118</td><td class="l"><span class="mv"><svg width="40" height="14"><use href="#rr"/></svg>−110</span></td><td class="ed">+3.8%</td><td>$18</td><td class="l"><span class="pill ok">✓ Clears rules</span></td><td><span class="add">+</span></td></tr>
+<tr><td class="l pl">Tyler Herro</td><td class="l mk">Threes</td><td class="l pk">O 2.5</td><td class="fair">−112</td><td class="hr">−105</td><td class="ref">−118</td><td class="ref">−120</td><td class="ref">−115</td><td class="l"><span class="mv"><svg width="40" height="14"><use href="#fl"/></svg>−105</span></td><td class="ed">+3.1%</td><td>$16</td><td class="l"><span class="pill ok">✓ Clears rules</span></td><td><span class="add">+</span></td></tr>
+<tr class="x"><td class="l pl">Bam Adebayo</td><td class="l mk">Points</td><td class="l pk">O 15.5</td><td class="fair">−110</td><td class="hr">−108</td><td class="ref">−115</td><td class="ref">−118</td><td class="ref">−112</td><td class="l"><span class="mv"><svg width="40" height="14"><use href="#rr"/></svg>−112</span></td><td class="ed lo">+0.9%</td><td>—</td><td class="l"><span class="pill no">✕ HR edge below 2%</span></td><td><span class="add off">+</span></td></tr>
+<tr class="g"><td colspan="13"><b>OKC @ LAL</b>10:30p ET</td></tr>
+<tr><td class="l pl">Shai Gilgeous-Alexander</td><td class="l mk">Points</td><td class="l pk">U 31.5</td><td class="fair">−106</td><td class="hr">+102</td><td class="ref">−112</td><td class="ref">−110</td><td class="ref">−114</td><td class="l"><span class="mv"><svg width="40" height="14"><use href="#ff"/></svg>+108</span></td><td class="ed">+3.9%</td><td>$19</td><td class="l"><span class="pill ok">✓ Clears rules</span></td><td><span class="add in">✓</span></td></tr>
+<tr><td class="l pl">LeBron James</td><td class="l mk">Assists</td><td class="l pk">O 7.5</td><td class="fair">+110</td><td class="hr">+118</td><td class="ref">+105</td><td class="ref">+102</td><td class="ref">+100</td><td class="l"><span class="mv"><svg width="40" height="14"><use href="#ff"/></svg>+125</span></td><td class="ed">+3.8%</td><td>$18</td><td class="l"><span class="pill ok">✓ Clears rules</span></td><td><span class="add">+</span></td></tr>
+<tr><td class="l pl">Chet Holmgren</td><td class="l mk">Rebounds</td><td class="l pk">O 8.5</td><td class="fair">−102</td><td class="hr">+104</td><td class="ref">−108</td><td class="ref">−110</td><td class="ref">−105</td><td class="l"><span class="mv"><svg width="40" height="14"><use href="#fx"/></svg>+106</span></td><td class="ed">+3.0%</td><td>$15</td><td class="l"><span class="pill ok">✓ Clears rules</span></td><td><span class="add">+</span></td></tr>
+</tbody></table></section>
+</div>
+<aside class="card">
+  <div class="ch"><h2>Tonight's Card</h2><span>3 legs · Thu Oct 22</span></div>
+  <div class="leg"><span class="dot"></span><span class="pl">Victor Wembanyama</span><span class="r">+105</span><span class="s">Blocks O 3.5 · SAS @ DET</span><span class="s r">$22 · fair −104</span></div>
+  <div class="leg"><span class="dot"></span><span class="pl">Cade Cunningham</span><span class="r">−110</span><span class="s">Assists O 8.5 · SAS @ DET</span><span class="s r">$20 · fair −120</span></div>
+  <div class="leg"><span class="dot"></span><span class="pl">Shai Gilgeous-Alexander</span><span class="r">+102</span><span class="s">Points U 31.5 · OKC @ LAL</span><span class="s r">$19 · fair −106</span></div>
+  <div class="risk"><div class="t"><span>Risk tonight</span><span><b>$61</b> of $160 cap</span></div><div class="trk"><i></i></div><div class="t" style="margin-top:7px;font-weight:500"><span>All singles at Hard Rock prices</span><span>Avg edge +4.2%</span></div></div>
+  <div class="cks"><h3>CARD CHECKS</h3>
+    <div class="ck"><i>✓</i><span>Every leg clears HR edge ≥ 2%<small>Lowest leg +3.9% (Gilgeous-Alexander)</small></span></div>
+    <div class="ck"><i>✓</i><span>Risk under nightly cap<small>$61 of $160 · 38%</small></span></div>
+    <div class="ck"><i>✓</i><span>Max 2 legs per game<small>SAS @ DET has 2</small></span></div>
+    <div class="ck n"><i>✕</i><span>Wembanyama Points U 24.5 kept off<small>Player cap: one leg per player</small></span></div>
+  </div>
+  <div class="cl"><svg width="40" height="14"><use href="#ff"/></svg><span><h3>NEXT STATION · CLOSE</h3><b>7:00p SAS @ DET</b> · CLV posts after tip</span></div>
+  <div class="lock">Lock card · $61</div>
+  <div class="nt">Place by hand in Hard Rock Bet. Closing prices are recorded at tip.</div>
+  <div class="clr"><span>Start over</span><b>Clear card</b></div>
+</aside></div>
+<footer class="foot"><span>Gambling problem? Call <b>1-800-GAMBLER</b></span><span class="sd">SAMPLE DATA</span><span>Hard Rock is the only bettable book · DK, FD, MGM are reference prices</span><span class="r">Rules from rules.json · confirmed only</span></footer>
+</body></html>

@@ -21,7 +21,8 @@ from zoneinfo import ZoneInfo
 
 import requests
 
-from .db import connect, name_key
+from .db import connect
+from .snapshot import odds_rows, team_code
 
 BASE = "https://api.the-odds-api.com/v4/historical/sports/basketball_nba"
 ET = ZoneInfo("America/New_York")
@@ -62,17 +63,7 @@ def save_snapshot(con, event, label, when, key, markets, books):
         "markets": ",".join(markets), "bookmakers": ",".join(books),
     }
     body, used, left = _get(f"{BASE}/events/{event['id']}/odds", params)
-    data = body.get("data") or {}
-    snap_ts = body.get("timestamp", iso(when))
-    rows = []
-    for bk in data.get("bookmakers", []):
-        for mk in bk.get("markets", []):
-            for o in mk.get("outcomes", []):
-                player = o.get("description")
-                if not player or o.get("point") is None:
-                    continue
-                rows.append((event["id"], label, snap_ts, bk["key"], mk["key"], player,
-                             name_key(player), o["name"], float(o["point"]), int(o["price"])))
+    rows = odds_rows(event["id"], label, body.get("timestamp", iso(when)), body.get("data") or {})
     con.executemany("INSERT OR REPLACE INTO prop_odds VALUES (?,?,?,?,?,?,?,?,?,?)", rows)
     return len(rows), left
 
@@ -92,7 +83,7 @@ def run(start, end, bet_minutes, close_minutes, markets, books, estimate, db_pat
                 tip = datetime.fromisoformat(e["commence_time"].replace("Z", "+00:00"))
                 con.execute("INSERT OR REPLACE INTO events VALUES (?,?,?,?,?)",
                             (e["id"], e["commence_time"], str(tip.astimezone(ET).date()),
-                             e["home_team"], e["away_team"]))
+                             team_code(e["home_team"]), team_code(e["away_team"])))
                 for label, mins in (("bet", bet_minutes), ("close", close_minutes)):
                     n, left = save_snapshot(con, e, label, tip - timedelta(minutes=mins), key, markets, books)
                     print(f"   {e['away_team']} @ {e['home_team']} [{label}] {n} prices  (credits left: {left})")

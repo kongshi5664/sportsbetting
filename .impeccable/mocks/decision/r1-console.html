@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Tip-Off Desk — Edge Board · Graphite Console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#16181c;--pn:#22252b;--pn2:#1c1f24;--sm:#2e323a;--sm2:#3a3f48;--tx:#e6e8ec;--mu:#9aa0ab;--dim:#868c97;--bl:#7aa2f7;--gr:#9ece6a;--rd:#f7768e;--am:#e0af68}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1440px;height:900px;overflow:hidden;background:var(--bg);color:var(--tx);font:400 13px/1.35 Geist,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.n{font-family:"Geist Mono",ui-monospace,monospace;font-feature-settings:"tnum";letter-spacing:-.01em}
+.sc{font-variant:all-small-caps;letter-spacing:.07em;font-weight:500;color:var(--mu)}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+/* top bar */
+.top{height:40px;display:flex;align-items:center;border-bottom:1px solid var(--sm);padding:0 12px 0 16px;gap:18px}
+.brand{font-weight:600;font-size:12px;letter-spacing:.16em}
+.lg{display:flex;gap:2px;padding-left:18px;border-left:1px solid var(--sm);height:100%;align-items:center}
+.chip{font-size:11px;padding:2px 7px;border-radius:3px;color:var(--dim)}.chip.on{color:var(--tx);background:var(--pn);box-shadow:inset 0 0 0 1px var(--sm2)}
+.chip i{font-style:normal;font-size:11px;margin-left:4px;color:var(--dim)}
+.tabs{display:flex;height:100%;margin-left:8px}
+.tab{display:flex;align-items:center;padding:0 12px;color:var(--mu);border-bottom:1px solid transparent;margin-bottom:-1px}
+.tab.on{color:var(--tx);border-color:var(--bl)}
+.kpi{margin-left:auto;display:flex;height:100%}
+.k{display:flex;align-items:baseline;gap:7px;padding:0 14px;border-left:1px solid var(--sm);height:100%;align-items:center}
+.k span{color:var(--dim);font-size:11px}.k b{font-weight:500}.k em{font-style:normal;color:var(--dim);font-size:11px}
+/* filter row */
+.fil{height:44px;display:flex;align-items:center;gap:8px;padding:0 16px;border-bottom:1px solid var(--sm)}
+.seg{display:flex;border:1px solid var(--sm2);border-radius:4px;overflow:hidden;height:26px}
+.seg button{padding:0 10px;color:var(--mu);border-left:1px solid var(--sm2);font-size:12px}.seg button:first-child{border:0}
+.seg button.on{background:var(--pn);color:var(--tx)}
+.ctl{height:26px;display:flex;align-items:center;gap:7px;padding:0 9px;border:1px solid var(--sm2);border-radius:4px;font-size:12px;color:var(--tx)}
+.ctl span{color:var(--dim)}.ctl.q{width:200px;color:var(--dim)}
+.box{width:12px;height:12px;border-radius:2px;background:var(--bl);color:var(--bg);font-size:9px;display:grid;place-items:center;font-weight:700}
+.snap{margin-left:auto;color:var(--mu);font-size:12px;display:flex;align-items:center;gap:10px}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--gr)}
+/* tiles */
+.tiles{display:grid;grid-template-columns:1fr 300px 264px;height:788px}
+.tile{display:flex;flex-direction:column;border-right:1px solid var(--sm);min-width:0}.tile:last-child{border:0}
+.th{height:32px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 14px;background:var(--pn);border-bottom:1px solid var(--sm)}
+.th .sc{color:var(--tx)}.th small{color:var(--dim);font-size:11px}
+table{width:100%;border-collapse:collapse;table-layout:fixed}
+th{height:28px;padding:0 8px;text-align:right;font-weight:500;border-bottom:1px solid var(--sm)}
+td{height:34px;padding:0 8px;text-align:right;border-bottom:1px solid var(--pn);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.l{text-align:left}th:first-child,td:first-child{padding-left:14px}th:last-child,td:last-child{padding-right:14px}
+tr.g td{height:28px;background:var(--pn2);border-bottom:1px solid var(--sm);color:var(--mu);font-size:12px;text-align:left}
+tr.g b{color:var(--tx);font-weight:500;margin-right:10px}
+.hr{background:rgba(122,162,247,.06)}th.hr{color:var(--tx)}td.hr{font-weight:600;color:var(--tx)}
+.rf{color:var(--dim)}.mu{color:var(--mu)}.pos{color:var(--gr)}
+tr.on td:first-child{box-shadow:inset 2px 0 0 var(--bl)}
+tr.x td{color:var(--dim)}tr.x td.hr{font-weight:400;color:var(--mu)}
+.pl{display:inline-flex;align-items:center;gap:5px;font-size:11px;padding:1px 6px;border-radius:3px;border:1px solid}
+.ok{color:var(--gr);border-color:rgba(158,206,106,.28)}.bk{color:var(--rd);border-color:rgba(247,118,142,.35)}
+.add{width:26px;height:22px;border:1px solid var(--sm2);border-radius:3px;color:var(--mu);font-size:13px;line-height:20px}
+.add.in{background:rgba(122,162,247,.14);border-color:var(--bl);color:var(--bl);font-size:11px}.add[disabled]{opacity:.3;cursor:not-allowed}
+.tf{margin-top:auto;height:28px;flex:none;display:flex;align-items:center;gap:16px;padding:0 14px;border-top:1px solid var(--sm);color:var(--dim);font-size:11px}
+/* card */
+.leg{padding:11px 14px;border-bottom:1px solid var(--sm);display:grid;grid-template-columns:1fr auto;row-gap:3px}
+.leg b{font-weight:500}.leg .p{font-weight:600}.leg .s{color:var(--mu);font-size:12px}
+.sum{padding:12px 14px;display:grid;grid-template-columns:1fr auto;row-gap:7px;border-bottom:1px solid var(--sm);font-size:12px}
+.sum span{color:var(--mu)}.sum b{font-weight:500;text-align:right}
+.mtr{grid-column:1/3;height:3px;background:var(--sm);position:relative}.mtr i{position:absolute;inset:0 auto 0 0;width:38.1%;background:var(--bl)}
+.void{flex:1;display:grid;place-items:center;color:var(--dim);font-size:11px;padding:0 24px;text-align:center}
+.dz{padding:0 14px 14px;display:flex;align-items:center;gap:10px}
+.clr{height:26px;padding:0 10px;border:1px solid rgba(247,118,142,.45);border-radius:4px;color:var(--rd);font-size:12px}
+.dz small{color:var(--dim);font-size:11px}
+/* checks */
+.ck{display:grid;grid-template-columns:16px 1fr;column-gap:8px;padding:9px 14px;border-bottom:1px solid var(--pn);font-size:12px}
+.ck i{font-style:normal;font-family:"Geist Mono",monospace;font-weight:600;font-size:12px}.ck small{grid-column:2;color:var(--mu);font-size:11px;margin-top:1px}
+.y i{color:var(--gr)}.w i{color:var(--am)}.w small{color:var(--am)}.no i{color:var(--rd)}.no small{color:var(--rd)}
+.sub{height:28px;display:flex;align-items:center;padding:0 14px;border-bottom:1px solid var(--sm);border-top:1px solid var(--sm);margin-top:6px;background:var(--pn2)}
+.rule{padding:10px 14px 0;color:var(--dim);font-size:11px}
+.lock{margin:auto 14px 8px;height:36px;border-radius:4px;background:var(--bl);color:#10131a;font-weight:600;font-size:13px;display:flex;align-items:center;justify-content:space-between;padding:0 12px}
+.lock kbd{font:500 11px "Geist Mono",monospace;opacity:.7}
+.ln{padding:0 14px 14px;color:var(--dim);font-size:11px}
+.foot{height:28px;display:flex;align-items:center;gap:14px;padding:0 16px;border-top:1px solid var(--sm);color:var(--mu);font-size:11px}
+.tag{color:var(--am);border:1px solid rgba(224,175,104,.45);border-radius:3px;padding:0 6px;font-variant:all-small-caps;letter-spacing:.08em}
+.foot .r{margin-left:auto;color:var(--dim)}
+</style></head><body>
+<header class="top">
+  <div class="brand">TIP-OFF DESK</div>
+  <div class="lg"><span class="chip on">NBA</span><span class="chip">NFL<i>soon</i></span><span class="chip">NHL<i>soon</i></span></div>
+  <nav class="tabs"><a class="tab on">Edge Board</a><a class="tab">Card</a><a class="tab">Ledger</a><a class="tab">Rulebook</a></nav>
+  <div class="kpi">
+    <div class="k"><span>Bankroll</span><b class="n">$2,000</b></div>
+    <div class="k"><span>Unit</span><b class="n">$20</b></div>
+    <div class="k"><span>Avg CLV</span><b class="n pos">+2.1%</b><em class="n">n=48</em></div>
+  </div>
+</header>
+<div class="fil">
+  <div class="seg"><button class="on">All</button><button>Points</button><button>Rebounds</button><button>Assists</button><button>Threes</button><button>Blocks</button></div>
+  <div class="ctl"><span>Min edge</span><b class="n">2.0%</b></div>
+  <div class="ctl"><span class="box">✓</span>Show blocked</div>
+  <div class="ctl q">Filter player or team…</div>
+  <div class="snap"><span class="dot"></span><span>Odds snapshot <b class="n" style="color:var(--tx);font-weight:500">6:12p</b> · 4 min ago</span><button class="ctl">Refresh odds <span class="n">~6 cr</span></button></div>
+</div>
+<main class="tiles">
+<section class="tile">
+  <div class="th"><span class="sc">Edge board · Thu Oct 16</span><small class="n">11 markets · 9 pass · 2 blocked</small></div>
+  <table>
+    <colgroup><col style="width:186px"><col style="width:84px"><col style="width:62px"><col style="width:62px"><col style="width:84px"><col style="width:54px"><col style="width:54px"><col style="width:58px"><col style="width:66px"><col style="width:56px"><col><col style="width:56px"></colgroup>
+    <thead><tr class="sc"><th class="l">Player</th><th class="l">Market</th><th>Pick</th><th>Fair</th><th class="hr">Hard Rock</th><th>DK</th><th>FD</th><th>MGM</th><th>Edge</th><th>Stake</th><th class="l">Rules</th><th>Add</th></tr></thead>
+    <tbody class="n-rows">
+    <tr class="g"><td colspan="12"><b>SAS @ DET</b><span class="n">7:00p</span></td></tr>
+    <tr class="on"><td class="l">Victor Wembanyama</td><td class="l mu">Blocks</td><td class="n">O3.5</td><td class="n mu">−104</td><td class="n hr">+105</td><td class="n rf">−115</td><td class="n rf">−110</td><td class="n rf">−105</td><td class="n pos">+4.6%</td><td class="n">$22</td><td class="l"><span class="pl ok">✓ pass</span></td><td><button class="add in">✓</button></td></tr>
+    <tr class="on"><td class="l">Cade Cunningham</td><td class="l mu">Points</td><td class="n">O25.5</td><td class="n mu">−119</td><td class="n hr">−110</td><td class="n rf">−125</td><td class="n rf">−120</td><td class="n rf">−130</td><td class="n pos">+3.7%</td><td class="n">$21</td><td class="l"><span class="pl ok">✓ pass</span></td><td><button class="add in">✓</button></td></tr>
+    <tr class="x"><td class="l">Victor Wembanyama</td><td class="l">Points</td><td class="n">O24.5</td><td class="n">−125</td><td class="n hr">−115</td><td class="n">−135</td><td class="n">−130</td><td class="n">−125</td><td class="n">+3.9%</td><td class="n">—</td><td class="l"><span class="pl bk">✕ Player cap</span></td><td><button class="add" disabled>+</button></td></tr>
+    <tr class="g"><td colspan="12"><b>MIA @ ORL</b><span class="n">7:30p</span></td></tr>
+    <tr class="on"><td class="l">Paolo Banchero</td><td class="l mu">Rebounds</td><td class="n">O7.5</td><td class="n mu">+102</td><td class="n hr">+110</td><td class="n rf">−105</td><td class="n rf">−110</td><td class="n rf">+100</td><td class="n pos">+4.0%</td><td class="n">$18</td><td class="l"><span class="pl ok">✓ pass</span></td><td><button class="add in">✓</button></td></tr>
+    <tr><td class="l">Franz Wagner</td><td class="l mu">Points</td><td class="n">U21.5</td><td class="n mu">−108</td><td class="n hr">+100</td><td class="n rf">−115</td><td class="n rf">−110</td><td class="n rf">−120</td><td class="n pos">+3.8%</td><td class="n">$19</td><td class="l"><span class="pl ok">✓ pass</span></td><td><button class="add">+</button></td></tr>
+    <tr><td class="l">Tyler Herro</td><td class="l mu">Threes</td><td class="n">O2.5</td><td class="n mu">+118</td><td class="n hr">+125</td><td class="n rf">+110</td><td class="n rf">+105</td><td class="n rf">+115</td><td class="n pos">+3.2%</td><td class="n">$13</td><td class="l"><span class="pl ok">✓ pass</span></td><td><button class="add">+</button></td></tr>
+    <tr class="x"><td class="l">Bam Adebayo</td><td class="l">Rebounds</td><td class="n">O9.5</td><td class="n">−112</td><td class="n hr">−108</td><td class="n">−120</td><td class="n">−115</td><td class="n">−125</td><td class="n">+1.7%</td><td class="n">—</td><td class="l"><span class="pl bk">✕ HR edge below 2%</span></td><td><button class="add" disabled>+</button></td></tr>
+    <tr class="g"><td colspan="12"><b>OKC @ LAL</b><span class="n">10:30p</span></td></tr>
+    <tr><td class="l">Shai Gilgeous-Alexander</td><td class="l mu">Points</td><td class="n">O31.5</td><td class="n mu">−102</td><td class="n hr">+108</td><td class="n rf">−110</td><td class="n rf">−105</td><td class="n rf">−115</td><td class="n pos">+5.0%</td><td class="n">$23</td><td class="l"><span class="pl ok">✓ pass</span></td><td><button class="add">+</button></td></tr>
+    <tr><td class="l">Chet Holmgren</td><td class="l mu">Blocks</td><td class="n">O2.5</td><td class="n mu">+105</td><td class="n hr">+115</td><td class="n rf">−105</td><td class="n rf">+100</td><td class="n rf">−110</td><td class="n pos">+4.9%</td><td class="n">$21</td><td class="l"><span class="pl ok">✓ pass</span></td><td><button class="add">+</button></td></tr>
+    <tr><td class="l">Austin Reaves</td><td class="l mu">Points</td><td class="n">O19.5</td><td class="n mu">−106</td><td class="n hr">+102</td><td class="n rf">−115</td><td class="n rf">−110</td><td class="n rf">−110</td><td class="n pos">+3.9%</td><td class="n">$19</td><td class="l"><span class="pl ok">✓ pass</span></td><td><button class="add">+</button></td></tr>
+    <tr><td class="l">Luka Dončić</td><td class="l mu">Threes</td><td class="n">O3.5</td><td class="n mu">+130</td><td class="n hr">+138</td><td class="n rf">+120</td><td class="n rf">+125</td><td class="n rf">+115</td><td class="n pos">+3.5%</td><td class="n">$13</td><td class="l"><span class="pl ok">✓ pass</span></td><td><button class="add">+</button></td></tr>
+    </tbody>
+  </table>
+  <div class="tf"><span>Fair = de-vigged consensus (DK · FD · MGM), model_weight 0.25</span><span>Edge = fair prob × HR decimal − 1</span><span>Stake = ¼ Kelly</span><span style="margin-left:auto">DK · FD · MGM are reference only</span></div>
+</section>
+<section class="tile">
+  <div class="th"><span class="sc">Tonight's card</span><small class="n">3 legs · Hard Rock</small></div>
+  <div class="leg"><b>Victor Wembanyama</b><span class="n p">+105</span><span class="s">Blocks O3.5 · fair <span class="n">−104</span></span><span class="s n" style="text-align:right">$22 · <span class="pos">+4.6%</span></span></div>
+  <div class="leg"><b>Cade Cunningham</b><span class="n p">−110</span><span class="s">Points O25.5 · fair <span class="n">−119</span></span><span class="s n" style="text-align:right">$21 · <span class="pos">+3.7%</span></span></div>
+  <div class="leg"><b>Paolo Banchero</b><span class="n p">+110</span><span class="s">Rebounds O7.5 · fair <span class="n">+102</span></span><span class="s n" style="text-align:right">$18 · <span class="pos">+4.0%</span></span></div>
+  <div class="sum">
+    <span>Risk</span><b class="n">$61 <span>of $160 cap</span></b>
+    <div class="mtr"><i></i></div>
+    <span>Avg edge</span><b class="n pos">+4.1%</b>
+    <span>Expected value</span><b class="n">+$2.51</b>
+    <span>Units</span><b class="n">3.05u</b>
+  </div>
+  <div class="void">Add passing rows from the board. Legs keep the Hard Rock price at the moment they were added.</div>
+  <div class="dz"><button class="clr">Clear card</button><small>Removes all 3 legs</small></div>
+</section>
+<section class="tile">
+  <div class="th"><span class="sc">Pre-lock checks</span><small class="n" style="color:var(--gr)">5 / 5 pass</small></div>
+  <div class="ck y"><i>✓</i>Edge ≥ 2% at Hard Rock<small class="n">all 3 legs · min +3.7%</small></div>
+  <div class="ck y"><i>✓</i>Within nightly risk cap<small class="n">$61 of $160</small></div>
+  <div class="ck y"><i>✓</i>One leg per player<small>3 legs · 3 players</small></div>
+  <div class="ck y"><i>✓</i>Stake ≤ 1.5 units<small class="n">max $22 · 1.1u</small></div>
+  <div class="ck y"><i>✓</i>Prices current<small class="n">snapshot 6:12p · 4 min old</small></div>
+  <div class="ck w"><i>!</i>Injury report pending<small class="n">DET · 6:30p update, before lock</small></div>
+  <div class="sub"><span class="sc">Held off the card</span></div>
+  <div class="ck no"><i>✕</i>Wembanyama · Points O24.5<small>Player cap — 1 leg per player</small></div>
+  <div class="ck no"><i>✕</i>Adebayo · Rebounds O9.5<small class="n">HR edge below 2% — +1.7%</small></div>
+  <p class="rule">Blocks come from confirmed rules and can't be overridden here. Change rules in the Rulebook.</p>
+  <button class="lock">Lock card · $61<kbd>Ctrl ↵</kbd></button>
+  <p class="ln">Locking records taken prices for CLV. Place bets by hand in Hard Rock Bet.</p>
+</section>
+</main>
+<footer class="foot"><span class="tag">Sample data</span><span>Gambling problem? Call 1-800-GAMBLER</span><span class="r">21+ · Florida · Hard Rock Bet is the only bettable book</span></footer>
+</body></html>

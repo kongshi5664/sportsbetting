@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Tip-Off Desk — Edge Board</title>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1b1d22;--ink2:#5b5f68;--mute:#6c7079;--sil:#c7c9c8;--sil2:#ebecec;--bg:#fff;--nba:#f28c28;--nfl:#3a9a4a;--mlb:#4fa3d8;--good:#0b6e5f;--bad:#c41f3b;--warn:#6f5600}
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:1440px;height:900px;overflow:hidden;background:var(--bg);color:var(--ink);font:14px/1.3 "Hanken Grotesk",sans-serif;font-variant-numeric:tabular-nums;display:grid;grid-template-columns:96px 1fr;grid-template-rows:64px 1fr 36px}
+button,select,label{font:inherit;color:inherit}
+.rail{grid-row:1/4;border-right:2px solid var(--ink);display:flex;flex-direction:column}
+.mark{height:64px;background:var(--ink);display:grid;place-items:center}
+.lg{height:96px;border-bottom:1px solid var(--sil);border-left:6px solid var(--c);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:none;border-top:0;border-right:0;cursor:pointer;font-size:11px;font-weight:700;letter-spacing:.08em}
+.lg svg{width:40px;height:40px;stroke:currentColor;fill:none;stroke-width:3.4;stroke-linecap:square;stroke-linejoin:miter}
+.lg svg .f{fill:currentColor;stroke:none}
+.lg.on{background:var(--nba);border-left-color:var(--ink)}
+.lg.soon{color:#a9acb0;border-left-color:color-mix(in srgb,var(--c) 45%,#fff)}
+.lg.soon small{font-weight:500;letter-spacing:.04em;text-transform:lowercase}
+.top{background:var(--nba);display:flex;align-items:stretch;padding-left:28px}
+.brand{font-weight:800;font-size:20px;letter-spacing:.14em;align-self:center;width:228px}
+.brand span{font-weight:500;letter-spacing:.06em;font-size:12px;display:block;margin-top:1px}
+nav{display:flex;align-items:flex-end;gap:2px}
+nav a{display:block;padding:0 22px;height:44px;line-height:44px;font-weight:700;font-size:15px;color:var(--ink);text-decoration:none}
+nav a.on{background:#fff}
+.stats{margin-left:auto;display:flex;align-items:center}
+.stats div{padding:0 22px;border-left:2px solid rgba(27,29,34,.22);height:40px;display:flex;flex-direction:column;justify-content:center}
+.stats small{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.stats b{font-size:18px;font-weight:800}
+main{padding:0 28px;display:grid;grid-template-columns:1fr 340px;gap:24px;overflow:hidden}
+.head{display:flex;align-items:baseline;gap:16px;height:60px;padding-top:18px}
+h1{font-size:26px;font-weight:800;letter-spacing:-.01em}
+.head p{color:var(--ink2)}
+.filt{display:flex;align-items:center;gap:10px;height:48px;border-top:2px solid var(--ink);border-bottom:1px solid var(--sil)}
+.seg{display:flex;border:1.5px solid var(--ink)}
+.seg button{border:0;background:none;padding:5px 11px;font-weight:600;font-size:13px;cursor:pointer}
+.seg button+button{border-left:1.5px solid var(--ink)}
+.seg button.on{background:var(--ink);color:#fff}
+select{border:1.5px solid var(--ink);background:#fff;padding:5px 8px;font-weight:600;font-size:13px}
+.filt label{display:flex;gap:6px;align-items:center;font-size:13px;font-weight:600}
+.filt input{accent-color:var(--ink);width:15px;height:15px}
+.upd{margin-left:auto;font-size:12px;color:var(--ink2)}
+.btn{border:1.5px solid var(--ink);background:#fff;padding:5px 12px;font-weight:700;font-size:13px;cursor:pointer}
+table{width:100%;border-collapse:collapse;table-layout:fixed}
+th{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;text-align:right;padding:10px 8px 6px;color:var(--ink2);border-bottom:2px solid var(--ink);white-space:nowrap}
+td{text-align:right;padding:0 8px;height:40px;border-bottom:1px solid var(--sil2);white-space:nowrap}
+.l{text-align:left}
+.pl{font-weight:700}
+.g td{background:var(--nba);height:32px;font-weight:800;font-size:13px;letter-spacing:.04em;border:0}
+.g td span{font-weight:600;margin-left:10px;letter-spacing:0}
+.fair{font-weight:600}
+.hr{font-size:17px;font-weight:800;border-left:2px solid var(--ink);border-right:2px solid var(--ink)}
+th.hr{font-size:11px;color:var(--ink)}
+.ref{color:var(--mute);font-size:13px}
+.pos{color:var(--good);font-weight:700}.neg{color:var(--bad);font-weight:600}
+.pill{display:inline-flex;gap:5px;align-items:center;font-size:12px;font-weight:700;padding:3px 8px;border:1.5px solid currentColor}
+.pill.ok{color:var(--good)}.pill.no{color:var(--bad)}.pill.na{color:var(--mute);border-style:dashed}
+.add{border:1.5px solid var(--ink);background:#fff;font-weight:700;font-size:12px;padding:4px 9px;cursor:pointer;width:58px}
+.add.in{background:var(--ink);color:#fff}
+.add[disabled]{border-color:var(--sil);color:#a9acb0;cursor:not-allowed}
+.blk td{color:var(--ink2)}.blk .hr{color:var(--ink2)}
+aside{margin-top:18px;border:2px solid var(--ink);align-self:start;display:flex;flex-direction:column}
+.ch{background:var(--ink);color:#fff;padding:12px 16px;display:flex;justify-content:space-between;align-items:baseline}
+.ch h2{font-size:17px;font-weight:800}
+.ch span{font-size:12px;color:#c7c9c8}
+.leg{display:grid;grid-template-columns:1fr auto auto;gap:4px 14px;padding:11px 16px;border-bottom:1px solid var(--sil2);align-items:baseline}
+.leg b{font-weight:700}.leg small{grid-column:1;color:var(--ink2);font-size:12px}
+.leg .o{font-weight:800;font-size:16px}.leg .s{font-weight:700;width:36px;text-align:right}
+.leg .e{grid-column:2/4;text-align:right;font-size:12px}
+.risk{padding:14px 16px 10px}
+.risk div{display:flex;justify-content:space-between;font-weight:700}
+.risk b{font-size:22px;font-weight:800}
+.bar{height:10px;background:var(--sil2);margin-top:8px;display:flex}
+.bar i{display:block;width:38.1%;background:var(--ink)}
+.bar+p{font-size:12px;color:var(--ink2);margin-top:5px}
+ul{list-style:none;padding:4px 16px 12px;border-bottom:1px solid var(--sil)}
+li{display:grid;grid-template-columns:20px 1fr;font-size:13px;padding:5px 0}
+li em{font-style:normal;font-weight:800}
+li.y em{color:var(--good)}li.x em{color:var(--bad)}
+li strong{font-weight:700}
+.act{display:flex;align-items:center;padding:14px 16px;gap:12px}
+.lock{flex:1;background:var(--ink);color:#fff;border:0;padding:12px;font-weight:800;font-size:15px;letter-spacing:.04em;cursor:pointer}
+.clr{background:none;border:0;font-weight:600;font-size:13px;color:var(--ink2);text-decoration:underline;padding:12px 4px 12px 14px;border-left:1px solid var(--sil);cursor:pointer}
+footer{grid-column:2;border-top:2px solid var(--ink);display:flex;align-items:center;gap:22px;padding:0 28px;font-size:12px;color:var(--ink2)}
+footer b{color:var(--ink)}
+.tag{margin-left:auto;background:var(--sil);color:var(--ink);font-weight:800;letter-spacing:.08em;text-transform:uppercase;font-size:11px;padding:3px 8px}
+</style></head><body>
+<div class="rail" role="navigation" aria-label="League">
+ <div class="mark"><svg width="32" height="32" viewBox="0 0 32 32"><rect x="4" y="4" width="11" height="11" fill="#f28c28"/><rect x="17" y="4" width="11" height="11" fill="#3a9a4a"/><rect x="4" y="17" width="11" height="11" fill="#4fa3d8"/><rect x="17" y="17" width="11" height="11" fill="#c7c9c8"/></svg></div>
+ <button class="lg on" style="--c:var(--nba)" aria-pressed="true"><svg viewBox="0 0 32 32"><circle class="f" cx="14" cy="5" r="3"/><circle class="f" cx="24" cy="3.5" r="2.6"/><path d="M14 10v9M14 12l6-6M14 13l-4 4M14 19l4 4v6M14 19l-4 4v6"/></svg>NBA</button>
+ <button class="lg soon" style="--c:var(--nfl)" disabled><svg viewBox="0 0 32 32"><circle class="f" cx="19" cy="5" r="3"/><path d="M18 10l-5 5v5l-5 5v4M13 20l6 6h4M17 11l5 5"/><rect class="f" x="21" y="14" width="6" height="4" transform="rotate(-45 24 16)"/></svg>NFL<small>soon</small></button>
+ <button class="lg soon" style="--c:var(--mlb)" disabled><svg viewBox="0 0 32 32"><circle class="f" cx="12" cy="5" r="3"/><path d="M12 10v10M13 12l9-9M12 20l-4 4v5M12 20l4 4v5"/><circle class="f" cx="26" cy="12" r="2"/></svg>MLB<small>soon</small></button>
+ <button class="lg soon" style="--c:#c7c9c8" disabled><svg viewBox="0 0 32 32"><circle class="f" cx="14" cy="5" r="3"/><path d="M14 10v8M14 13l8 8h5M14 18l-4 4v6M14 18l4 4v6"/><rect class="f" x="24" y="25" width="4" height="2.5"/></svg>NHL<small>soon</small></button>
+</div>
+<header class="top">
+ <div class="brand">TIP-OFF DESK<span>NBA · Thu Oct 16</span></div>
+ <nav><a class="on" href="#">Edge Board</a><a href="#">Card</a><a href="#">Ledger</a><a href="#">Rulebook</a></nav>
+ <div class="stats"><div><small>Bankroll</small><b>$2,000</b></div><div><small>Unit</small><b>$20</b></div><div><small>Avg CLV · n=48</small><b>+2.1%</b></div></div>
+</header>
+<main>
+<section>
+ <div class="head"><h1>Edge Board</h1><p>3 games · 8 markets priced · 5 clear the rulebook · bettable at Hard Rock only</p></div>
+ <div class="filt">
+  <div class="seg" role="group" aria-label="Market"><button class="on">All</button><button>Points</button><button>Rebounds</button><button>Assists</button><button>Threes</button><button>Blocks</button></div>
+  <select aria-label="Minimum edge"><option>Edge ≥ 0%</option></select>
+  <label><input type="checkbox" checked> Show blocked</label>
+  <span class="upd">Odds snapshot 6:12p · 48 min to first tip</span><button class="btn">Refresh odds</button>
+ </div>
+ <table>
+  <colgroup><col style="width:168px"><col style="width:82px"><col style="width:64px"><col style="width:60px"><col style="width:82px"><col style="width:46px"><col style="width:46px"><col style="width:50px"><col style="width:66px"><col style="width:54px"><col><col style="width:74px"></colgroup>
+  <thead><tr><th class="l">Player</th><th class="l">Market</th><th class="l">Pick</th><th>Fair</th><th class="hr">Hard Rock</th><th>DK</th><th>FD</th><th>MGM</th><th>Edge</th><th>Stake</th><th class="l">Rules</th><th></th></tr></thead>
+  <tbody>
+   <tr class="g"><td class="l" colspan="12">SAS @ DET<span>7:00p</span></td></tr>
+   <tr><td class="l pl">Victor Wembanyama</td><td class="l">Blocks</td><td class="l">O 3.5</td><td class="fair">−104</td><td class="hr">+105</td><td class="ref">−110</td><td class="ref">+100</td><td class="ref">−105</td><td class="pos">+4.6%</td><td>$22</td><td class="l"><span class="pill ok">✓ Pass</span></td><td><button class="add in">✓ Added</button></td></tr>
+   <tr><td class="l pl">Cade Cunningham</td><td class="l">Assists</td><td class="l">O 9.5</td><td class="fair">+102</td><td class="hr">+110</td><td class="ref">−105</td><td class="ref">+100</td><td class="ref">+104</td><td class="pos">+4.0%</td><td>$19</td><td class="l"><span class="pill ok">✓ Pass</span></td><td><button class="add in">✓ Added</button></td></tr>
+   <tr class="blk"><td class="l pl">Victor Wembanyama</td><td class="l">Rebounds</td><td class="l">O 11.5</td><td class="fair">−108</td><td class="hr">+100</td><td class="ref">−115</td><td class="ref">−105</td><td class="ref">−108</td><td class="pos">+3.8%</td><td>—</td><td class="l"><span class="pill no">✕ Player cap</span></td><td><button class="add" disabled>Add</button></td></tr>
+   <tr class="g"><td class="l" colspan="12">MIA @ ORL<span>7:30p</span></td></tr>
+   <tr><td class="l pl">Franz Wagner</td><td class="l">Threes</td><td class="l">O 1.5</td><td class="fair">+118</td><td class="hr">+130</td><td class="ref">+115</td><td class="ref">+120</td><td class="ref">+110</td><td class="pos">+5.5%</td><td>$20</td><td class="l"><span class="pill ok">✓ Pass</span></td><td><button class="add in">✓ Added</button></td></tr>
+   <tr class="blk"><td class="l pl">Paolo Banchero</td><td class="l">Points</td><td class="l">O 24.5</td><td class="fair">−106</td><td class="hr">−102</td><td class="ref">−112</td><td class="ref">−110</td><td class="ref">−105</td><td class="pos">+1.9%</td><td>—</td><td class="l"><span class="pill no">✕ HR edge below 2%</span></td><td><button class="add" disabled>Add</button></td></tr>
+   <tr class="blk"><td class="l pl">Bam Adebayo</td><td class="l">Rebounds</td><td class="l">O 9.5</td><td class="fair">−115</td><td class="hr">−120</td><td class="ref">−118</td><td class="ref">−112</td><td class="ref">−115</td><td class="neg">−1.9%</td><td>—</td><td class="l"><span class="pill na">No edge</span></td><td><button class="add" disabled>Add</button></td></tr>
+   <tr class="g"><td class="l" colspan="12">OKC @ LAL<span>10:30p</span></td></tr>
+   <tr><td class="l pl">Shai Gilgeous-Alexander</td><td class="l">Points</td><td class="l">O 31.5</td><td class="fair">−110</td><td class="hr">−104</td><td class="ref">−115</td><td class="ref">−108</td><td class="ref">−110</td><td class="pos">+2.7%</td><td>$14</td><td class="l"><span class="pill ok">✓ Pass</span></td><td><button class="add">+ Add</button></td></tr>
+   <tr><td class="l pl">Chet Holmgren</td><td class="l">Blocks</td><td class="l">O 2.5</td><td class="fair">+120</td><td class="hr">+125</td><td class="ref">+115</td><td class="ref">+120</td><td class="ref">+125</td><td class="pos">+2.3%</td><td>$10</td><td class="l"><span class="pill ok">✓ Pass</span></td><td><button class="add">+ Add</button></td></tr>
+  </tbody>
+ </table>
+</section>
+<aside aria-label="Tonight's Card">
+ <div class="ch"><h2>Tonight's Card</h2><span>3 legs · Hard Rock prices</span></div>
+ <div class="leg"><b>Wembanyama · Blocks O 3.5</b><span class="o">+105</span><span class="s">$22</span><small>SAS @ DET · fair −104</small><span class="e pos">+4.6%</span></div>
+ <div class="leg"><b>Cunningham · Assists O 9.5</b><span class="o">+110</span><span class="s">$19</span><small>SAS @ DET · fair +102</small><span class="e pos">+4.0%</span></div>
+ <div class="leg"><b>Wagner · Threes O 1.5</b><span class="o">+130</span><span class="s">$20</span><small>MIA @ ORL · fair +118</small><span class="e pos">+5.5%</span></div>
+ <div class="risk"><div><span>Risk</span><span><b>$61</b> of $160 cap</span></div><div class="bar" role="meter" aria-valuenow="61" aria-valuemax="160" aria-label="Nightly risk"><i></i></div><p>$99 of headroom · 3.05% of bankroll</p></div>
+ <ul>
+  <li class="y"><em>✓</em><span><strong>Pass</strong> · every leg clears 2% edge at Hard Rock</span></li>
+  <li class="y"><em>✓</em><span><strong>Pass</strong> · risk under nightly cap</span></li>
+  <li class="y"><em>✓</em><span><strong>Pass</strong> · one leg per player</span></li>
+  <li class="x"><em>✕</em><span><strong>Held out</strong> · Wembanyama Rebounds, Player cap</span></li>
+ </ul>
+ <div class="act"><button class="lock">Lock card</button><button class="clr">Clear card</button></div>
+</aside>
+</main>
+<footer><span><b>Gambling problem? Call 1-800-GAMBLER</b></span><span>21+ · Florida · Tip-Off Desk never places bets</span><span>DK / FD / MGM are price references, not bettable</span><span class="tag">Sample data</span></footer>
+</body></html>

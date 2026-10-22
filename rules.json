@@ -6,7 +6,8 @@
     "kelly_fraction": 0.25,
     "stake_cap_units": 2,
     "nightly_risk_cap": 0.08,
-    "holdout_season": "latest"
+    "holdout_season": "latest",
+    "suggest_max_per_game": 3
   },
   "rules": [
     {"id": "min_edge", "name": "Minimum edge vs. fair price", "status": "confirmed",

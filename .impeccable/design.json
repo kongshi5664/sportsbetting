@@ -1,0 +1,853 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-16T21:15:03+00:00",
+  "title": "Design System: Tip-Off Desk",
+  "extensions": {
+    "colorMeta": {
+      "ground": {
+        "role": "neutral",
+        "displayName": "Ground",
+        "canonical": "#ffffff",
+        "oklch": "oklch(100.0% 0.000 89.9)",
+        "purpose": "Page and control background.",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#252525",
+          "#424242",
+          "#616161",
+          "#828282",
+          "#a5a5a5",
+          "#c9c9c9",
+          "#eeeeee"
+        ]
+      },
+      "sunk": {
+        "role": "neutral",
+        "displayName": "Sunk",
+        "canonical": "#f4f5f5",
+        "oklch": "oklch(96.9% 0.001 197.1)",
+        "purpose": "Row hover, expanded proof rows, on-card rows.",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#242525",
+          "#414242",
+          "#606161",
+          "#818282",
+          "#a4a5a5",
+          "#c8c9c9",
+          "#eeefef"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "#1b1d22",
+        "oklch": "oklch(23.1% 0.010 268.2)",
+        "purpose": "Text, primary buttons, card head, toast; light-theme rule color.",
+        "tonalRamp": [
+          "#090b10",
+          "#23252a",
+          "#404248",
+          "#5f6167",
+          "#808289",
+          "#a2a5ac",
+          "#c6c9d0",
+          "#ebeef6"
+        ]
+      },
+      "ink-2": {
+        "role": "neutral",
+        "displayName": "Ink 2",
+        "canonical": "#474b54",
+        "oklch": "oklch(41.3% 0.016 266.5)",
+        "purpose": "Secondary text, column heads, held-out rows.",
+        "tonalRamp": [
+          "#080b12",
+          "#21252d",
+          "#3e424b",
+          "#5d616b",
+          "#7e828c",
+          "#a0a5af",
+          "#c4c9d4",
+          "#e9eefa"
+        ]
+      },
+      "mute": {
+        "role": "neutral",
+        "displayName": "Mute",
+        "canonical": "#5f636c",
+        "oklch": "oklch(49.9% 0.015 266.6)",
+        "purpose": "Reference prices, meta, testing pills, disabled text.",
+        "tonalRamp": [
+          "#080b12",
+          "#22252d",
+          "#3e424a",
+          "#5d616a",
+          "#7e828c",
+          "#a1a5af",
+          "#c5c9d3",
+          "#eaeef9"
+        ]
+      },
+      "rule": {
+        "role": "neutral",
+        "displayName": "Rule",
+        "canonical": "#1b1d22",
+        "oklch": "oklch(23.1% 0.010 268.2)",
+        "purpose": "2px and 1.5px structural ink rules.",
+        "tonalRamp": [
+          "#090b10",
+          "#23252a",
+          "#404248",
+          "#5f6167",
+          "#808289",
+          "#a2a5ac",
+          "#c6c9d0",
+          "#ebeef6"
+        ]
+      },
+      "rule-soft": {
+        "role": "neutral",
+        "displayName": "Rule Soft",
+        "canonical": "#e3e4e5",
+        "oklch": "oklch(91.8% 0.002 247.8)",
+        "purpose": "1px row dividers, gridlines, empty ramp cells.",
+        "tonalRamp": [
+          "#0b0b0c",
+          "#242526",
+          "#414243",
+          "#606162",
+          "#818283",
+          "#a4a5a6",
+          "#c8c9ca",
+          "#edeeef"
+        ]
+      },
+      "silver": {
+        "role": "neutral",
+        "displayName": "Silver",
+        "canonical": "#c7c9c8",
+        "oklch": "oklch(83.4% 0.003 165.1)",
+        "purpose": "Sample tag, dashed empty states, scrollbar.",
+        "tonalRamp": [
+          "#0a0b0b",
+          "#242525",
+          "#414242",
+          "#606261",
+          "#818382",
+          "#a3a5a4",
+          "#c8cac9",
+          "#edefee"
+        ]
+      },
+      "on-zone": {
+        "role": "neutral",
+        "displayName": "On Zone",
+        "canonical": "#1b1d22",
+        "oklch": "oklch(23.1% 0.010 268.2)",
+        "purpose": "Text on any league zone, both themes.",
+        "tonalRamp": [
+          "#090b10",
+          "#23252a",
+          "#404248",
+          "#5f6167",
+          "#808289",
+          "#a2a5ac",
+          "#c6c9d0",
+          "#ebeef6"
+        ]
+      },
+      "press-ink": {
+        "role": "neutral",
+        "displayName": "Press Ink",
+        "canonical": "#33363d",
+        "oklch": "oklch(33.3% 0.013 267.1)",
+        "purpose": "Hover on solid ink buttons, light theme.",
+        "tonalRamp": [
+          "#090b11",
+          "#22252c",
+          "#3f4249",
+          "#5e6169",
+          "#7f828a",
+          "#a1a5ad",
+          "#c5c9d2",
+          "#eaeef8"
+        ]
+      },
+      "league-nba": {
+        "role": "primary",
+        "displayName": "NBA Court Orange",
+        "canonical": "#f28c28",
+        "oklch": "oklch(73.5% 0.161 58.8)",
+        "purpose": "Live league zone: rail tile, header, game bands, ticket head, CLV line.",
+        "tonalRamp": [
+          "#160700",
+          "#3b1c00",
+          "#633506",
+          "#8d5016",
+          "#bb6c21",
+          "#ed8821",
+          "#fdb882",
+          "#ffeadb"
+        ]
+      },
+      "league-nfl": {
+        "role": "secondary",
+        "displayName": "NFL Field Green",
+        "canonical": "#3a9a4a",
+        "oklch": "oklch(61.0% 0.147 146.6)",
+        "purpose": "NFL zone, waiting.",
+        "tonalRamp": [
+          "#001002",
+          "#012e0a",
+          "#09501b",
+          "#027627",
+          "#399949",
+          "#5fbd6b",
+          "#84e38f",
+          "#cdfdd0"
+        ]
+      },
+      "league-mlb": {
+        "role": "secondary",
+        "displayName": "MLB Diamond Blue",
+        "canonical": "#4fa3d8",
+        "oklch": "oklch(68.5% 0.113 239.1)",
+        "purpose": "MLB zone, waiting.",
+        "tonalRamp": [
+          "#010d17",
+          "#00283f",
+          "#064769",
+          "#186894",
+          "#348bbe",
+          "#5baee4",
+          "#90d2ff",
+          "#e0f1fe"
+        ]
+      },
+      "league-nhl": {
+        "role": "secondary",
+        "displayName": "NHL Rink Silver",
+        "canonical": "#c7c9c8",
+        "oklch": "oklch(83.4% 0.003 165.1)",
+        "purpose": "NHL zone, waiting.",
+        "tonalRamp": [
+          "#0a0b0b",
+          "#242525",
+          "#414242",
+          "#606261",
+          "#818382",
+          "#a3a5a4",
+          "#c8cac9",
+          "#edefee"
+        ]
+      },
+      "pass": {
+        "role": "tertiary",
+        "displayName": "Pass Teal",
+        "canonical": "#0b6e5f",
+        "oklch": "oklch(48.3% 0.086 178.6)",
+        "purpose": "Passing rules, positive edge and CLV, wins.",
+        "tonalRamp": [
+          "#000f0b",
+          "#032c25",
+          "#004e42",
+          "#117162",
+          "#3f9383",
+          "#64b7a6",
+          "#89dcca",
+          "#bcffef"
+        ]
+      },
+      "blocked": {
+        "role": "tertiary",
+        "displayName": "Blocked Red",
+        "canonical": "#c41f3b",
+        "oklch": "oklch(53.2% 0.196 19.3)",
+        "purpose": "Failing rules, negatives, over-cap, errors.",
+        "tonalRamp": [
+          "#1f0003",
+          "#4c010f",
+          "#7c0c21",
+          "#b60330",
+          "#df3e50",
+          "#f8777c",
+          "#fcb3b3",
+          "#fee9e8"
+        ]
+      },
+      "blocked-soft": {
+        "role": "tertiary",
+        "displayName": "Blocked Soft",
+        "canonical": "#fbe4e8",
+        "oklch": "oklch(93.9% 0.026 5.7)",
+        "purpose": "Failing leg tint, remove hover, confirm strip.",
+        "tonalRamp": [
+          "#14070a",
+          "#302023",
+          "#4e3c40",
+          "#6f5b5f",
+          "#917c80",
+          "#b49fa3",
+          "#d9c3c7",
+          "#ffe8ec"
+        ]
+      },
+      "warning": {
+        "role": "tertiary",
+        "displayName": "Warning Ochre",
+        "canonical": "#7a5c00",
+        "oklch": "oklch(49.2% 0.101 86.4)",
+        "purpose": "Notice border and icon.",
+        "tonalRamp": [
+          "#110a00",
+          "#302300",
+          "#533f07",
+          "#7a5c00",
+          "#9d7e32",
+          "#c1a157",
+          "#e6c57b",
+          "#feedc6"
+        ]
+      },
+      "warning-soft": {
+        "role": "tertiary",
+        "displayName": "Warning Soft",
+        "canonical": "#f8efd3",
+        "oklch": "oklch(95.2% 0.038 92.2)",
+        "purpose": "Notice fill.",
+        "tonalRamp": [
+          "#100b00",
+          "#2c240e",
+          "#49422a",
+          "#696149",
+          "#8a8269",
+          "#ada58b",
+          "#d2c9ae",
+          "#f7eed2"
+        ]
+      },
+      "focus": {
+        "role": "tertiary",
+        "displayName": "Focus Blue",
+        "canonical": "#1f5fd6",
+        "oklch": "oklch(52.0% 0.194 261.5)",
+        "purpose": "2.5px keyboard focus outline only.",
+        "tonalRamp": [
+          "#000827",
+          "#011e5b",
+          "#073993",
+          "#1656cd",
+          "#3a7bf4",
+          "#72a4fd",
+          "#aecafb",
+          "#e6efff"
+        ]
+      },
+      "ground-dark": {
+        "role": "neutral",
+        "displayName": "Ground (dark)",
+        "canonical": "#121316",
+        "oklch": "oklch(18.7% 0.006 271.1)",
+        "purpose": "Dark-theme value of ground. Page and control background.",
+        "tonalRamp": [
+          "#0a0b0e",
+          "#242528",
+          "#414245",
+          "#606165",
+          "#818286",
+          "#a3a5a9",
+          "#c7c9cd",
+          "#edeef3"
+        ]
+      },
+      "sunk-dark": {
+        "role": "neutral",
+        "displayName": "Sunk (dark)",
+        "canonical": "#1a1c20",
+        "oklch": "oklch(22.6% 0.008 264.4)",
+        "purpose": "Dark-theme value of sunk. Row hover, expanded proof rows, on-card rows.",
+        "tonalRamp": [
+          "#090b0f",
+          "#232529",
+          "#404247",
+          "#5f6166",
+          "#808287",
+          "#a2a5aa",
+          "#c6c9cf",
+          "#eceef4"
+        ]
+      },
+      "ink-dark": {
+        "role": "neutral",
+        "displayName": "Ink (dark)",
+        "canonical": "#eceef1",
+        "oklch": "oklch(94.8% 0.005 258.3)",
+        "purpose": "Dark-theme value of ink. Text, primary buttons, card head, toast; light-theme rule color.",
+        "tonalRamp": [
+          "#0a0b0d",
+          "#242527",
+          "#404244",
+          "#606164",
+          "#818285",
+          "#a3a5a8",
+          "#c7c9cc",
+          "#edeff2"
+        ]
+      },
+      "ink-2-dark": {
+        "role": "neutral",
+        "displayName": "Ink 2 (dark)",
+        "canonical": "#c3c7ce",
+        "oklch": "oklch(82.9% 0.011 261.8)",
+        "purpose": "Dark-theme value of ink-2. Secondary text, column heads, held-out rows.",
+        "tonalRamp": [
+          "#090b10",
+          "#22252a",
+          "#3f4248",
+          "#5e6167",
+          "#7f8289",
+          "#a1a5ac",
+          "#c5c9d0",
+          "#ebeff6"
+        ]
+      },
+      "mute-dark": {
+        "role": "neutral",
+        "displayName": "Mute (dark)",
+        "canonical": "#9ba0a9",
+        "oklch": "oklch(70.5% 0.014 262.4)",
+        "purpose": "Dark-theme value of mute. Reference prices, meta, testing pills, disabled text.",
+        "tonalRamp": [
+          "#080b11",
+          "#21252c",
+          "#3e424a",
+          "#5d616a",
+          "#7e838b",
+          "#a0a5ae",
+          "#c4c9d3",
+          "#e9eff8"
+        ]
+      },
+      "rule-dark": {
+        "role": "neutral",
+        "displayName": "Rule (dark)",
+        "canonical": "#d9dce1",
+        "oklch": "oklch(89.4% 0.008 260.7)",
+        "purpose": "Dark-theme value of rule. 2px and 1.5px structural ink rules.",
+        "tonalRamp": [
+          "#090b0e",
+          "#232529",
+          "#404246",
+          "#5f6166",
+          "#808287",
+          "#a2a5aa",
+          "#c6c9ce",
+          "#eceff4"
+        ]
+      },
+      "rule-soft-dark": {
+        "role": "neutral",
+        "displayName": "Rule Soft (dark)",
+        "canonical": "#2b2e34",
+        "oklch": "oklch(30.1% 0.012 264.4)",
+        "purpose": "Dark-theme value of rule-soft. 1px row dividers, gridlines, empty ramp cells.",
+        "tonalRamp": [
+          "#090b10",
+          "#22252b",
+          "#3f4248",
+          "#5e6168",
+          "#7f828a",
+          "#a1a5ad",
+          "#c5c9d1",
+          "#eaeff7"
+        ]
+      },
+      "silver-dark": {
+        "role": "neutral",
+        "displayName": "Silver (dark)",
+        "canonical": "#4a4e56",
+        "oklch": "oklch(42.3% 0.014 264.4)",
+        "purpose": "Dark-theme value of silver. Sample tag, dashed empty states, scrollbar.",
+        "tonalRamp": [
+          "#080b11",
+          "#22252c",
+          "#3e424a",
+          "#5d616a",
+          "#7e828b",
+          "#a1a5ae",
+          "#c4c9d3",
+          "#eaeff8"
+        ]
+      },
+      "pass-dark": {
+        "role": "tertiary",
+        "displayName": "Pass Teal (dark)",
+        "canonical": "#45c9a9",
+        "oklch": "oklch(75.6% 0.124 173.5)",
+        "purpose": "Dark-theme value of pass. Passing rules, positive edge and CLV, wins.",
+        "tonalRamp": [
+          "#000f0a",
+          "#032c23",
+          "#0f4d3f",
+          "#0f725d",
+          "#17987d",
+          "#36be9e",
+          "#64e3c2",
+          "#c1feeb"
+        ]
+      },
+      "blocked-dark": {
+        "role": "tertiary",
+        "displayName": "Blocked Red (dark)",
+        "canonical": "#ff7088",
+        "oklch": "oklch(72.4% 0.175 12.2)",
+        "purpose": "Dark-theme value of blocked. Failing rules, negatives, over-cap, errors.",
+        "tonalRamp": [
+          "#1e0005",
+          "#4b0217",
+          "#7b0d2d",
+          "#ad2146",
+          "#d54a66",
+          "#fe6f87",
+          "#fab3ba",
+          "#fee8ea"
+        ]
+      },
+      "blocked-soft-dark": {
+        "role": "tertiary",
+        "displayName": "Blocked Soft (dark)",
+        "canonical": "#3b1820",
+        "oklch": "oklch(26.4% 0.056 7.3)",
+        "purpose": "Dark-theme value of blocked-soft. Failing leg tint, remove hover, confirm strip.",
+        "tonalRamp": [
+          "#1d0107",
+          "#3b1820",
+          "#5b353d",
+          "#7d545b",
+          "#a0757c",
+          "#c5979f",
+          "#ebbbc3",
+          "#fee8eb"
+        ]
+      },
+      "warning-dark": {
+        "role": "tertiary",
+        "displayName": "Warning Ochre (dark)",
+        "canonical": "#e7b84a",
+        "oklch": "oklch(80.5% 0.136 85.4)",
+        "purpose": "Dark-theme value of warning. Notice border and icon.",
+        "tonalRamp": [
+          "#110a00",
+          "#312301",
+          "#533e09",
+          "#7b5c05",
+          "#a37b08",
+          "#cb9d28",
+          "#f1c255",
+          "#ffedc7"
+        ]
+      },
+      "warning-soft-dark": {
+        "role": "tertiary",
+        "displayName": "Warning Soft (dark)",
+        "canonical": "#352a10",
+        "oklch": "oklch(29.1% 0.043 86.5)",
+        "purpose": "Dark-theme value of warning-soft. Notice fill.",
+        "tonalRamp": [
+          "#110a00",
+          "#2e2309",
+          "#4c4126",
+          "#6c6045",
+          "#8e8165",
+          "#b1a486",
+          "#d6c8aa",
+          "#fbedce"
+        ]
+      },
+      "focus-dark": {
+        "role": "tertiary",
+        "displayName": "Focus Blue (dark)",
+        "canonical": "#7fa8ff",
+        "oklch": "oklch(73.8% 0.134 264.2)",
+        "purpose": "Dark-theme value of focus. 2.5px keyboard focus outline only.",
+        "tonalRamp": [
+          "#000133",
+          "#031965",
+          "#1c3b88",
+          "#395dad",
+          "#597fd2",
+          "#7aa3f9",
+          "#afc9fe",
+          "#e7effe"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display figure",
+        "purpose": "Lead CLV figure on the Ledger; 44px under 860px."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "View title line; 24px under 860px."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Section heads, rule groups, card head, empty-state heads."
+      },
+      "brand": {
+        "displayName": "Brand",
+        "purpose": "TIP-OFF DESK wordmark only, uppercase; 17px on phone."
+      },
+      "figure": {
+        "displayName": "Figure",
+        "purpose": "Hard Rock price in the board; card leg prices at 16px."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Running text and table cells, tabular figures."
+      },
+      "control": {
+        "displayName": "Control",
+        "purpose": "Buttons, segmented filters, fields; header tabs at 15px."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Uppercase 11px column heads, stat names, proof subheads; the 11px floor."
+      }
+    },
+    "shadows": [],
+    "rules": [
+      {
+        "name": "structure",
+        "value": "2px solid var(--rule)",
+        "purpose": "Card frame, rail edge, footer, section and filter tops, column-head underline, Hard Rock column sides."
+      },
+      {
+        "name": "control",
+        "value": "1.5px solid var(--rule)",
+        "purpose": "Buttons, fields, segmented controls, pills, notice."
+      },
+      {
+        "name": "row",
+        "value": "1px solid var(--rule-soft)",
+        "purpose": "Row and list dividers."
+      },
+      {
+        "name": "empty",
+        "value": "1.5px dashed var(--sil)",
+        "purpose": "Empty states; dashed borders also mark testing pills."
+      },
+      {
+        "name": "focus",
+        "value": "outline 2.5px solid var(--focus), offset 2px",
+        "purpose": "Keyboard focus on every focusable element."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "The single easing for all motion."
+      },
+      {
+        "name": "capacity-fill",
+        "value": "width 240ms var(--ease)",
+        "purpose": "Risk capacity bar."
+      },
+      {
+        "name": "ticket-settle",
+        "value": "280ms var(--ease), 45ms stagger; clip-path inset(0 0 0 100%) + translateY(4px) to none",
+        "purpose": "Legs settling into the locked ticket."
+      },
+      {
+        "name": "toast-rise",
+        "value": "220ms var(--ease); opacity 0 + translateY(8px) to none",
+        "purpose": "Toast entry."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "animation: none; transition: none",
+        "purpose": "prefers-reduced-motion removes all motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "desk",
+        "value": "1180px",
+        "purpose": "At or below: docked Card leaves the board, reference books hide, only the Avg CLV stat stays, tabs tighten."
+      },
+      {
+        "name": "phone",
+        "value": "860px",
+        "purpose": "At or below: rail and header tabs hide, fixed bottom tab bar, stacked board rows, 44px targets."
+      }
+    ],
+    "layout": {
+      "rail": "88px",
+      "dock": "340px",
+      "header": "64px (56px phone)",
+      "gutter": "28px (16px phone)",
+      "boardRow": "42px",
+      "gameBand": "32px"
+    }
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Solid ink action; inverts to light ink on the dark ground in the night theme.",
+      "html": "<button class=\"ds-btn-primary\">Confirm</button>",
+      "css": ".ds-btn-primary{display:inline-flex;align-items:center;gap:6px;min-height:34px;padding:6px 12px;border:1.5px solid #1b1d22;border-radius:0;background:#1b1d22;color:#fff;font:700 13px/1.4 'Hanken Grotesk',system-ui,sans-serif;cursor:pointer}.ds-btn-primary:hover{background:#33363d;border-color:#33363d}.ds-btn-primary:focus-visible{outline:2.5px solid #1f5fd6;outline-offset:2px}"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Ground fill with a 1.5px ink rule; Sunk on hover. The board's Add button.",
+      "html": "<button class=\"ds-btn\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"square\" stroke-linejoin=\"miter\" aria-hidden=\"true\"><path d=\"M12 5v14M5 12h14\"/></svg>Add</button>",
+      "css": ".ds-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:34px;padding:6px 12px;border:1.5px solid #1b1d22;border-radius:0;background:#fff;color:#1b1d22;font:700 13px/1.4 'Hanken Grotesk',system-ui,sans-serif;cursor:pointer}.ds-btn:hover{background:#f4f5f5}.ds-btn:focus-visible{outline:2.5px solid #1f5fd6;outline-offset:2px}.ds-btn:disabled{border-color:#c7c9c8;color:#5f636c;cursor:not-allowed}"
+    },
+    {
+      "name": "Lock Card",
+      "kind": "button",
+      "refersTo": "button-lock",
+      "description": "The one large action: a full-width ink slab carrying the total, with Clear set apart as a link.",
+      "html": "<div class=\"ds-actions\"><button class=\"ds-lock\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"square\" stroke-linejoin=\"miter\" aria-hidden=\"true\"><rect x=\"5\" y=\"11\" width=\"14\" height=\"10\"/><path d=\"M8 11V7a4 4 0 0 1 8 0v4\"/></svg>Lock card · $124</button><button class=\"ds-clear\">Clear</button></div>",
+      "css": ".ds-actions{display:flex;align-items:stretch;width:340px;border:2px solid #1b1d22}.ds-lock{flex:1;min-height:52px;border:0;border-radius:0;background:#1b1d22;color:#fff;display:flex;gap:8px;align-items:center;justify-content:center;font:800 15px 'Hanken Grotesk',system-ui,sans-serif;letter-spacing:.04em;cursor:pointer}.ds-lock:hover{background:#33363d}.ds-lock:focus-visible{outline:2.5px solid #1f5fd6;outline-offset:2px}.ds-clear{border:0;border-left:1px solid #e3e4e5;margin-left:18px;padding:0 16px 0 18px;background:none;color:#474b54;text-decoration:underline;font:600 13px 'Hanken Grotesk',system-ui,sans-serif;cursor:pointer}.ds-clear:hover{color:#c41f3b}.ds-clear:focus-visible{outline:2.5px solid #1f5fd6;outline-offset:2px}"
+    },
+    {
+      "name": "Segmented Filter",
+      "kind": "chip",
+      "refersTo": "segmented-active",
+      "description": "Ruled segmented control; the pressed segment fills ink.",
+      "html": "<div class=\"ds-seg\" role=\"group\"><button aria-pressed=\"true\">All</button><button aria-pressed=\"false\">Threes</button><button aria-pressed=\"false\">Assists</button><button aria-pressed=\"false\">Points</button></div>",
+      "css": ".ds-seg{display:inline-flex;border:1.5px solid #1b1d22}.ds-seg button{border:0;border-radius:0;background:#fff;color:#1b1d22;padding:6px 12px;min-height:31px;font:700 13px 'Hanken Grotesk',system-ui,sans-serif;cursor:pointer}.ds-seg button+button{border-left:1.5px solid #1b1d22}.ds-seg button[aria-pressed=true]{background:#1b1d22;color:#fff}.ds-seg button:hover:not([aria-pressed=true]){background:#f4f5f5}.ds-seg button:focus-visible{outline:2.5px solid #1f5fd6;outline-offset:2px}"
+    },
+    {
+      "name": "State Pills",
+      "kind": "chip",
+      "refersTo": "pill-pass",
+      "description": "Outlined state pills, always with a mark or a word; testing is dashed.",
+      "html": "<span class=\"ds-pill ds-ok\"><svg width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"square\" stroke-linejoin=\"miter\" aria-hidden=\"true\"><path d=\"M5 12.5l4.5 4.5L19 7.5\"/></svg>Pass</span> <span class=\"ds-pill ds-no\"><svg width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"square\" stroke-linejoin=\"miter\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\"/></svg>Below 2% edge</span> <span class=\"ds-pill ds-test\">1 testing</span>",
+      "css": ".ds-pill{display:inline-flex;align-items:center;gap:4px;border:1.5px solid currentColor;border-radius:0;padding:1px 7px;font:700 12px 'Hanken Grotesk',system-ui,sans-serif;white-space:nowrap}.ds-ok{color:#0b6e5f}.ds-no{color:#c41f3b}.ds-test{color:#5f636c;border-style:dashed;font-weight:600}"
+    },
+    {
+      "name": "Search Field",
+      "kind": "input",
+      "refersTo": "",
+      "description": "Ruled field with an inset search icon and the blue focus outline.",
+      "html": "<label class=\"ds-search\"><svg width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"square\" stroke-linejoin=\"miter\" aria-hidden=\"true\"><circle cx=\"10.5\" cy=\"10.5\" r=\"6\"/><path d=\"M15 15l5 5\"/></svg><input type=\"search\" placeholder=\"Player or team\" aria-label=\"Player or team\"></label>",
+      "css": ".ds-search{position:relative;display:inline-flex}.ds-search svg{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:#5f636c;pointer-events:none}.ds-search input{width:200px;min-height:34px;padding:5px 8px 5px 30px;border:1.5px solid #1b1d22;border-radius:0;background:#fff;color:#1b1d22;font:600 13px 'Hanken Grotesk',system-ui,sans-serif}.ds-search input:focus-visible{outline:2.5px solid #1f5fd6;outline-offset:2px}"
+    },
+    {
+      "name": "League Header",
+      "kind": "nav",
+      "refersTo": "header-zone",
+      "description": "League-zone band with the wordmark, tabs cut into it, and ruled stats.",
+      "html": "<header class=\"ds-top\"><b class=\"ds-brand\">TIP-OFF DESK</b><nav class=\"ds-tabs\"><a href=\"#\" aria-current=\"page\">Edge Board</a><a href=\"#\">Card <span>4</span></a><a href=\"#\">Ledger</a></nav><div class=\"ds-stat\"><small>Avg CLV</small><b>+7.5%</b></div></header>",
+      "css": ".ds-top{display:flex;align-items:stretch;min-height:64px;padding-left:28px;background:#f28c28;color:#1b1d22;font-family:'Hanken Grotesk',system-ui,sans-serif}.ds-brand{align-self:center;font-size:21px;font-weight:800;letter-spacing:.16em;padding-right:32px}.ds-tabs{display:flex;align-items:flex-end;gap:2px}.ds-tabs a{display:flex;align-items:center;gap:8px;height:44px;padding:0 18px;font-weight:700;font-size:15px;color:#1b1d22;text-decoration:none}.ds-tabs a:hover{background:rgba(255,255,255,.22)}.ds-tabs a[aria-current=page]{background:#fff}.ds-tabs a:focus-visible{outline:2.5px solid #1f5fd6;outline-offset:2px}.ds-tabs span{display:grid;place-items:center;min-width:20px;height:20px;padding:0 5px;background:#1b1d22;color:#fff;font-size:12px;font-weight:800}.ds-stat{margin-left:auto;align-self:center;padding:0 22px;border-left:2px solid rgba(27,29,34,.45)}.ds-stat small{display:block;font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase}.ds-stat b{display:block;font-size:21px;font-weight:800;line-height:1.1}"
+    },
+    {
+      "name": "League Rail Tile",
+      "kind": "nav",
+      "refersTo": "league-tile-active",
+      "description": "Pictogram tile; the live league is the full zone, waiting leagues a 22% mix marked soon.",
+      "html": "<div class=\"ds-rail\"><button class=\"ds-league\" aria-pressed=\"true\" style=\"--c:#f28c28\"><svg viewBox=\"0 0 32 32\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3.4\" stroke-linecap=\"square\" stroke-linejoin=\"miter\" aria-hidden=\"true\"><circle cx=\"14\" cy=\"5\" r=\"3\" fill=\"currentColor\" stroke=\"none\"/><circle cx=\"24\" cy=\"3.5\" r=\"2.6\" fill=\"currentColor\" stroke=\"none\"/><path d=\"M14 10v9M14 12l6-6M14 13l-4 4M14 19l4 4v6M14 19l-4 4v6\"/></svg>NBA</button><button class=\"ds-league\" disabled style=\"--c:#3a9a4a\"><svg viewBox=\"0 0 32 32\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3.4\" stroke-linecap=\"square\" stroke-linejoin=\"miter\" aria-hidden=\"true\"><circle cx=\"19\" cy=\"5\" r=\"3\" fill=\"currentColor\" stroke=\"none\"/><path d=\"M18 10l-5 5v5l-5 5v4M13 20l6 6h4M17 11l5 5\"/><rect x=\"21\" y=\"14\" width=\"6\" height=\"4\" transform=\"rotate(-45 24 16)\" fill=\"currentColor\" stroke=\"none\"/></svg>NFL<small>soon</small></button></div>",
+      "css": ".ds-rail{width:88px;border-right:2px solid #1b1d22}.ds-league{width:100%;height:92px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;border:0;border-bottom:1px solid #fff;border-radius:0;background:color-mix(in srgb,var(--c) 22%,#fff);color:#1b1d22;font:800 11px 'Hanken Grotesk',system-ui,sans-serif;letter-spacing:.1em;cursor:pointer}.ds-league svg{width:38px;height:38px}.ds-league[aria-pressed=true]{background:var(--c)}.ds-league:disabled{color:#474b54;cursor:not-allowed}.ds-league small{font-size:11px;font-weight:600;letter-spacing:.04em;margin-top:-4px}.ds-league:focus-visible{outline:2.5px solid #1f5fd6;outline-offset:-2.5px}"
+    },
+    {
+      "name": "Board Row",
+      "kind": "custom",
+      "refersTo": "game-band",
+      "description": "Zone game band over a priced row: Hard Rock boxed in 2px ink rules, fair beside it, reference muted, edge ramp.",
+      "html": "<table class=\"ds-board\"><tr class=\"ds-game\"><td colspan=\"5\">DEN @ MIA <span>7:30p</span></td></tr><tr class=\"ds-mk\" tabindex=\"0\"><td class=\"l\"><b>Devin Holloway</b> <small>MIA</small></td><td>+147</td><td class=\"ds-hr\">+181</td><td class=\"ds-ref\">+140</td><td class=\"ds-pos\">+13.6%<span class=\"ds-ramp\"><i class=\"on\"></i><i class=\"on\"></i><i class=\"on\"></i><i class=\"on\"></i></span></td></tr></table>",
+      "css": ".ds-board{border-collapse:collapse;font:400 14px/1.4 'Hanken Grotesk',system-ui,sans-serif;font-variant-numeric:tabular-nums;color:#1b1d22}.ds-board td{height:42px;padding:0 8px;text-align:right;border-bottom:1px solid #e3e4e5;white-space:nowrap}.ds-board .l{text-align:left}.ds-board small{color:#5f636c;font-size:12px}.ds-game td{height:32px;background:#f28c28;color:#1b1d22;font-weight:800;font-size:13px;letter-spacing:.04em;text-align:left;border:0}.ds-game span{font-weight:600;margin-left:10px;letter-spacing:0}.ds-hr{font-size:17px;font-weight:800;border-left:2px solid #1b1d22;border-right:2px solid #1b1d22;min-width:84px}.ds-ref{color:#5f636c;font-size:13px}.ds-pos{color:#0b6e5f;font-weight:700}.ds-ramp{display:inline-flex;gap:2px;margin-left:8px;vertical-align:middle}.ds-ramp i{width:5px;height:12px;background:#e3e4e5}.ds-ramp i.on{background:#0b6e5f}.ds-mk{cursor:pointer}.ds-mk:hover td:not(.ds-hr){background:#f4f5f5}.ds-mk:focus-visible{outline:2.5px solid #1f5fd6;outline-offset:-2.5px}"
+    },
+    {
+      "name": "Notice",
+      "kind": "card",
+      "refersTo": "notice",
+      "description": "Ruled ochre caveat box with the warning mark, 72ch max.",
+      "html": "<div class=\"ds-notice\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"square\" stroke-linejoin=\"miter\" aria-hidden=\"true\"><path d=\"M12 4l9 16H3z\"/><path d=\"M12 10v4M12 17v.5\"/></svg><p>These verdicts come from sample data, a fake world with planted edges.</p></div>",
+      "css": ".ds-notice{display:flex;gap:10px;align-items:flex-start;max-width:72ch;padding:10px 14px;border:1.5px solid #7a5c00;background:#f8efd3;color:#1b1d22;font:400 14px/1.4 'Hanken Grotesk',system-ui,sans-serif}.ds-notice svg{color:#7a5c00;flex:none;margin-top:2px}.ds-notice p{margin:0}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Games System",
+    "overview": "Tip-Off Desk is one identity built to hold every sport, in the tradition of the Munich 1972 Games: each league owns a geometric pictogram and a flat color zone, and everything else is ink on white on a strict grid. The active league's color runs from the left rail tile, through the header band, into the game bands of the board, so the room is always painted in the color of the sport in play. Nothing else in the interface is decorative; the zone is the only spectacle.\n\nThe desk is dense and precise: a priced table is the primary surface, structure comes from 1.5 to 2px ink rules rather than boxes or shadows, every corner is square, and every number sits in tabular figures from a single typeface, Hanken Grotesk. It refuses the category default of a dark odds terminal with glowing green and red numbers. State (pass, blocked, warning) has its own teal, red and ochre, never borrows a league color, and always carries a mark or a word.\n\nDark is a designed night theme, not an inversion: a near-black ground, light ink rules, and brightened state colors, while the league zone keeps its exact hue so the identity reads the same at midnight.",
+    "keyCharacteristics": [
+      "White ground, ink #1b1d22, one flat league zone per sport (NBA orange live; NFL, MLB, NHL waiting).",
+      "Hanken Grotesk only, weights 400/600/700/800, tabular figures everywhere.",
+      "Ink rules (1.5px controls, 2px structure, 1px soft row dividers), square corners, no shadows, no gradients.",
+      "Geometric pictograms and icons on a 45/90 grid with square caps and miter joins.",
+      "State colors are reserved, always paired with a mark or word.",
+      "Motion is small and functional: a ticket settling, a toast rising, a bar filling."
+    ],
+    "rules": [
+      {
+        "name": "The Zone Belongs To The League Rule",
+        "body": "The league color marks the sport in play and nothing else. It never signals good, bad, primary action or emphasis. A second league goes live by switching the zone variable, not by adding new accents.",
+        "section": "colors"
+      },
+      {
+        "name": "The State Never Borrows Rule",
+        "body": "Pass, blocked and warning use their own teal, red and ochre and always ship with a check, cross, warning mark or a word. Color alone never carries state.",
+        "section": "colors"
+      },
+      {
+        "name": "The Ink On Zone Rule",
+        "body": "Text on any league zone is ink (#1b1d22), in both themes.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Family Rule",
+        "body": "Hanken Grotesk is the only typeface. No monospace for numbers, no condensed display face.",
+        "section": "typography"
+      },
+      {
+        "name": "The Tabular Figures Rule",
+        "body": "Body sets `tabular-nums`; every price, stake, edge and CLV column aligns.",
+        "section": "typography"
+      },
+      {
+        "name": "The True Minus Rule",
+        "body": "Numbers are formatted once, in one way: American odds with a true minus sign (+181, −110), signed percents to one decimal (+7.5%, −1.9%), units with a \"u\" (+1.4u), money without cents unless settling ($124, +$12.40), tip times in Eastern as 7:30p, and an em dash for a missing value.",
+        "section": "typography"
+      },
+      {
+        "name": "The Rail-To-Band Rule",
+        "body": "The active league's color always runs continuously from the rail tile through the header into the game bands. Any new surface that groups by game or team uses a zone band, not a card.",
+        "section": "layout"
+      },
+      {
+        "name": "The Rule Not Shadow Rule",
+        "body": "If something needs to separate, draw an ink rule or fill it solid. A shadow is never the answer.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do paint the live league's zone from rail to header to game bands, with ink text on it.",
+      "Do set every number in Hanken Grotesk tabular figures, with the true minus sign and one formatting convention (format.ts).",
+      "Do show the fair price beside every Hard Rock price, and box the Hard Rock column in 2px ink rules.",
+      "Do pair every state color with a check, cross, warning mark or word, and name the rule that blocks.",
+      "Do separate with ink rules: 2px for structure, 1.5px for controls, 1px Rule Soft for rows.",
+      "Do keep targets at 44px or more on phone, and the 2.5px Focus Blue outline on everything focusable.",
+      "Do label sample data with the silver Sample tag and keep 1-800-GAMBLER in the footer.",
+      "Do write short, plain, specific copy in a bettor's words (\"104 clear the rulebook\", \"Locking freezes these prices\"), sentence case except the brand and 11px labels.",
+      "Do draw new icons on the 24px grid with 2.4 strokes, square caps, miter joins and 45/90 angles; new league pictograms on the 32px grid at 3.4 strokes."
+    ],
+    "donts": [
+      "Don't use a league color to mean good, bad, primary or emphasis, and don't introduce any accent outside the league zones and the state triad.",
+      "Don't round corners, add shadows or use gradients.",
+      "Don't add a second typeface, a monospace for numbers, or a condensed display face.",
+      "Don't build a dark odds terminal with glowing green and red numbers, or any casino styling: confetti, streak flames, countdowns, hype words like \"lock of the day\".",
+      "Don't put sport-specific detail (team colors, sport names, stat vocabulary) into the shell, palette or type; it comes from data.",
+      "Don't set text smaller than 11px, or rely on color alone for state.",
+      "Don't add small uppercase labels above headings as decoration; uppercase 11px is for column heads, stat names and data labels only.",
+      "Don't animate view changes or celebrate wins."
+    ]
+  }
+}

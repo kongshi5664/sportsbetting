@@ -57,13 +57,41 @@ CREATE TABLE IF NOT EXISTS prop_odds (
     PRIMARY KEY (event_id, label, book, market, name_key, side, point)
 );
 CREATE INDEX IF NOT EXISTS ix_po_event ON prop_odds(event_id, label);
+
+-- Real bets from the live desk. status: 'card' (on tonight's card), 'locked', 'graded'.
+-- Every bet keeps the price taken and, once graded, the closing price (CLV is the scoreboard).
+CREATE TABLE IF NOT EXISTS bets (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    slate_date  TEXT NOT NULL,
+    event_id    TEXT NOT NULL,
+    market      TEXT NOT NULL,
+    name_key    TEXT NOT NULL,
+    player      TEXT NOT NULL,
+    side        TEXT NOT NULL,
+    point       REAL NOT NULL,
+    book        TEXT NOT NULL,
+    price       INTEGER NOT NULL,       -- American odds taken
+    fair        REAL NOT NULL,          -- fair win probability when added
+    edge        REAL NOT NULL,
+    stake       REAL NOT NULL,
+    snapshot_ts TEXT,
+    added_at    TEXT NOT NULL,
+    status      TEXT NOT NULL DEFAULT 'card',
+    locked_at   TEXT,
+    placed      INTEGER NOT NULL DEFAULT 0,
+    close_price INTEGER,
+    clv         REAL,
+    result      TEXT,                   -- win / loss / push / void
+    actual      REAL
+);
+CREATE INDEX IF NOT EXISTS ix_bets_date ON bets(slate_date, status);
 """
 
 
-def connect(path=DEFAULT_DB):
+def connect(path=DEFAULT_DB, **kwargs):
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
-    con = sqlite3.connect(path)
+    con = sqlite3.connect(path, **kwargs)
     con.row_factory = sqlite3.Row
     con.executescript(SCHEMA)
     return con

@@ -3,3 +3,9 @@ __pycache__/
 data/
 reports/
 .env
+node_modules/
+web/dist/
+.impeccable/review/
+.impeccable/build/
+.impeccable/config.local.json
+*.tsbuildinfo

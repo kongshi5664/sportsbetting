@@ -51,3 +51,6 @@ export const BOOK_SHORT: Record<string, string> = {
   pinnacle: "Pinnacle",
   betonlineag: "BetOnline",
 };
+
+/** What a bet pays in profit if it wins, from its American price. */
+export const toWin = (price: number, stake: number) => stake * (price > 0 ? price / 100 : 100 / -price);

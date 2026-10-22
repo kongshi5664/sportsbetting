@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { money, odds, pct, pick, tipTime } from "../format";
+import { money, odds, pct, pick, signedMoney, tipTime, toWin } from "../format";
 import { Check, Cross, Lock } from "../icons";
 import type { Card, Leg, Note } from "../types";
 import { Progress, useLive } from "./Live";
@@ -71,6 +71,7 @@ export function CardPanel(props: {
   const n = card.legs.length;
   const graded = card.legs.filter((l) => l.status === "graded");
   const placed = card.legs.filter((l) => l.placed).length;
+  const open = card.legs.filter((l) => l.status !== "graded");
   // Once locked, follow each open leg live from the box score until it is graded.
   const live = useLive(card.locked && graded.length < n ? card.date : null);
 
@@ -105,6 +106,16 @@ export function CardPanel(props: {
       <p>
         {over ? `${money(card.risk - card.cap)} over the cap` : `${money(card.cap - card.risk)} of room left tonight`}
       </p>
+      {open.length > 0 && (
+        <div className="slip-totals">
+          <span>
+            To win <b>{money(open.reduce((s, l) => s + toWin(l.price, l.stake), 0))}</b> if every bet hits
+          </span>
+          <span>
+            Expected <b className="pos">{signedMoney(open.reduce((s, l) => s + l.stake * l.edge, 0))}</b>
+          </span>
+        </div>
+      )}
     </div>
   );
 

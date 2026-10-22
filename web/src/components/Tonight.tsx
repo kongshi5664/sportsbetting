@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from "react";
-import { dayLabel, money, odds, tipTime } from "../format";
+import { dayLabel, money, odds, signedMoney, tipTime, toWin } from "../format";
 import { Check, ChevronRight, Lock, Plus, Warn } from "../icons";
 import type { Card, Game, Injury, JournalEntry, Market, Note, Suggested } from "../types";
 import { Entry } from "./Journal";
@@ -53,6 +53,7 @@ function BetCard({ m, note, injury, onAdd }: { m: Pick; note?: Note; injury?: In
           <div>
             <small>Bet</small>
             <b>{money(m.stake)}</b>
+            <small className="to-win">to win {money(toWin(m.price, m.stake))}</small>
           </div>
         </div>
         <p className="bet-strength">
@@ -61,7 +62,10 @@ function BetCard({ m, note, injury, onAdd }: { m: Pick; note?: Note; injury?: In
             <b className="bet-edge">+{(m.edge * 100).toFixed(1)}%</b> {strength(m.edge)} <Term k="value">value</Term>
           </span>
         </p>
-        <p className="bet-why">About ${Math.round(m.edge * 100)} profit per $100 bet, on average over many bets like it.</p>
+        <p className="bet-why">
+          Expected <b className="pos">{signedMoney(m.stake * m.edge)}</b> on this bet: about ${Math.round(m.edge * 100)} per $100, on
+          average over many bets like it.
+        </p>
         {movement(m) && <p className="bet-moved">{movement(m)}</p>}
         {injury && (
           <p className="bet-injury">
@@ -122,6 +126,8 @@ export function Tonight(props: {
   const skipped = legs.filter((m) => notes[m.id]?.verdict === "skip");
   const picks = legs.filter((m) => notes[m.id]?.verdict !== "skip");
   const total = picks.reduce((s, m) => s + m.stake, 0);
+  const totalWin = picks.reduce((s, m) => s + toWin(m.price, m.stake), 0);
+  const totalExp = picks.reduce((s, m) => s + m.stake * m.edge, 0);
   const clearing = (games ?? []).flatMap((g) => g.markets).filter((m) => !m.blocked).length;
   const tips = (games ?? []).map((g) => g.commence_time).sort();
   const upcoming = (games ?? []).filter((g) => Date.parse(g.commence_time) > Date.now()).length;
@@ -257,7 +263,8 @@ export function Tonight(props: {
               <h2>
                 {picks.length} {picks.length === 1 ? "bet" : "bets"} worth taking
                 <span>
-                  {money(total)} total · Hard Rock pays more than each one is <Term k="worth">worth</Term>
+                  Bet {money(total)} · to win {money(totalWin)} if all hit · expected {signedMoney(totalExp)}. Hard Rock pays
+                  more than each one is <Term k="worth">worth</Term>.
                 </span>
               </h2>
               <button

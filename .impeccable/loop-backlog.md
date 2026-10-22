@@ -4,7 +4,7 @@ One item per round, highest value first. Each round: build, run tests, screensho
 
 ## Up next
 - [ ] Capture the live score chips and bet progress once tonight's games tip (CLE @ PHI 7:10p ET). Fix anything that looks wrong in a live state.
-- [ ] Live progress on a locked real card: show each leg's "14 so far, pace 28" on the ticket (CardPanel), the way the Paper tab already does.
+- [x] Live progress on a locked real card (0c7376d)
 - [ ] League dot from data, not hardcoded `--nba`: game rows, quote-card headers and team headings should read the league id (in Meta) and use `var(--<league>)`.
 - [ ] Replace the text glyphs "✓ Hit" / "✗ Missed" in Live.tsx `Progress` with the drawn Check / Cross icons.
 - [ ] Separate "live game" from "below the close": live dot and in-progress score border use their own token (not the coral mood colour).

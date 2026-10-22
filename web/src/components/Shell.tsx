@@ -46,6 +46,12 @@ export function Shell(props: {
   }, [theme]);
 
   // The mood accent: green while the desk beats the closing line (or has no record yet), coral below it.
+  // League colour comes from data: the live league's own token drives every league dot.
+  const liveLeague = meta?.leagues.find((l) => l.live)?.id;
+  useEffect(() => {
+    if (liveLeague) document.documentElement.style.setProperty("--league", `var(--${liveLeague})`);
+  }, [liveLeague]);
+
   const clv = meta?.live_clv;
   useEffect(() => {
     document.documentElement.dataset.mood = clv && clv.n > 0 && (clv.avg ?? 0) < 0 ? "down" : "up";

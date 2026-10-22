@@ -43,6 +43,7 @@
   --nfl: #3a9a4a;
   --mlb: #4fa3d8;
   --nhl: #9aa3a8;
+  --league: var(--nba); /* set from the live league in Shell */
 
   --shadow: 0 1px 2px rgb(15 20 23 / 0.05), 0 6px 20px rgb(15 20 23 / 0.06);
   --shadow-up: 0 2px 6px rgb(15 20 23 / 0.08), 0 14px 32px rgb(15 20 23 / 0.1);
@@ -427,7 +428,7 @@ kbd { font: 700 11px/1 var(--font); border: 1px solid var(--line-2); border-radi
   border-bottom: 1px solid var(--line);
   text-align: left;
 }
-.board .game td::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--nba); margin-right: 10px; vertical-align: 1px; }
+.board .game td::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--league); margin-right: 10px; vertical-align: 1px; }
 .board .game td span { font-weight: 600; color: var(--ink-2); margin-left: 10px; }
 .board .hr { font-size: 16px; font-weight: 800; min-width: 84px; padding-right: 12px; }
 .board td.hr { color: var(--ink); }
@@ -506,7 +507,7 @@ kbd { font: 700 11px/1 var(--font); border: 1px solid var(--line-2); border-radi
 }
 .bet:hover { transform: translateY(-2px); box-shadow: var(--shadow-up); }
 .bet > header { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px 0; font-size: 12px; font-weight: 700; color: var(--mute); }
-.bet > header span:first-child::before { content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--nba); margin-right: 8px; vertical-align: 1px; }
+.bet > header span:first-child::before { content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--league); margin-right: 8px; vertical-align: 1px; }
 .bet-body { padding: 8px 18px 14px; display: grid; gap: 8px; flex: 1; align-content: start; }
 .bet-body h3 { font-size: 24px; font-weight: 800; line-height: 1.1; letter-spacing: -0.015em; }
 .bet-pick { font-size: 15px; color: var(--ink-2); margin-top: -2px; }
@@ -775,7 +776,7 @@ kbd { font: 700 11px/1 var(--font); border: 1px solid var(--line-2); border-radi
 .teams { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
 .team { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); box-shadow: var(--shadow); overflow: hidden; }
 .team h2 { font-size: 13px; font-weight: 800; padding: 12px 16px; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 8px; }
-.team h2::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--nba); }
+.team h2::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--league); }
 .team ul { list-style: none; margin: 0; padding: 0; }
 .team button { width: 100%; border: 0; border-bottom: 1px solid var(--line); background: none; text-align: left; padding: 0 16px; min-height: 46px; font-weight: 600; display: flex; justify-content: space-between; align-items: center; }
 .team li:last-child button { border-bottom: 0; }

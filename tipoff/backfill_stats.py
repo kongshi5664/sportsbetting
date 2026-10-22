@@ -1,13 +1,16 @@
-"""Backfill NBA box scores with the free nba_api package.
+"""Backfill box scores: NBA from the free nba_api package, NFL from nflverse's free CSVs.
 
     python -m tipoff.backfill_stats --seasons 2023-24 2024-25 2025-26
+    python -m tipoff.backfill_stats --league nfl --seasons 2023 2024 2025 2026
 
-Takes a few minutes per season. stats.nba.com throttles fast clients, so the script
-pauses between calls. Safe to re-run: rows are upserted.
+NBA takes a few minutes per season (stats.nba.com throttles fast clients, so the script pauses
+between calls). NFL is a few seconds per season (see tipoff/backfill_nfl.py). Safe to re-run:
+rows are upserted.
 """
 import argparse
 import time
 
+from . import leagues
 from .db import connect, name_key
 
 STAT_COLS = {"PTS": "pts", "REB": "reb", "AST": "ast", "BLK": "blk", "STL": "stl", "FG3M": "fg3m", "TOV": "tov"}
@@ -80,7 +83,12 @@ def backfill(seasons, db_path=None):
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("--seasons", nargs="+", required=True, help="e.g. 2024-25 2025-26")
+    ap.add_argument("--seasons", nargs="+", required=True, help="NBA: 2024-25 2025-26; NFL: 2025 2026")
     ap.add_argument("--db", default=None)
+    leagues.add_argument(ap)
     a = ap.parse_args()
-    backfill(a.seasons, a.db)
+    if a.league == "nfl":
+        from .backfill_nfl import backfill as backfill_nfl
+        backfill_nfl(a.seasons, a.db)
+    else:
+        backfill(a.seasons, a.db)

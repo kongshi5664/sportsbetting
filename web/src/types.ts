@@ -120,7 +120,17 @@ export type Metrics = {
   avg_edge: number | null;
 };
 
-export type WaitingBet = { id: number; date: string; game: string; bet: string; price: number; edge: number; stake: number };
+export type WaitingBet = {
+  id: number;
+  date: string;
+  game: string;
+  bet: string;
+  side: string;
+  point: number;
+  price: number;
+  edge: number;
+  stake: number;
+};
 
 export type LedgerBet = {
   date: string;
@@ -228,4 +238,44 @@ export type News = {
   team: string;
   teammates: (Market & { matchup: string; commence_time: string; snapshot_ts: string | null })[];
   own: (Market & { matchup: string })[];
+};
+
+export type DeskStatus = {
+  trader: { running: boolean; seen: string | null };
+  last_pull: string | null;
+  credits_remaining: number | null;
+  credits_at: string | null;
+  games: number;
+  decided: number;
+  next: { game: string; tip: string; decide_at: string } | null;
+};
+
+export type LiveGame = {
+  espn_id: string;
+  away: string;
+  home: string;
+  away_score: number;
+  home_score: number;
+  state: "pre" | "in" | "post";
+  period: number;
+  clock: string;
+  detail: string;
+};
+
+export type BetProgress = {
+  state: "pre" | "in" | "post";
+  detail: string;
+  now?: number;
+  min?: number;
+  pace?: number | null;
+  on_pace?: boolean | null;
+  status?: "live" | "won" | "lost" | "void";
+};
+
+export type Live = { games: LiveGame[]; bets: Record<string, BetProgress> };
+
+export type StrategyHistory = {
+  id: string;
+  name: string;
+  nights: { date: string; pnl: number | null; clv: number | null; n: number }[];
 };

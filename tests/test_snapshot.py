@@ -3,6 +3,7 @@
     python -m unittest discover tests
 """
 import json
+import os
 import tempfile
 import unittest
 from datetime import datetime, timedelta, timezone
@@ -13,6 +14,9 @@ from tipoff import snapshot as live
 from tipoff.board import price_slate
 from tipoff.db import connect
 from tipoff.features import FeatureStore
+
+# Keep the fake credit counts below out of the real data/status.json.
+os.environ["TIPOFF_STATUS"] = str(Path(tempfile.mkdtemp()) / "status.json")
 
 ROOT = Path(__file__).resolve().parent.parent
 

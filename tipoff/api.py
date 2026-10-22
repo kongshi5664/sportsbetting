@@ -6,7 +6,7 @@ import argparse
 import json
 import os
 import re
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException, Request
@@ -24,7 +24,9 @@ from . import grading
 from . import injuries as injury_feed
 from . import notes as claude_notes
 from . import review as weekly
+from . import scores
 from . import snapshot as live
+from . import status as job_status
 
 DB_PATH = Path(os.environ.get("TIPOFF_DB", DEFAULT_DB))
 RULES_PATH = Path(os.environ.get("TIPOFF_RULES", ROOT / "rules.json"))
@@ -488,7 +490,8 @@ async def ledger(source: str = "live", strategy: str = "current"):
             waiting.append({"id": r["id"], "date": r["slate_date"],
                             "game": f"{r['away_team']} @ {r['home_team']}" if r["away_team"] else r["event_id"],
                             "bet": bet_label(r["player"], r["side"], r["point"], MARKET_STAT[r["market"]]),
-                            "price": r["price"], "edge": r["edge"], "stake": r["stake"]})
+                            "side": r["side"], "point": r["point"], "price": r["price"], "edge": r["edge"],
+                            "stake": r["stake"]})
         paper = []
         for st in strategies(cfg()):
             clvs = [r[0] for r in con().execute("SELECT clv FROM bets WHERE paper=1 AND strategy=? AND status='graded'"
@@ -508,6 +511,76 @@ async def ledger(source: str = "live", strategy: str = "current"):
                       "bankroll": None, "start": None})
     return {"source": source, "paper": paper, "waiting": waiting, "summary": summary, "nights": by_night,
             "bets": bets[-200:]}
+
+
+@app.get("/api/status")
+def desk_status(date: str):
+    """What the background jobs are doing tonight: odds freshness, credits, the paper trader."""
+    from .paper import DECIDE_MINUTES
+    st = job_status.read()
+    now = datetime.now(timezone.utc)
+    seen = st.get("trader_at")
+    running = bool(seen) and st.get("trader_day") == date and         now - datetime.fromisoformat(seen) < timedelta(minutes=3)
+    last_pull = con().execute("SELECT MAX(p.snapshot_ts) FROM prop_odds p JOIN events e USING (event_id)"
+                              " WHERE e.game_date=?", (date,)).fetchone()[0]
+    try:
+        decided = {r[0] for r in con().execute("SELECT DISTINCT event_id FROM marks WHERE slate_date=?", (date,))}
+    except Exception:
+        decided = set()
+    games, upcoming = [], []
+    for e in con().execute("SELECT * FROM events WHERE game_date=? ORDER BY commence_time", (date,)):
+        tip = datetime.fromisoformat(e["commence_time"].replace("Z", "+00:00"))
+        games.append(e["event_id"])
+        if tip > now and e["event_id"] not in decided:
+            upcoming.append({"game": f"{e['away_team']} @ {e['home_team']}", "tip": e["commence_time"],
+                             "decide_at": (tip - timedelta(minutes=DECIDE_MINUTES)).isoformat()})
+    return {"trader": {"running": running, "seen": seen}, "last_pull": last_pull,
+            "credits_remaining": st.get("credits_remaining", _state.get("credits_remaining")),
+            "credits_at": st.get("credits_at"), "games": len(games), "decided": len(decided & set(games)),
+            "next": upcoming[0] if upcoming else None}
+
+
+@app.get("/api/live")
+def live_scores(date: str):
+    """Scores and each open bet's progress, real and paper, from ESPN's live box scores."""
+    rows = [dict(r) for r in con().execute(
+        "SELECT b.id, b.name_key, b.market, b.side, b.point, e.away_team AS away, e.home_team AS home"
+        " FROM bets b JOIN events e USING (event_id) WHERE b.slate_date=? AND b.status='locked'", (date,))]
+    for r in rows:
+        r["stat"] = MARKET_STAT[r["market"]]
+    return scores.track(date, rows)
+
+
+@app.get("/api/paper/history")
+async def paper_history():
+    """Night by night for each paper strategy: running profit and running average CLV.
+    The control line is every recorded prop, picked or not."""
+    from .paper import strategies
+    out = []
+    for st in strategies(cfg()):
+        nights, pnl, clvs = [], 0.0, []
+        rows = con().execute("SELECT slate_date, price, stake, result, clv FROM bets WHERE paper=1 AND strategy=?"
+                             " AND status='graded' ORDER BY slate_date", (st["id"],)).fetchall()
+        for day in sorted({r["slate_date"] for r in rows}):
+            for r in (r for r in rows if r["slate_date"] == day):
+                d = (1 + r["price"] / 100) if r["price"] > 0 else (1 + 100 / -r["price"])
+                pnl += r["stake"] * (d - 1) if r["result"] == "win" else (-r["stake"] if r["result"] == "loss" else 0)
+                if r["clv"] is not None:
+                    clvs.append(r["clv"])
+            nights.append({"date": day, "pnl": round(pnl, 2), "clv": sum(clvs) / len(clvs) if clvs else None,
+                           "n": len(clvs)})
+        out.append({"id": st["id"], "name": st["name"], "nights": nights})
+    try:
+        rows = con().execute("SELECT slate_date, clv FROM marks WHERE graded=1 AND clv IS NOT NULL"
+                             " ORDER BY slate_date").fetchall()
+    except Exception:
+        rows = []
+    nights, clvs = [], []
+    for day in sorted({r[0] for r in rows}):
+        clvs += [r[1] for r in rows if r[0] == day]
+        nights.append({"date": day, "pnl": None, "clv": sum(clvs) / len(clvs), "n": len(clvs)})
+    out.append({"id": "_all", "name": "Every prop (control)", "nights": nights})
+    return {"strategies": out}
 
 
 # ---------- rulebook ----------

@@ -5,6 +5,8 @@ import { Warn } from "../icons";
 import { Term } from "./Term";
 import type { JournalEntry, Ledger, LedgerBet } from "../types";
 import { Journal } from "./Journal";
+import { Progress, useLive } from "./Live";
+import { StrategyChart } from "./StrategyChart";
 
 const MIN_BETS = 30;
 
@@ -23,6 +25,8 @@ export function LedgerView({ onError }: { onError: (e: unknown) => void }) {
     api.ledger(source, strategy).then(setData).catch(onError);
   }, [source, strategy, onError]);
 
+  const waitDay = data?.waiting?.map((b) => b.date).sort().at(-1) ?? null;
+  const live = useLive(source === "paper" ? waitDay : null);
   const s = data?.summary;
   const few = s && s.n < MIN_BETS;
 
@@ -92,6 +96,7 @@ export function LedgerView({ onError }: { onError: (e: unknown) => void }) {
                   </tbody>
                 </table>
               </div>
+              <StrategyChart />
               {data.waiting && data.waiting.length > 0 && (
                 <>
                   <h2 className="journal-h">
@@ -106,6 +111,7 @@ export function LedgerView({ onError }: { onError: (e: unknown) => void }) {
                           <th>Took</th>
                           <th>Value</th>
                           <th>Stake</th>
+                          <th className="l">Live</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -119,6 +125,9 @@ export function LedgerView({ onError }: { onError: (e: unknown) => void }) {
                             <td>{odds(b.price)}</td>
                             <td className={b.edge >= 0 ? "pos" : "neg"}>{pct(b.edge)}</td>
                             <td>${Math.round(b.stake)}</td>
+                            <td className="l">
+                              <Progress p={live?.bets[String(b.id)]} point={b.point} side={b.side} />
+                            </td>
                           </tr>
                         ))}
                       </tbody>

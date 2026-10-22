@@ -780,3 +780,49 @@ kbd { font: 700 11px/1 var(--font); border: 1px solid var(--sil); padding: 2px 4
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+/* ---------- live: status strip, scoreboard, bet progress ---------- */
+:root { --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --s4: #c98500; --s-ctl: var(--mute); }
+:root[data-theme="dark"] { --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500; } }
+.status-strip { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; color: var(--ink-2); margin: 0 0 14px; }
+.status-item { display: inline-flex; align-items: center; gap: 6px; }
+.status-item i { width: 8px; height: 8px; border-radius: 50%; background: var(--sil); }
+.status-item.ok i { background: var(--good); }
+.status-item.bad { color: var(--bad); font-weight: 700; }
+.status-item.bad i { background: var(--bad); }
+.scoreboard { display: flex; gap: 8px; overflow-x: auto; margin: 0 0 16px; padding-bottom: 2px; }
+.score { display: grid; gap: 2px; min-width: 112px; padding: 8px 10px; border: 1.5px solid var(--rule-soft); background: var(--bg); font-variant-numeric: tabular-nums; }
+.score.in { border-color: var(--rule); }
+.score-row { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; }
+.score small { display: flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 700; color: var(--mute); }
+.live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--bad); animation: pulse 1.6s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: 0.35; } }
+@media (prefers-reduced-motion: reduce) { .live-dot { animation: none; } }
+.prog { font-size: 13px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.prog.good, .prog.won { color: var(--good); font-weight: 700; }
+.prog.behind, .prog.lost { color: var(--bad); font-weight: 700; }
+
+/* ---------- strategy chart ---------- */
+.strategy-chart { margin: 8px 0 24px; max-width: 760px; }
+.chart-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.seg.small button { min-height: 28px; padding: 4px 10px; font-size: 12px; }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 16px; list-style: none; padding: 0; margin: 6px 0 8px; font-size: 13px; color: var(--ink-2); }
+.legend li, .chart-tip span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i, .chart-tip i { width: 14px; height: 3px; border-radius: 2px; background: currentColor; }
+.s-current i { color: var(--s1); } .s-min3 i { color: var(--s2); } .s-model15 i { color: var(--s3); } .s-volume i { color: var(--s4); } .s-_all i { color: var(--s-ctl); }
+.chart-wrap { position: relative; }
+.chart-wrap svg { width: 100%; height: auto; display: block; }
+.chart-wrap .grid line { stroke: var(--rule-soft); }
+.chart-wrap text { font-size: 11px; fill: var(--mute); font-family: var(--font); }
+.chart-wrap .zero { stroke: var(--sil); }
+.chart-wrap .line polyline { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.chart-wrap .line circle { stroke: var(--bg); stroke-width: 2; }
+.line.s-current polyline { stroke: var(--s1); } .line.s-current circle { fill: var(--s1); }
+.line.s-min3 polyline { stroke: var(--s2); } .line.s-min3 circle { fill: var(--s2); }
+.line.s-model15 polyline { stroke: var(--s3); } .line.s-model15 circle { fill: var(--s3); }
+.line.s-volume polyline { stroke: var(--s4); } .line.s-volume circle { fill: var(--s4); }
+.line.s-_all polyline { stroke: var(--s-ctl); stroke-dasharray: 5 4; } .line.s-_all circle { fill: var(--s-ctl); }
+.chart-wrap .cross { stroke: var(--sil); }
+.chart-wrap .hit { fill: transparent; }
+.chart-tip { position: absolute; top: 4px; transform: translateX(-50%); display: grid; gap: 2px; padding: 8px 10px; background: var(--bg); border: 1.5px solid var(--rule); font-size: 12px; pointer-events: none; white-space: nowrap; z-index: 2; }

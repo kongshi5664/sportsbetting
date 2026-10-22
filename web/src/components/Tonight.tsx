@@ -3,6 +3,7 @@ import { dayLabel, money, odds, tipTime } from "../format";
 import { Check, ChevronRight, Lock, Plus, Warn } from "../icons";
 import type { Card, Game, Injury, JournalEntry, Market, Note, Suggested } from "../types";
 import { Entry } from "./Journal";
+import { Scoreboard, StatusStrip, useLive } from "./Live";
 import { label, Proof, Ramp } from "./EdgeBoard";
 import { NoteLine } from "./Suggest";
 import { Term } from "./Term";
@@ -98,9 +99,10 @@ export function Tonight(props: {
   onAddAll: (exclude: string[]) => Promise<unknown>;
   onLock: () => void;
 }) {
-  const { date, games, suggested, card, notes, sample, live, today, costPerGame, claudeKey, checkedAt, cardPanel } =
+  const { date, games, suggested, card, notes, sample, live: oddsKey, today, costPerGame, claudeKey, checkedAt, cardPanel } =
     props;
   const [busy, setBusy] = useState<"odds" | "news" | "add" | null>(null);
+  const live = useLive(today ? date : null);
   const run = async (what: "odds" | "news" | "add", f: () => Promise<unknown>) => {
     setBusy(what);
     await f();
@@ -113,8 +115,6 @@ export function Tonight(props: {
   const total = picks.reduce((s, m) => s + m.stake, 0);
   const clearing = (games ?? []).flatMap((g) => g.markets).filter((m) => !m.blocked).length;
   const tips = (games ?? []).map((g) => g.commence_time).sort();
-  const snap = (games ?? []).map((g) => g.snapshot_ts).filter(Boolean).sort().at(-1);
-  const ageMin = snap ? Math.max(0, Math.round((Date.now() - Date.parse(snap)) / 60000)) : null;
   const upcoming = (games ?? []).filter((g) => Date.parse(g.commence_time) > Date.now()).length;
   const onCard = card?.legs.length ?? 0;
   const hurt = new Map(props.injuries.map((i) => [i.name_key, i]));
@@ -132,7 +132,7 @@ export function Tonight(props: {
         <h2>No odds for this date yet</h2>
         <p>
           {today
-            ? live
+            ? oddsKey
               ? "Pull tonight's odds once Hard Rock posts player props, usually by early afternoon."
               : "Add your ODDS_API_KEY to .env and restart the desk to pull tonight's odds."
             : "Nothing was priced on this date. Pick another night in the header."}
@@ -187,15 +187,17 @@ export function Tonight(props: {
               {today ? `${dayLabel(date)} · ` : ""}
               {games.length} {games.length === 1 ? "game" : "games"}
               {today ? ` · first tip ${tipTime(tips[0])} ET` : ""}
-              {ageMin != null && today ? ` · odds updated ${ageMin} min ago` : ""}
               {sample && " · sample data"}
             </p>
           )}
         </div>
 
-        {(live || (claudeKey && legs.length > 0)) && !card?.locked && (
+        {today && date && <StatusStrip date={date} />}
+        <Scoreboard live={live} />
+
+        {(oddsKey || (claudeKey && legs.length > 0)) && !card?.locked && (
           <div className="tonight-tools">
-            {live && (
+            {oddsKey && (
               <button className="btn" disabled={busy !== null || upcoming === 0} onClick={() => run("odds", props.onRefresh)}>
                 {busy === "odds" ? "Pulling odds…" : `Refresh odds · ${upcoming * costPerGame} credits`}
               </button>

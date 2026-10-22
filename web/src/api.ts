@@ -1,4 +1,19 @@
-import type { Card, Game, Injury, JournalEntry, Ledger, Meta, News, Note, Review, Rules, Suggested } from "./types";
+import type {
+  Card,
+  DeskStatus,
+  Game,
+  Injury,
+  JournalEntry,
+  Ledger,
+  Live,
+  Meta,
+  News,
+  Note,
+  Review,
+  Rules,
+  StrategyHistory,
+  Suggested,
+} from "./types";
 
 export class ApiError extends Error {}
 /** The desk has a password and this device isn't signed in (or its session expired). */
@@ -42,6 +57,9 @@ export const api = {
   ledger: (source: "live" | "backtest" | "paper", strategy = "current") =>
     call<Ledger>("/api/ledger" + q({ source, strategy })),
   rules: () => call<Rules>("/api/rules"),
+  status: (date: string) => call<DeskStatus>("/api/status" + q({ date })),
+  live: (date: string) => call<Live>("/api/live" + q({ date })),
+  paperHistory: () => call<{ strategies: StrategyHistory[] }>("/api/paper/history"),
   review: () => call<Review>("/api/review"),
   journal: (limit = 30) => call<{ entries: JournalEntry[] }>("/api/journal" + q({ limit: String(limit) })),
   applyProposal: (id: string) => call<Review>("/api/review/apply", post({ id })),

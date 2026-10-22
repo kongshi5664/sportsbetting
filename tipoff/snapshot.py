@@ -82,6 +82,9 @@ class Credits:
         self.used += int(r.headers.get("x-requests-last", 0) or 0)
         left = r.headers.get("x-requests-remaining")
         self.remaining = int(float(left)) if left else self.remaining
+        if left:
+            from . import status
+            status.update(credits_remaining=self.remaining, credits_at=status.now())
 
 
 def _get(url, params, credits):

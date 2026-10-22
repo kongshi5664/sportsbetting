@@ -164,8 +164,10 @@ def run(day, once=False, db=None):
     decided, closed = set(), set()
     for (eid,) in con.execute("SELECT DISTINCT event_id FROM bets WHERE paper=1 AND slate_date=?", (str(day),)):
         decided.add(eid)  # restarted mid-evening: don't bet a game twice
+    from . import status
     while True:
         now = datetime.now(timezone.utc)
+        status.update(trader_at=status.now(), trader_day=str(day))  # the desk's "trader running" light
         try:
             games = games_on(day, key, credits)
         except Exception as e:  # network blip: try again next minute

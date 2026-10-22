@@ -1,15 +1,32 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-22T13:39:49+00:00",
+  "generatedAt": "2026-10-22T21:28:26+00:00",
   "title": "Design System: Tip-Off Desk",
   "extensions": {
     "colorMeta": {
-      "ground": {
+      "bg": {
         "role": "neutral",
-        "displayName": "Ground",
+        "displayName": "Desk Ground",
+        "canonical": "#f2f4f5",
+        "oklch": "oklch(96.6% 0.003 228.8)",
+        "purpose": "Page ground; equals sunk in light so white panels separate.",
+        "tonalRamp": [
+          "#0a0b0c",
+          "#242526",
+          "#414243",
+          "#606162",
+          "#818383",
+          "#a3a5a6",
+          "#c7c9ca",
+          "#edeff0"
+        ]
+      },
+      "card": {
+        "role": "neutral",
+        "displayName": "Panel",
         "canonical": "#ffffff",
         "oklch": "oklch(100.0% 0.000 89.9)",
-        "purpose": "Page and control background.",
+        "purpose": "Every raised surface and control ground.",
         "tonalRamp": [
           "#0b0b0b",
           "#252525",
@@ -24,682 +41,935 @@
       "sunk": {
         "role": "neutral",
         "displayName": "Sunk",
-        "canonical": "#f4f5f5",
-        "oklch": "oklch(96.9% 0.001 197.1)",
-        "purpose": "Row hover, expanded proof rows, on-card rows, opened bet-card math, term definitions.",
+        "canonical": "#f2f4f5",
+        "oklch": "oklch(96.6% 0.003 228.8)",
+        "purpose": "Inset wells: secondary quote chips, segmented track, game rows, math drawer, hover rows.",
         "tonalRamp": [
-          "#0b0b0b",
-          "#242525",
-          "#414242",
-          "#606161",
-          "#818282",
-          "#a4a5a5",
-          "#c8c9c9",
-          "#eeefef"
+          "#0a0b0c",
+          "#242526",
+          "#414243",
+          "#606162",
+          "#818383",
+          "#a3a5a6",
+          "#c7c9ca",
+          "#edeff0"
         ]
       },
       "ink": {
         "role": "neutral",
         "displayName": "Ink",
-        "canonical": "#1b1d22",
-        "oklch": "oklch(23.1% 0.010 268.2)",
-        "purpose": "Text, primary buttons, card head, toast; light-theme rule color.",
+        "canonical": "#0f1417",
+        "oklch": "oklch(18.7% 0.010 234.4)",
+        "purpose": "Primary text.",
         "tonalRamp": [
-          "#090b10",
-          "#23252a",
-          "#404248",
-          "#5f6167",
-          "#808289",
-          "#a2a5ac",
-          "#c6c9d0",
-          "#ebeef6"
+          "#070c0f",
+          "#212629",
+          "#3d4347",
+          "#5c6266",
+          "#7d8387",
+          "#9fa6aa",
+          "#c3cacf",
+          "#e8f0f4"
         ]
       },
       "ink-2": {
         "role": "neutral",
         "displayName": "Ink 2",
-        "canonical": "#474b54",
-        "oklch": "oklch(41.3% 0.016 266.5)",
-        "purpose": "Secondary text, column heads, held-out rows.",
+        "canonical": "#48535a",
+        "oklch": "oklch(43.5% 0.018 235.8)",
+        "purpose": "Secondary text.",
         "tonalRamp": [
-          "#080b12",
-          "#21252d",
-          "#3e424b",
-          "#5d616b",
-          "#7e828c",
-          "#a0a5af",
-          "#c4c9d4",
-          "#e9eefa"
+          "#050c12",
+          "#1d272d",
+          "#39444a",
+          "#58636a",
+          "#78848c",
+          "#9ba7af",
+          "#bfcbd4",
+          "#e4f1f9"
         ]
       },
       "mute": {
         "role": "neutral",
         "displayName": "Mute",
-        "canonical": "#5f636c",
-        "oklch": "oklch(49.9% 0.015 266.6)",
-        "purpose": "Reference prices, meta, testing pills, disabled text.",
+        "canonical": "#66717a",
+        "oklch": "oklch(54.2% 0.019 242.7)",
+        "purpose": "Labels and meta.",
         "tonalRamp": [
-          "#080b12",
-          "#22252d",
-          "#3e424a",
-          "#5d616a",
-          "#7e828c",
-          "#a1a5af",
-          "#c5c9d3",
-          "#eaeef9"
+          "#050c13",
+          "#1d262e",
+          "#39434c",
+          "#58636c",
+          "#79848d",
+          "#9ba7b0",
+          "#bfcbd5",
+          "#e4f0fb"
         ]
       },
-      "rule": {
+      "line": {
         "role": "neutral",
-        "displayName": "Rule",
-        "canonical": "#1b1d22",
-        "oklch": "oklch(23.1% 0.010 268.2)",
-        "purpose": "2px and 1.5px structural ink rules.",
+        "displayName": "Line",
+        "canonical": "#e4e8ea",
+        "oklch": "oklch(92.9% 0.005 228.8)",
+        "purpose": "Hairline dividers and panel borders.",
         "tonalRamp": [
-          "#090b10",
-          "#23252a",
-          "#404248",
-          "#5f6167",
-          "#808289",
-          "#a2a5ac",
-          "#c6c9d0",
-          "#ebeef6"
+          "#090c0d",
+          "#232627",
+          "#3f4344",
+          "#5e6263",
+          "#7f8385",
+          "#a2a6a7",
+          "#c6cacc",
+          "#ebeff1"
         ]
       },
-      "rule-soft": {
+      "line-2": {
         "role": "neutral",
-        "displayName": "Rule Soft",
-        "canonical": "#e3e4e5",
-        "oklch": "oklch(91.8% 0.002 247.8)",
-        "purpose": "1px row dividers, gridlines, empty ramp cells.",
+        "displayName": "Line 2",
+        "canonical": "#d2d8db",
+        "oklch": "oklch(87.8% 0.008 228.9)",
+        "purpose": "Control borders, zero line.",
         "tonalRamp": [
-          "#0b0b0c",
-          "#242526",
-          "#414243",
-          "#606162",
-          "#818283",
-          "#a4a5a6",
-          "#c8c9ca",
-          "#edeeef"
+          "#080c0e",
+          "#212628",
+          "#3e4345",
+          "#5d6265",
+          "#7e8386",
+          "#a0a6a9",
+          "#c4cacd",
+          "#e9f0f3"
         ]
       },
-      "silver": {
+      "sil": {
         "role": "neutral",
         "displayName": "Silver",
-        "canonical": "#c7c9c8",
-        "oklch": "oklch(83.4% 0.003 165.1)",
-        "purpose": "Sample tag, dashed empty states, scrollbar.",
+        "canonical": "#b9c1c5",
+        "oklch": "oklch(80.6% 0.011 228.9)",
+        "purpose": "Inactive meter segments, dashed testing borders, scrollbars.",
         "tonalRamp": [
-          "#0a0b0b",
-          "#242525",
-          "#414242",
-          "#606261",
-          "#818382",
-          "#a3a5a4",
-          "#c8cac9",
-          "#edefee"
+          "#070c0f",
+          "#202629",
+          "#3c4346",
+          "#5b6266",
+          "#7c8487",
+          "#9fa6aa",
+          "#c2cbcf",
+          "#e8f0f4"
         ]
       },
-      "on-zone": {
-        "role": "neutral",
-        "displayName": "On Zone",
-        "canonical": "#1b1d22",
-        "oklch": "oklch(23.1% 0.010 268.2)",
-        "purpose": "Text on any league zone, both themes.",
-        "tonalRamp": [
-          "#090b10",
-          "#23252a",
-          "#404248",
-          "#5f6167",
-          "#808289",
-          "#a2a5ac",
-          "#c6c9d0",
-          "#ebeef6"
-        ]
-      },
-      "press-ink": {
-        "role": "neutral",
-        "displayName": "Press Ink",
-        "canonical": "#33363d",
-        "oklch": "oklch(33.3% 0.013 267.1)",
-        "purpose": "Hover on solid ink buttons, light theme.",
-        "tonalRamp": [
-          "#090b11",
-          "#22252c",
-          "#3f4249",
-          "#5e6169",
-          "#7f828a",
-          "#a1a5ad",
-          "#c5c9d2",
-          "#eaeef8"
-        ]
-      },
-      "league-nba": {
+      "up": {
         "role": "primary",
-        "displayName": "NBA Court Orange",
-        "canonical": "#f28c28",
-        "oklch": "oklch(73.5% 0.161 58.8)",
-        "purpose": "Live league zone: rail tile, header, game bands, bet-card heads, ticket head, beat-the-market chart line.",
+        "displayName": "Beating-the-Close Green (text)",
+        "canonical": "#06733f",
+        "oklch": "oklch(48.8% 0.121 154.2)",
+        "purpose": "Mood accent text on its tint while CLV is flat or positive.",
         "tonalRamp": [
-          "#160700",
-          "#3b1c00",
-          "#633506",
-          "#8d5016",
-          "#bb6c21",
-          "#ed8821",
-          "#fdb882",
-          "#ffeadb"
+          "#001102",
+          "#00320a",
+          "#005321",
+          "#097440",
+          "#3c9760",
+          "#6bb986",
+          "#aad6b7",
+          "#e5f3e9"
         ]
       },
-      "league-nfl": {
-        "role": "secondary",
-        "displayName": "NFL Field Green",
-        "canonical": "#3a9a4a",
-        "oklch": "oklch(61.0% 0.147 146.6)",
-        "purpose": "NFL zone, waiting.",
+      "up-fill": {
+        "role": "primary",
+        "displayName": "Beating-the-Close Green",
+        "canonical": "#077a45",
+        "oklch": "oklch(51.0% 0.124 155.0)",
+        "purpose": "Mood fill: primary buttons, Lock card, active tab underline, brand mark, risk bar.",
         "tonalRamp": [
-          "#001002",
-          "#012e0a",
-          "#09501b",
-          "#027627",
-          "#399949",
-          "#5fbd6b",
-          "#84e38f",
-          "#cdfdd0"
+          "#001202",
+          "#00320a",
+          "#005421",
+          "#007540",
+          "#369861",
+          "#68ba86",
+          "#a8d6b7",
+          "#e5f3e9"
         ]
       },
-      "league-mlb": {
-        "role": "secondary",
-        "displayName": "MLB Diamond Blue",
-        "canonical": "#4fa3d8",
-        "oklch": "oklch(68.5% 0.113 239.1)",
-        "purpose": "MLB zone, waiting.",
+      "up-soft": {
+        "role": "primary",
+        "displayName": "Green Tint",
+        "canonical": "#e2f5eb",
+        "oklch": "oklch(95.3% 0.024 163.1)",
+        "purpose": "Ground behind mood text: Hard Rock quote chip, mood chip, soft button, on-card rows.",
         "tonalRamp": [
-          "#010d17",
-          "#00283f",
-          "#064769",
-          "#186894",
-          "#348bbe",
-          "#5baee4",
-          "#90d2ff",
-          "#e0f1fe"
+          "#070d0a",
+          "#1c2822",
+          "#37463e",
+          "#55665d",
+          "#76877e",
+          "#9aa9a1",
+          "#c2ccc7",
+          "#ecefee"
         ]
       },
-      "league-nhl": {
-        "role": "secondary",
-        "displayName": "NHL Rink Silver",
-        "canonical": "#c7c9c8",
-        "oklch": "oklch(83.4% 0.003 165.1)",
-        "purpose": "NHL zone, waiting.",
+      "down": {
+        "role": "primary",
+        "displayName": "Below-the-Close Coral (text)",
+        "canonical": "#b8311c",
+        "oklch": "oklch(52.0% 0.175 31.7)",
+        "purpose": "Mood text when CLV is negative; error and blocked text.",
         "tonalRamp": [
-          "#0a0b0b",
-          "#242525",
-          "#414242",
-          "#606261",
-          "#818382",
-          "#a3a5a4",
-          "#c8cac9",
-          "#edefee"
+          "#250000",
+          "#590000",
+          "#870000",
+          "#af2711",
+          "#d74f39",
+          "#f77b65",
+          "#ffb3a4",
+          "#ffe8e3"
         ]
       },
-      "pass": {
+      "down-fill": {
+        "role": "primary",
+        "displayName": "Below-the-Close Coral",
+        "canonical": "#d43c25",
+        "oklch": "oklch(58.0% 0.192 31.6)",
+        "purpose": "Mood fill when CLV is negative; live dot; error toast dot.",
+        "tonalRamp": [
+          "#270000",
+          "#5d0000",
+          "#8d0000",
+          "#b51600",
+          "#de462e",
+          "#fe755e",
+          "#ffb1a0",
+          "#ffe8e2"
+        ]
+      },
+      "down-soft": {
+        "role": "primary",
+        "displayName": "Coral Tint",
+        "canonical": "#fce9e5",
+        "oklch": "oklch(94.8% 0.021 31.8)",
+        "purpose": "Ground behind coral text: failed legs, no pills, confirm strips.",
+        "tonalRamp": [
+          "#0f0a09",
+          "#2d2220",
+          "#4d3e3b",
+          "#6d5d5a",
+          "#8f7e7a",
+          "#b1a19e",
+          "#d0c7c5",
+          "#f1eeed"
+        ]
+      },
+      "warn": {
         "role": "tertiary",
-        "displayName": "Pass Teal",
-        "canonical": "#0b6e5f",
-        "oklch": "oklch(48.3% 0.086 178.6)",
-        "purpose": "Passing rules, positive value and beat-the-market, the value ramp, wins.",
+        "displayName": "Ledger Amber",
+        "canonical": "#855600",
+        "oklch": "oklch(49.3% 0.105 72.7)",
+        "purpose": "Warning text: notices, SAMPLE tag, injury icons.",
         "tonalRamp": [
-          "#000f0b",
-          "#032c25",
-          "#004e42",
-          "#117162",
-          "#3f9383",
-          "#64b7a6",
-          "#89dcca",
-          "#bcffef"
+          "#170600",
+          "#3e1b00",
+          "#633600",
+          "#855600",
+          "#a87732",
+          "#c99c61",
+          "#e0c4a2",
+          "#f6ede3"
         ]
       },
-      "blocked": {
+      "warn-soft": {
         "role": "tertiary",
-        "displayName": "Blocked Red",
-        "canonical": "#c41f3b",
-        "oklch": "oklch(53.2% 0.196 19.3)",
-        "purpose": "Failing rules, negatives, over-cap, errors.",
+        "displayName": "Amber Tint",
+        "canonical": "#fbf0d6",
+        "oklch": "oklch(95.7% 0.036 87.8)",
+        "purpose": "Ground behind warning text.",
         "tonalRamp": [
-          "#1f0003",
-          "#4c010f",
-          "#7c0c21",
-          "#b60330",
-          "#df3e50",
-          "#f8777c",
-          "#fcb3b3",
-          "#fee9e8"
-        ]
-      },
-      "blocked-soft": {
-        "role": "tertiary",
-        "displayName": "Blocked Soft",
-        "canonical": "#fbe4e8",
-        "oklch": "oklch(93.9% 0.026 5.7)",
-        "purpose": "Failing bet tint, remove hover, confirm strip.",
-        "tonalRamp": [
-          "#14070a",
-          "#302023",
-          "#4e3c40",
-          "#6f5b5f",
-          "#917c80",
-          "#b49fa3",
-          "#d9c3c7",
-          "#ffe8ec"
-        ]
-      },
-      "warning": {
-        "role": "tertiary",
-        "displayName": "Warning Ochre",
-        "canonical": "#7a5c00",
-        "oklch": "oklch(49.2% 0.101 86.4)",
-        "purpose": "Notice border and icon; Not taking mark; Claude caution pill.",
-        "tonalRamp": [
-          "#110a00",
-          "#302300",
-          "#533f07",
-          "#7a5c00",
-          "#9d7e32",
-          "#c1a157",
-          "#e6c57b",
-          "#feedc6"
-        ]
-      },
-      "warning-soft": {
-        "role": "tertiary",
-        "displayName": "Warning Soft",
-        "canonical": "#f8efd3",
-        "oklch": "oklch(95.2% 0.038 92.2)",
-        "purpose": "Notice fill.",
-        "tonalRamp": [
-          "#100b00",
-          "#2c240e",
-          "#49422a",
-          "#696149",
-          "#8a8269",
-          "#ada58b",
-          "#d2c9ae",
-          "#f7eed2"
+          "#0e0b04",
+          "#2b2413",
+          "#4a412c",
+          "#6a604a",
+          "#8b816a",
+          "#ada48f",
+          "#cec9bc",
+          "#f0eeea"
         ]
       },
       "focus": {
         "role": "tertiary",
         "displayName": "Focus Blue",
-        "canonical": "#1f5fd6",
-        "oklch": "oklch(52.0% 0.194 261.5)",
-        "purpose": "2.5px keyboard focus outline only.",
+        "canonical": "#2563eb",
+        "oklch": "oklch(54.6% 0.215 262.9)",
+        "purpose": "2.5px focus outline only.",
         "tonalRamp": [
-          "#000827",
-          "#011e5b",
-          "#073993",
-          "#1656cd",
-          "#3a7bf4",
-          "#72a4fd",
-          "#aecafb",
-          "#e6efff"
+          "#000035",
+          "#00037b",
+          "#0029b1",
+          "#1451d8",
+          "#3777ff",
+          "#629fff",
+          "#a2c9ff",
+          "#e2efff"
         ]
       },
-      "ground-dark": {
+      "on-mood": {
         "role": "neutral",
-        "displayName": "Ground (dark)",
-        "canonical": "#121316",
-        "oklch": "oklch(18.7% 0.006 271.1)",
-        "purpose": "Dark-theme value of ground. Page and control background.",
+        "displayName": "On Mood",
+        "canonical": "#ffffff",
+        "oklch": "oklch(100.0% 0.000 89.9)",
+        "purpose": "Text and marks on a mood fill.",
         "tonalRamp": [
-          "#0a0b0e",
-          "#242528",
-          "#414245",
-          "#606165",
-          "#818286",
-          "#a3a5a9",
-          "#c7c9cd",
-          "#edeef3"
+          "#0b0b0b",
+          "#252525",
+          "#424242",
+          "#616161",
+          "#828282",
+          "#a5a5a5",
+          "#c9c9c9",
+          "#eeeeee"
+        ]
+      },
+      "bg-dark": {
+        "role": "neutral",
+        "displayName": "Desk Ground (dark)",
+        "canonical": "#0e1113",
+        "oklch": "oklch(17.5% 0.006 237.0)",
+        "purpose": "Dark-theme value. Page ground; equals sunk in light so white panels separate.",
+        "tonalRamp": [
+          "#090c0e",
+          "#222628",
+          "#3f4345",
+          "#5e6264",
+          "#7f8386",
+          "#a1a6a8",
+          "#c5cacd",
+          "#ebeff2"
+        ]
+      },
+      "card-dark": {
+        "role": "neutral",
+        "displayName": "Panel (dark)",
+        "canonical": "#171b1e",
+        "oklch": "oklch(21.9% 0.008 240.3)",
+        "purpose": "Dark-theme value. Every raised surface and control ground.",
+        "tonalRamp": [
+          "#080c0e",
+          "#212629",
+          "#3e4346",
+          "#5d6266",
+          "#7e8387",
+          "#a0a6aa",
+          "#c4cace",
+          "#eaeff4"
         ]
       },
       "sunk-dark": {
         "role": "neutral",
         "displayName": "Sunk (dark)",
-        "canonical": "#1a1c20",
-        "oklch": "oklch(22.6% 0.008 264.4)",
-        "purpose": "Dark-theme value of sunk. Row hover, expanded proof rows, on-card rows, opened bet-card math, term definitions.",
+        "canonical": "#1e2327",
+        "oklch": "oklch(25.3% 0.011 242.1)",
+        "purpose": "Dark-theme value. Inset wells: secondary quote chips, segmented track, game rows, math drawer, hover rows.",
         "tonalRamp": [
-          "#090b0f",
-          "#232529",
-          "#404247",
-          "#5f6166",
-          "#808287",
-          "#a2a5aa",
-          "#c6c9cf",
-          "#eceef4"
+          "#070c0f",
+          "#21262a",
+          "#3d4347",
+          "#5c6267",
+          "#7d8388",
+          "#a0a6ab",
+          "#c3cacf",
+          "#e9eff5"
         ]
       },
       "ink-dark": {
         "role": "neutral",
         "displayName": "Ink (dark)",
-        "canonical": "#eceef1",
-        "oklch": "oklch(94.8% 0.005 258.3)",
-        "purpose": "Dark-theme value of ink. Text, primary buttons, card head, toast; light-theme rule color.",
+        "canonical": "#f2f5f6",
+        "oklch": "oklch(96.8% 0.003 219.5)",
+        "purpose": "Dark-theme value. Primary text.",
         "tonalRamp": [
-          "#0a0b0d",
-          "#242527",
-          "#404244",
-          "#606164",
-          "#818285",
-          "#a3a5a8",
-          "#c7c9cc",
-          "#edeff2"
+          "#0a0b0c",
+          "#232526",
+          "#404243",
+          "#5f6262",
+          "#808384",
+          "#a3a5a6",
+          "#c7cacb",
+          "#eceff0"
         ]
       },
       "ink-2-dark": {
         "role": "neutral",
         "displayName": "Ink 2 (dark)",
-        "canonical": "#c3c7ce",
-        "oklch": "oklch(82.9% 0.011 261.8)",
-        "purpose": "Dark-theme value of ink-2. Secondary text, column heads, held-out rows.",
+        "canonical": "#b3bcc1",
+        "oklch": "oklch(79.0% 0.012 231.7)",
+        "purpose": "Dark-theme value. Secondary text.",
         "tonalRamp": [
-          "#090b10",
-          "#22252a",
-          "#3f4248",
-          "#5e6167",
-          "#7f8289",
-          "#a1a5ac",
-          "#c5c9d0",
-          "#ebeff6"
+          "#060c0f",
+          "#1f262a",
+          "#3c4347",
+          "#5b6367",
+          "#7b8488",
+          "#9ea7ab",
+          "#c2cbd0",
+          "#e7f0f5"
         ]
       },
       "mute-dark": {
         "role": "neutral",
         "displayName": "Mute (dark)",
-        "canonical": "#9ba0a9",
-        "oklch": "oklch(70.5% 0.014 262.4)",
-        "purpose": "Dark-theme value of mute. Reference prices, meta, testing pills, disabled text.",
+        "canonical": "#8d979d",
+        "oklch": "oklch(67.0% 0.015 233.9)",
+        "purpose": "Dark-theme value. Labels and meta.",
         "tonalRamp": [
-          "#080b11",
-          "#21252c",
-          "#3e424a",
-          "#5d616a",
-          "#7e838b",
-          "#a0a5ae",
-          "#c4c9d3",
-          "#e9eff8"
+          "#060c10",
+          "#1e262b",
+          "#3b4349",
+          "#596368",
+          "#7a848a",
+          "#9da7ad",
+          "#c0cbd1",
+          "#e5f0f7"
         ]
       },
-      "rule-dark": {
+      "line-dark": {
         "role": "neutral",
-        "displayName": "Rule (dark)",
-        "canonical": "#d9dce1",
-        "oklch": "oklch(89.4% 0.008 260.7)",
-        "purpose": "Dark-theme value of rule. 2px and 1.5px structural ink rules.",
+        "displayName": "Line (dark)",
+        "canonical": "#262d31",
+        "oklch": "oklch(29.2% 0.012 232.9)",
+        "purpose": "Dark-theme value. Hairline dividers and panel borders.",
         "tonalRamp": [
-          "#090b0e",
-          "#232529",
-          "#404246",
-          "#5f6166",
-          "#808287",
-          "#a2a5aa",
-          "#c6c9ce",
-          "#eceff4"
+          "#060c0f",
+          "#1f262a",
+          "#3c4348",
+          "#5b6367",
+          "#7b8489",
+          "#9ea7ac",
+          "#c2cbd0",
+          "#e7f0f5"
         ]
       },
-      "rule-soft-dark": {
+      "line-2-dark": {
         "role": "neutral",
-        "displayName": "Rule Soft (dark)",
-        "canonical": "#2b2e34",
-        "oklch": "oklch(30.1% 0.012 264.4)",
-        "purpose": "Dark-theme value of rule-soft. 1px row dividers, gridlines, empty ramp cells.",
+        "displayName": "Line 2 (dark)",
+        "canonical": "#343c41",
+        "oklch": "oklch(35.1% 0.014 235.3)",
+        "purpose": "Dark-theme value. Control borders, zero line.",
         "tonalRamp": [
-          "#090b10",
-          "#22252b",
-          "#3f4248",
-          "#5e6168",
-          "#7f828a",
-          "#a1a5ad",
-          "#c5c9d1",
-          "#eaeff7"
+          "#060c10",
+          "#1f262b",
+          "#3b4348",
+          "#5a6368",
+          "#7b848a",
+          "#9da7ad",
+          "#c1cbd1",
+          "#e6f0f7"
         ]
       },
-      "silver-dark": {
+      "sil-dark": {
         "role": "neutral",
         "displayName": "Silver (dark)",
-        "canonical": "#4a4e56",
-        "oklch": "oklch(42.3% 0.014 264.4)",
-        "purpose": "Dark-theme value of silver. Sample tag, dashed empty states, scrollbar.",
+        "canonical": "#4b555b",
+        "oklch": "oklch(44.3% 0.016 234.1)",
+        "purpose": "Dark-theme value. Inactive meter segments, dashed testing borders, scrollbars.",
         "tonalRamp": [
-          "#080b11",
-          "#22252c",
-          "#3e424a",
-          "#5d616a",
-          "#7e828b",
-          "#a1a5ae",
-          "#c4c9d3",
-          "#eaeff8"
+          "#050c11",
+          "#1e262c",
+          "#3a4449",
+          "#596369",
+          "#79848b",
+          "#9ca7ae",
+          "#c0cbd2",
+          "#e5f1f8"
         ]
       },
-      "pass-dark": {
-        "role": "tertiary",
-        "displayName": "Pass Teal (dark)",
-        "canonical": "#45c9a9",
-        "oklch": "oklch(75.6% 0.124 173.5)",
-        "purpose": "Dark-theme value of pass. Passing rules, positive value and beat-the-market, the value ramp, wins.",
+      "up-dark": {
+        "role": "primary",
+        "displayName": "Beating-the-Close Green (text) (dark)",
+        "canonical": "#34d687",
+        "oklch": "oklch(77.7% 0.173 156.4)",
+        "purpose": "Dark-theme value. Mood accent text on its tint while CLV is flat or positive.",
         "tonalRamp": [
-          "#000f0a",
-          "#032c23",
-          "#0f4d3f",
-          "#0f725d",
-          "#17987d",
-          "#36be9e",
-          "#64e3c2",
-          "#c1feeb"
+          "#001400",
+          "#003600",
+          "#005911",
+          "#007b33",
+          "#009f54",
+          "#39c17c",
+          "#98dbb1",
+          "#e0f4e7"
         ]
       },
-      "blocked-dark": {
-        "role": "tertiary",
-        "displayName": "Blocked Red (dark)",
-        "canonical": "#ff7088",
-        "oklch": "oklch(72.4% 0.175 12.2)",
-        "purpose": "Dark-theme value of blocked. Failing rules, negatives, over-cap, errors.",
+      "up-fill-dark": {
+        "role": "primary",
+        "displayName": "Beating-the-Close Green (dark)",
+        "canonical": "#2fd583",
+        "oklch": "oklch(77.2% 0.176 155.7)",
+        "purpose": "Dark-theme value. Mood fill: primary buttons, Lock card, active tab underline, brand mark, risk bar.",
         "tonalRamp": [
-          "#1e0005",
-          "#4b0217",
-          "#7b0d2d",
-          "#ad2146",
-          "#d54a66",
-          "#fe6f87",
-          "#fab3ba",
-          "#fee8ea"
+          "#001400",
+          "#003600",
+          "#00590c",
+          "#007c30",
+          "#009f51",
+          "#37c179",
+          "#97dcb0",
+          "#e0f5e7"
         ]
       },
-      "blocked-soft-dark": {
-        "role": "tertiary",
-        "displayName": "Blocked Soft (dark)",
-        "canonical": "#3b1820",
-        "oklch": "oklch(26.4% 0.056 7.3)",
-        "purpose": "Dark-theme value of blocked-soft. Failing bet tint, remove hover, confirm strip.",
+      "up-soft-dark": {
+        "role": "primary",
+        "displayName": "Green Tint (dark)",
+        "canonical": "#11301f",
+        "oklch": "oklch(28.0% 0.049 157.1)",
+        "purpose": "Dark-theme value. Ground behind mood text: Hard Rock quote chip, mood chip, soft button, on-card rows.",
         "tonalRamp": [
-          "#1d0107",
-          "#3b1820",
-          "#5b353d",
-          "#7d545b",
-          "#a0757c",
-          "#c5979f",
-          "#ebbbc3",
-          "#fee8eb"
+          "#040e07",
+          "#122b1d",
+          "#2b4a38",
+          "#4a6a56",
+          "#6a8c77",
+          "#8fae9a",
+          "#bccec3",
+          "#eaf0ec"
         ]
       },
-      "warning-dark": {
-        "role": "tertiary",
-        "displayName": "Warning Ochre (dark)",
-        "canonical": "#e7b84a",
-        "oklch": "oklch(80.5% 0.136 85.4)",
-        "purpose": "Dark-theme value of warning. Notice border and icon; Not taking mark; Claude caution pill.",
+      "down-dark": {
+        "role": "primary",
+        "displayName": "Below-the-Close Coral (text) (dark)",
+        "canonical": "#ff7a66",
+        "oklch": "oklch(73.1% 0.166 30.3)",
+        "purpose": "Dark-theme value. Mood text when CLV is negative; error and blocked text.",
         "tonalRamp": [
-          "#110a00",
-          "#312301",
-          "#533e09",
-          "#7b5c05",
-          "#a37b08",
-          "#cb9d28",
-          "#f1c255",
-          "#ffedc7"
+          "#240000",
+          "#570000",
+          "#840000",
+          "#ab2c1e",
+          "#d35241",
+          "#f37e6b",
+          "#fdb4a7",
+          "#ffe8e4"
         ]
       },
-      "warning-soft-dark": {
-        "role": "tertiary",
-        "displayName": "Warning Soft (dark)",
-        "canonical": "#352a10",
-        "oklch": "oklch(29.1% 0.043 86.5)",
-        "purpose": "Dark-theme value of warning-soft. Notice fill.",
+      "down-fill-dark": {
+        "role": "primary",
+        "displayName": "Below-the-Close Coral (dark)",
+        "canonical": "#ff6b55",
+        "oklch": "oklch(70.8% 0.185 30.7)",
+        "purpose": "Dark-theme value. Mood fill when CLV is negative; live dot; error toast dot.",
         "tonalRamp": [
-          "#110a00",
-          "#2e2309",
-          "#4c4126",
-          "#6c6045",
-          "#8e8165",
-          "#b1a486",
-          "#d6c8aa",
-          "#fbedce"
+          "#260000",
+          "#5b0000",
+          "#8b0000",
+          "#b21e0c",
+          "#db4936",
+          "#fb7863",
+          "#ffb2a3",
+          "#ffe8e3"
+        ]
+      },
+      "down-soft-dark": {
+        "role": "primary",
+        "displayName": "Coral Tint (dark)",
+        "canonical": "#3b1b16",
+        "oklch": "oklch(26.6% 0.052 30.1)",
+        "purpose": "Dark-theme value. Ground behind coral text: failed legs, no pills, confirm strips.",
+        "tonalRamp": [
+          "#140706",
+          "#371c18",
+          "#5a3731",
+          "#7c5650",
+          "#9f7770",
+          "#c09b94",
+          "#dac3bf",
+          "#f4edeb"
+        ]
+      },
+      "warn-dark": {
+        "role": "tertiary",
+        "displayName": "Ledger Amber (dark)",
+        "canonical": "#f2b84b",
+        "oklch": "oklch(81.7% 0.140 80.1)",
+        "purpose": "Dark-theme value. Warning text: notices, SAMPLE tag, injury icons.",
+        "tonalRamp": [
+          "#190600",
+          "#411800",
+          "#673400",
+          "#895500",
+          "#ad7600",
+          "#ce9b3d",
+          "#e3c593",
+          "#f7edde"
+        ]
+      },
+      "warn-soft-dark": {
+        "role": "tertiary",
+        "displayName": "Amber Tint (dark)",
+        "canonical": "#33280f",
+        "oklch": "oklch(28.3% 0.042 85.7)",
+        "purpose": "Dark-theme value. Ground behind warning text.",
+        "tonalRamp": [
+          "#0f0a03",
+          "#2d2410",
+          "#4c4027",
+          "#6c6046",
+          "#8e8166",
+          "#b0a48b",
+          "#d0c8b9",
+          "#f0eee9"
         ]
       },
       "focus-dark": {
         "role": "tertiary",
         "displayName": "Focus Blue (dark)",
-        "canonical": "#7fa8ff",
-        "oklch": "oklch(73.8% 0.134 264.2)",
-        "purpose": "Dark-theme value of focus. 2.5px keyboard focus outline only.",
+        "canonical": "#7aa7ff",
+        "oklch": "oklch(73.3% 0.137 262.9)",
+        "purpose": "Dark-theme value. 2.5px focus outline only.",
         "tonalRamp": [
-          "#000133",
-          "#031965",
-          "#1c3b88",
-          "#395dad",
-          "#597fd2",
-          "#7aa3f9",
-          "#afc9fe",
+          "#010826",
+          "#031e5c",
+          "#173b8a",
+          "#355dae",
+          "#557fd4",
+          "#7ca4f2",
+          "#b0caf9",
           "#e7effe"
+        ]
+      },
+      "on-mood-dark": {
+        "role": "neutral",
+        "displayName": "On Mood (dark)",
+        "canonical": "#05150c",
+        "oklch": "oklch(17.8% 0.030 158.2)",
+        "purpose": "Dark-theme value. Text and marks on a mood fill.",
+        "tonalRamp": [
+          "#060d09",
+          "#1b2920",
+          "#35473c",
+          "#53675b",
+          "#74887c",
+          "#98aa9f",
+          "#c1ccc5",
+          "#ecefed"
+        ]
+      },
+      "league-nba": {
+        "role": "data",
+        "displayName": "NBA Dot",
+        "canonical": "#f28c28",
+        "oklch": "oklch(73.5% 0.161 58.8)",
+        "purpose": "League dot only.",
+        "tonalRamp": [
+          "#200000",
+          "#500000",
+          "#7b1b00",
+          "#a04100",
+          "#c66400",
+          "#e68c3b",
+          "#f3bc92",
+          "#fcebde"
+        ]
+      },
+      "league-nfl": {
+        "role": "data",
+        "displayName": "NFL Dot",
+        "canonical": "#3a9a4a",
+        "oklch": "oklch(61.0% 0.147 146.6)",
+        "purpose": "League dot only.",
+        "tonalRamp": [
+          "#001200",
+          "#003300",
+          "#005400",
+          "#027627",
+          "#399949",
+          "#69bb73",
+          "#a9d7ac",
+          "#e5f3e5"
+        ]
+      },
+      "league-mlb": {
+        "role": "data",
+        "displayName": "MLB Dot",
+        "canonical": "#4fa3d8",
+        "oklch": "oklch(68.5% 0.113 239.1)",
+        "purpose": "League dot only.",
+        "tonalRamp": [
+          "#000d1f",
+          "#00284d",
+          "#004777",
+          "#00689a",
+          "#348bbe",
+          "#65aedd",
+          "#a6cfec",
+          "#e4f1fa"
+        ]
+      },
+      "league-nhl": {
+        "role": "data",
+        "displayName": "NHL Dot",
+        "canonical": "#9aa3a8",
+        "oklch": "oklch(71.0% 0.013 231.7)",
+        "purpose": "League dot only.",
+        "tonalRamp": [
+          "#060c10",
+          "#1f262a",
+          "#3c4348",
+          "#5a6367",
+          "#7b8489",
+          "#9ea7ac",
+          "#c1cbd0",
+          "#e7f0f6"
+        ]
+      },
+      "series-1": {
+        "role": "data",
+        "displayName": "Series 1",
+        "canonical": "#2a78d6",
+        "oklch": "oklch(57.5% 0.163 255.5)",
+        "purpose": "Strategy chart: current strategy.",
+        "tonalRamp": [
+          "#00072b",
+          "#001d65",
+          "#003c95",
+          "#055fba",
+          "#3582e1",
+          "#64a7fe",
+          "#a4ccff",
+          "#e3f0ff"
+        ]
+      },
+      "series-2": {
+        "role": "data",
+        "displayName": "Series 2",
+        "canonical": "#eb6834",
+        "oklch": "oklch(67.1% 0.175 40.6)",
+        "purpose": "Strategy chart: min-3 strategy.",
+        "tonalRamp": [
+          "#240000",
+          "#580000",
+          "#860000",
+          "#ad2d00",
+          "#d5531b",
+          "#f57f53",
+          "#feb59b",
+          "#ffe9e0"
+        ]
+      },
+      "series-3": {
+        "role": "data",
+        "displayName": "Series 3",
+        "canonical": "#1baf7a",
+        "oklch": "oklch(66.9% 0.141 162.1)",
+        "purpose": "Strategy chart: model-15 strategy.",
+        "tonalRamp": [
+          "#001303",
+          "#003411",
+          "#005729",
+          "#007848",
+          "#009b68",
+          "#4dbd8d",
+          "#9ed9bb",
+          "#e2f4ea"
+        ]
+      },
+      "series-4": {
+        "role": "data",
+        "displayName": "Series 4",
+        "canonical": "#c98500",
+        "oklch": "oklch(67.0% 0.143 73.2)",
+        "purpose": "Strategy chart: volume strategy (same in both themes).",
+        "tonalRamp": [
+          "#1b0400",
+          "#451300",
+          "#6d2e00",
+          "#905000",
+          "#b47200",
+          "#d5973e",
+          "#e7c293",
+          "#f8edde"
+        ]
+      },
+      "series-1-dark": {
+        "role": "data",
+        "displayName": "Series 1 (dark)",
+        "canonical": "#3987e5",
+        "oklch": "oklch(62.2% 0.161 255.1)",
+        "purpose": "Dark-theme value. Strategy chart: current strategy.",
+        "tonalRamp": [
+          "#00082a",
+          "#001e64",
+          "#003c94",
+          "#025fb9",
+          "#3482e0",
+          "#63a7fd",
+          "#a4ccff",
+          "#e3f0ff"
+        ]
+      },
+      "series-2-dark": {
+        "role": "data",
+        "displayName": "Series 2 (dark)",
+        "canonical": "#d95926",
+        "oklch": "oklch(62.2% 0.173 40.1)",
+        "purpose": "Dark-theme value. Strategy chart: min-3 strategy.",
+        "tonalRamp": [
+          "#240000",
+          "#570000",
+          "#850000",
+          "#ac2e00",
+          "#d45420",
+          "#f47f56",
+          "#fdb69c",
+          "#ffe9e1"
+        ]
+      },
+      "series-3-dark": {
+        "role": "data",
+        "displayName": "Series 3 (dark)",
+        "canonical": "#199e70",
+        "oklch": "oklch(62.1% 0.128 163.1)",
+        "purpose": "Dark-theme value. Strategy chart: model-15 strategy.",
+        "tonalRamp": [
+          "#001204",
+          "#003314",
+          "#00552d",
+          "#00774c",
+          "#0e9a6c",
+          "#57bb90",
+          "#a1d8bd",
+          "#e3f3eb"
         ]
       }
     },
+    "moodAliases": {
+      "up": {
+        "--mood": "up-fill",
+        "--mood-ink": "up",
+        "--mood-soft": "up-soft"
+      },
+      "down": {
+        "--mood": "down-fill",
+        "--mood-ink": "down",
+        "--mood-soft": "down-soft"
+      },
+      "switch": "data-mood on :root; 'down' when live average CLV is negative with at least one graded bet, otherwise 'up'."
+    },
     "typographyMeta": {
       "display": {
-        "displayName": "Display figure",
-        "purpose": "Beat-the-market figure leading the Ledger and a graded night on Tonight; 44px under 860px."
+        "displayName": "Display",
+        "purpose": "Results and ledger lead figures (64px / 60px)."
       },
       "headline": {
         "displayName": "Headline",
-        "purpose": "View title line (Tonight or the date, All markets, Player out, Ledger & CLV, Rulebook); 24px under 860px."
+        "purpose": "Page titles and the card's risk figure."
       },
       "title": {
         "displayName": "Title",
-        "purpose": "Section heads, rule groups, card head, empty-state heads."
+        "purpose": "Player names on quote cards and section heads."
       },
-      "brand": {
-        "displayName": "Brand",
-        "purpose": "TIP-OFF DESK wordmark only, uppercase; 17px on phone."
-      },
-      "figure": {
-        "displayName": "Figure",
-        "purpose": "Hard Rock price in the All markets table; card bet prices at 16px; bet-card ask price at 20px."
+      "quote": {
+        "displayName": "Quote",
+        "purpose": "Hard Rock's price in the quote chip; Worth and Bet at 17px."
       },
       "body": {
         "displayName": "Body",
-        "purpose": "Running text and table cells, tabular figures."
+        "purpose": "Running text, tabular figures on."
       },
-      "control": {
-        "displayName": "Control",
-        "purpose": "Buttons, segmented filters, fields; header tabs at 15px."
+      "nav": {
+        "displayName": "Nav",
+        "purpose": "Desktop tabs."
       },
       "label": {
         "displayName": "Label",
-        "purpose": "Uppercase 11px column heads, stat names, proof subheads; the 11px floor."
+        "purpose": "Chip labels, meta; uppercase only for table column headers and status badges."
       }
     },
-    "shadows": [],
-    "rules": [
+    "shadows": [
       {
-        "name": "structure",
-        "value": "2px solid var(--rule)",
-        "purpose": "Card frame, rail edge, footer, section and filter tops, column-head underline, Hard Rock column sides."
+        "name": "rest",
+        "value": "0 1px 2px rgb(15 20 23 / 0.05), 0 6px 20px rgb(15 20 23 / 0.06)",
+        "dark": "none",
+        "purpose": "Every raised panel at rest."
       },
       {
-        "name": "control",
-        "value": "1.5px solid var(--rule)",
-        "purpose": "Buttons, fields, segmented controls, pills, notice."
+        "name": "lift",
+        "value": "0 2px 6px rgb(15 20 23 / 0.08), 0 14px 32px rgb(15 20 23 / 0.1)",
+        "dark": "0 12px 32px rgb(0 0 0 / 0.45)",
+        "purpose": "Hovered quote card, tooltip, sign-in, toast, phone lock bar."
       },
       {
-        "name": "row",
-        "value": "1px solid var(--rule-soft)",
-        "purpose": "Row and list dividers."
+        "name": "mood-halo",
+        "value": "0 0 0 4px var(--mood-soft)",
+        "purpose": "Hover on primary button and Lock card (3px on soft button)."
       },
       {
-        "name": "empty",
-        "value": "1.5px dashed var(--sil)",
-        "purpose": "Empty states; dashed borders also mark testing pills."
-      },
-      {
-        "name": "focus",
-        "value": "outline 2.5px solid var(--focus), offset 2px",
-        "purpose": "Keyboard focus on every focusable element."
-      },
-      {
-        "name": "term",
-        "value": "1.5px dotted currentColor (underline)",
-        "purpose": "Marks a tap-to-explain Term."
+        "name": "segment-thumb",
+        "value": "0 1px 3px rgb(0 0 0 / 0.12)",
+        "purpose": "Pressed option in a segmented control."
       }
     ],
     "motion": [
       {
         "name": "ease",
         "value": "cubic-bezier(0.16, 1, 0.3, 1)",
-        "purpose": "The single easing for all motion."
+        "purpose": "House ease for every state change."
       },
       {
-        "name": "capacity-fill",
-        "value": "width 240ms var(--ease)",
-        "purpose": "Risk capacity bar."
+        "name": "press",
+        "value": "160ms",
+        "purpose": "Button background, halo and scale(0.97) press."
       },
       {
-        "name": "ticket-settle",
-        "value": "280ms var(--ease), 45ms stagger; clip-path inset(0 0 0 100%) + translateY(4px) to none",
-        "purpose": "Legs settling into the locked ticket."
+        "name": "lift",
+        "value": "220ms",
+        "purpose": "Quote card hover lift (translateY -2px)."
       },
       {
-        "name": "toast-rise",
-        "value": "220ms var(--ease); opacity 0 + translateY(8px) to none",
-        "purpose": "Toast entry."
+        "name": "toast",
+        "value": "260ms",
+        "purpose": "Toast rise-in."
+      },
+      {
+        "name": "settle",
+        "value": "320ms, +50ms stagger per leg",
+        "purpose": "Locked ticket legs clip in; risk bar width."
+      },
+      {
+        "name": "live-pulse",
+        "value": "1.6s ease-in-out infinite",
+        "purpose": "Live game dot only."
       },
       {
         "name": "reduced-motion",
-        "value": "animation: none; transition: none",
-        "purpose": "prefers-reduced-motion removes all motion."
+        "value": "all animation and transition off",
+        "purpose": "prefers-reduced-motion: reduce."
       }
     ],
     "breakpoints": [
       {
-        "name": "desk",
+        "name": "wide",
+        "value": "1500px",
+        "purpose": "Compacts rule pills on the board."
+      },
+      {
+        "name": "dock-narrow",
+        "value": "1181-1320px",
+        "purpose": "Dock narrows to 300px."
+      },
+      {
+        "name": "dock-folds",
         "value": "1180px",
-        "purpose": "At or below: docked Card leaves All markets and drops below the bets on Tonight, bet cards two-up, reference books hide, only the Beat the market stat stays, tabs tighten."
+        "purpose": "Dock folds under main; two-column quote grid; only the mood chip stays."
       },
       {
         "name": "phone",
         "value": "860px",
-        "purpose": "At or below: rail and header tabs hide, fixed bottom tab bar (Tonight, Markets, Player out, Ledger, Rules), bet cards one column, lock bar above the tab bar, stacked table rows, 44px targets."
+        "purpose": "Bottom tab bar, lock bar, one column, restacked board rows."
       }
     ],
     "layout": {
-      "rail": "88px",
-      "dock": "340px",
-      "header": "64px (56px phone)",
-      "gutter": "28px (16px phone)",
-      "boardRow": "42px",
-      "gameBand": "32px",
-      "betCardMin": "300px",
-      "betGridGap": "16px",
-      "lockBarOffset": "calc(58px + env(safe-area-inset-bottom))",
-      "defaultScreen": "Tonight"
+      "max": "1360px",
+      "dock": "352px",
+      "stickyOffset": "132px",
+      "topBar": "64px (56px phone)",
+      "tabs": "46px"
     }
   },
   "components": [
@@ -707,204 +977,145 @@
       "name": "Primary Button",
       "kind": "button",
       "refersTo": "button-primary",
-      "description": "Solid ink action; inverts to light ink on the dark ground in the night theme.",
-      "html": "<button class=\"ds-btn-primary\">Confirm</button>",
-      "css": ".ds-btn-primary{display:inline-flex;align-items:center;gap:6px;min-height:34px;padding:6px 12px;border:1.5px solid #1b1d22;border-radius:0;background:#1b1d22;color:#fff;font:700 13px/1.4 'Hanken Grotesk',system-ui,sans-serif;cursor:pointer}.ds-btn-primary:hover{background:#33363d;border-color:#33363d}.ds-btn-primary:focus-visible{outline:2.5px solid #1f5fd6;outline-offset:2px}"
+      "description": "The mood-filled pill for the one main action on a view (Add all, Lock card on phones).",
+      "html": "<button class=\"ds-btn ds-btn-primary\">Add all 5</button>",
+      "css": ":host{--bg:#f2f4f5;--card:#fff;--sunk:#f2f4f5;--ink:#0f1417;--ink-2:#48535a;--mute:#66717a;--line:#e4e8ea;--line-2:#d2d8db;--sil:#b9c1c5;--mood:#077a45;--mood-ink:#06733f;--mood-soft:#e2f5eb;--on-mood:#fff;--good:#06733f;--good-soft:#e2f5eb;--bad:#b8311c;--bad-soft:#fce9e5;--warn:#855600;--warn-soft:#fbf0d6;--focus:#2563eb;--nba:#f28c28;--shadow:0 1px 2px rgb(15 20 23 / 0.05), 0 6px 20px rgb(15 20 23 / 0.06);--shadow-up:0 2px 6px rgb(15 20 23 / 0.08), 0 14px 32px rgb(15 20 23 / 0.1);--r:14px;--r-sm:10px;--font:\"Archivo Variable\",\"Archivo\",system-ui,sans-serif;--ease:cubic-bezier(0.16, 1, 0.3, 1);font-family:var(--font);font-variant-numeric:tabular-nums;color:var(--ink);} .ds-btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid var(--line-2);border-radius:999px;background:var(--card);color:var(--ink);padding:7px 16px;font:700 13px var(--font);min-height:36px;cursor:pointer;transition:background 160ms var(--ease),transform 160ms var(--ease),box-shadow 160ms var(--ease);} .ds-btn:hover{background:var(--sunk);} .ds-btn:active{transform:scale(0.97);} .ds-btn:focus-visible{outline:2.5px solid var(--focus);outline-offset:2px;} .ds-btn-primary{background:var(--mood);color:var(--on-mood);border-color:transparent;} .ds-btn-primary:hover{background:var(--mood);box-shadow:0 0 0 4px var(--mood-soft);}"
+    },
+    {
+      "name": "Soft Button",
+      "kind": "button",
+      "refersTo": "button-soft",
+      "description": "Mood tint with mood text; the per-card add action.",
+      "html": "<button class=\"ds-btn ds-btn-soft\"><svg width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"square\" aria-hidden=\"true\"><path d=\"M12 5v14M5 12h14\"/></svg> Add to tonight&#39;s card</button>",
+      "css": ":host{--bg:#f2f4f5;--card:#fff;--sunk:#f2f4f5;--ink:#0f1417;--ink-2:#48535a;--mute:#66717a;--line:#e4e8ea;--line-2:#d2d8db;--sil:#b9c1c5;--mood:#077a45;--mood-ink:#06733f;--mood-soft:#e2f5eb;--on-mood:#fff;--good:#06733f;--good-soft:#e2f5eb;--bad:#b8311c;--bad-soft:#fce9e5;--warn:#855600;--warn-soft:#fbf0d6;--focus:#2563eb;--nba:#f28c28;--shadow:0 1px 2px rgb(15 20 23 / 0.05), 0 6px 20px rgb(15 20 23 / 0.06);--shadow-up:0 2px 6px rgb(15 20 23 / 0.08), 0 14px 32px rgb(15 20 23 / 0.1);--r:14px;--r-sm:10px;--font:\"Archivo Variable\",\"Archivo\",system-ui,sans-serif;--ease:cubic-bezier(0.16, 1, 0.3, 1);font-family:var(--font);font-variant-numeric:tabular-nums;color:var(--ink);} .ds-btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid var(--line-2);border-radius:999px;background:var(--card);color:var(--ink);padding:7px 16px;font:700 13px var(--font);min-height:36px;cursor:pointer;transition:background 160ms var(--ease),transform 160ms var(--ease),box-shadow 160ms var(--ease);} .ds-btn:hover{background:var(--sunk);} .ds-btn:active{transform:scale(0.97);} .ds-btn:focus-visible{outline:2.5px solid var(--focus);outline-offset:2px;} .ds-btn-soft{background:var(--mood-soft);color:var(--mood-ink);border-color:transparent;} .ds-btn-soft:hover{background:var(--mood-soft);box-shadow:0 0 0 3px var(--mood-soft);}"
     },
     {
       "name": "Secondary Button",
       "kind": "button",
       "refersTo": "button-secondary",
-      "description": "Ground fill with a 1.5px ink rule; Sunk on hover. The board's Add button.",
-      "html": "<button class=\"ds-btn\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"square\" stroke-linejoin=\"miter\" aria-hidden=\"true\"><path d=\"M12 5v14M5 12h14\"/></svg>Add</button>",
-      "css": ".ds-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:34px;padding:6px 12px;border:1.5px solid #1b1d22;border-radius:0;background:#fff;color:#1b1d22;font:700 13px/1.4 'Hanken Grotesk',system-ui,sans-serif;cursor:pointer}.ds-btn:hover{background:#f4f5f5}.ds-btn:focus-visible{outline:2.5px solid #1f5fd6;outline-offset:2px}.ds-btn:disabled{border-color:#c7c9c8;color:#5f636c;cursor:not-allowed}"
+      "description": "Card-ground pill with a line-2 border for tools (Check news with Claude, Refresh odds).",
+      "html": "<button class=\"ds-btn\">Check news with Claude</button>",
+      "css": ":host{--bg:#f2f4f5;--card:#fff;--sunk:#f2f4f5;--ink:#0f1417;--ink-2:#48535a;--mute:#66717a;--line:#e4e8ea;--line-2:#d2d8db;--sil:#b9c1c5;--mood:#077a45;--mood-ink:#06733f;--mood-soft:#e2f5eb;--on-mood:#fff;--good:#06733f;--good-soft:#e2f5eb;--bad:#b8311c;--bad-soft:#fce9e5;--warn:#855600;--warn-soft:#fbf0d6;--focus:#2563eb;--nba:#f28c28;--shadow:0 1px 2px rgb(15 20 23 / 0.05), 0 6px 20px rgb(15 20 23 / 0.06);--shadow-up:0 2px 6px rgb(15 20 23 / 0.08), 0 14px 32px rgb(15 20 23 / 0.1);--r:14px;--r-sm:10px;--font:\"Archivo Variable\",\"Archivo\",system-ui,sans-serif;--ease:cubic-bezier(0.16, 1, 0.3, 1);font-family:var(--font);font-variant-numeric:tabular-nums;color:var(--ink);} .ds-btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid var(--line-2);border-radius:999px;background:var(--card);color:var(--ink);padding:7px 16px;font:700 13px var(--font);min-height:36px;cursor:pointer;transition:background 160ms var(--ease),transform 160ms var(--ease),box-shadow 160ms var(--ease);} .ds-btn:hover{background:var(--sunk);} .ds-btn:active{transform:scale(0.97);} .ds-btn:focus-visible{outline:2.5px solid var(--focus);outline-offset:2px;} "
     },
     {
       "name": "Lock Card",
       "kind": "button",
       "refersTo": "button-lock",
-      "description": "The one large action: a full-width ink slab carrying the total, with Clear set apart as a link.",
-      "html": "<div class=\"ds-actions\"><button class=\"ds-lock\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"square\" stroke-linejoin=\"miter\" aria-hidden=\"true\"><rect x=\"5\" y=\"11\" width=\"14\" height=\"10\"/><path d=\"M8 11V7a4 4 0 0 1 8 0v4\"/></svg>Lock card · $124</button><button class=\"ds-clear\">Clear</button></div>",
-      "css": ".ds-actions{display:flex;align-items:stretch;width:340px;border:2px solid #1b1d22}.ds-lock{flex:1;min-height:52px;border:0;border-radius:0;background:#1b1d22;color:#fff;display:flex;gap:8px;align-items:center;justify-content:center;font:800 15px 'Hanken Grotesk',system-ui,sans-serif;letter-spacing:.04em;cursor:pointer}.ds-lock:hover{background:#33363d}.ds-lock:focus-visible{outline:2.5px solid #1f5fd6;outline-offset:2px}.ds-clear{border:0;border-left:1px solid #e3e4e5;margin-left:18px;padding:0 16px 0 18px;background:none;color:#474b54;text-decoration:underline;font:600 13px 'Hanken Grotesk',system-ui,sans-serif;cursor:pointer}.ds-clear:hover{color:#c41f3b}.ds-clear:focus-visible{outline:2.5px solid #1f5fd6;outline-offset:2px}"
-    },
-    {
-      "name": "Segmented Filter",
-      "kind": "chip",
-      "refersTo": "segmented-active",
-      "description": "Ruled segmented control; the pressed segment fills ink.",
-      "html": "<div class=\"ds-seg\" role=\"group\"><button aria-pressed=\"true\">All</button><button aria-pressed=\"false\">Threes</button><button aria-pressed=\"false\">Assists</button><button aria-pressed=\"false\">Points</button></div>",
-      "css": ".ds-seg{display:inline-flex;border:1.5px solid #1b1d22}.ds-seg button{border:0;border-radius:0;background:#fff;color:#1b1d22;padding:6px 12px;min-height:31px;font:700 13px 'Hanken Grotesk',system-ui,sans-serif;cursor:pointer}.ds-seg button+button{border-left:1.5px solid #1b1d22}.ds-seg button[aria-pressed=true]{background:#1b1d22;color:#fff}.ds-seg button:hover:not([aria-pressed=true]){background:#f4f5f5}.ds-seg button:focus-visible{outline:2.5px solid #1f5fd6;outline-offset:2px}"
-    },
-    {
-      "name": "State Pills",
-      "kind": "chip",
-      "refersTo": "pill-pass",
-      "description": "Outlined state pills, always with a mark or a word; testing is dashed.",
-      "html": "<span class=\"ds-pill ds-ok\"><svg width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"square\" stroke-linejoin=\"miter\" aria-hidden=\"true\"><path d=\"M5 12.5l4.5 4.5L19 7.5\"/></svg>Pass</span> <span class=\"ds-pill ds-no\"><svg width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"square\" stroke-linejoin=\"miter\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6L6 18\"/></svg>Below 2% edge</span> <span class=\"ds-pill ds-test\">1 testing</span>",
-      "css": ".ds-pill{display:inline-flex;align-items:center;gap:4px;border:1.5px solid currentColor;border-radius:0;padding:1px 7px;font:700 12px 'Hanken Grotesk',system-ui,sans-serif;white-space:nowrap}.ds-ok{color:#0b6e5f}.ds-no{color:#c41f3b}.ds-test{color:#5f636c;border-style:dashed;font-weight:600}"
+      "description": "The full-width 48px mood pill that locks Tonight's Card.",
+      "html": "<button class=\"ds-lock\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"square\" aria-hidden=\"true\"><rect x=\"5\" y=\"11\" width=\"14\" height=\"10\"/><path d=\"M8 11V7a4 4 0 0 1 8 0v4\"/></svg> Lock card</button>",
+      "css": ":host{--bg:#f2f4f5;--card:#fff;--sunk:#f2f4f5;--ink:#0f1417;--ink-2:#48535a;--mute:#66717a;--line:#e4e8ea;--line-2:#d2d8db;--sil:#b9c1c5;--mood:#077a45;--mood-ink:#06733f;--mood-soft:#e2f5eb;--on-mood:#fff;--good:#06733f;--good-soft:#e2f5eb;--bad:#b8311c;--bad-soft:#fce9e5;--warn:#855600;--warn-soft:#fbf0d6;--focus:#2563eb;--nba:#f28c28;--shadow:0 1px 2px rgb(15 20 23 / 0.05), 0 6px 20px rgb(15 20 23 / 0.06);--shadow-up:0 2px 6px rgb(15 20 23 / 0.08), 0 14px 32px rgb(15 20 23 / 0.1);--r:14px;--r-sm:10px;--font:\"Archivo Variable\",\"Archivo\",system-ui,sans-serif;--ease:cubic-bezier(0.16, 1, 0.3, 1);font-family:var(--font);font-variant-numeric:tabular-nums;color:var(--ink);} .ds-lock{width:100%;border:0;border-radius:999px;background:var(--mood);color:var(--on-mood);padding:12px;font:800 15px var(--font);display:flex;gap:8px;justify-content:center;align-items:center;min-height:48px;cursor:pointer;transition:box-shadow 160ms var(--ease),transform 160ms var(--ease);} .ds-lock:hover{box-shadow:0 0 0 4px var(--mood-soft);} .ds-lock:active{transform:scale(0.98);} .ds-lock:focus-visible{outline:2.5px solid var(--focus);outline-offset:2px;}"
     },
     {
       "name": "Search Field",
       "kind": "input",
-      "refersTo": "",
-      "description": "Ruled field with an inset search icon and the blue focus outline.",
-      "html": "<label class=\"ds-search\"><svg width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"square\" stroke-linejoin=\"miter\" aria-hidden=\"true\"><circle cx=\"10.5\" cy=\"10.5\" r=\"6\"/><path d=\"M15 15l5 5\"/></svg><input type=\"search\" placeholder=\"Player or team\" aria-label=\"Player or team\"></label>",
-      "css": ".ds-search{position:relative;display:inline-flex}.ds-search svg{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:#5f636c;pointer-events:none}.ds-search input{width:200px;min-height:34px;padding:5px 8px 5px 30px;border:1.5px solid #1b1d22;border-radius:0;background:#fff;color:#1b1d22;font:600 13px 'Hanken Grotesk',system-ui,sans-serif}.ds-search input:focus-visible{outline:2.5px solid #1f5fd6;outline-offset:2px}"
+      "refersTo": "input-field",
+      "description": "Pill search with an inset icon, used in the All markets filters.",
+      "html": "<label class=\"ds-search\"><svg width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"square\" aria-hidden=\"true\"><circle cx=\"10.5\" cy=\"10.5\" r=\"6\"/><path d=\"M15 15l5 5\"/></svg><input type=\"search\" placeholder=\"Player or team\"></label>",
+      "css": ":host{--bg:#f2f4f5;--card:#fff;--sunk:#f2f4f5;--ink:#0f1417;--ink-2:#48535a;--mute:#66717a;--line:#e4e8ea;--line-2:#d2d8db;--sil:#b9c1c5;--mood:#077a45;--mood-ink:#06733f;--mood-soft:#e2f5eb;--on-mood:#fff;--good:#06733f;--good-soft:#e2f5eb;--bad:#b8311c;--bad-soft:#fce9e5;--warn:#855600;--warn-soft:#fbf0d6;--focus:#2563eb;--nba:#f28c28;--shadow:0 1px 2px rgb(15 20 23 / 0.05), 0 6px 20px rgb(15 20 23 / 0.06);--shadow-up:0 2px 6px rgb(15 20 23 / 0.08), 0 14px 32px rgb(15 20 23 / 0.1);--r:14px;--r-sm:10px;--font:\"Archivo Variable\",\"Archivo\",system-ui,sans-serif;--ease:cubic-bezier(0.16, 1, 0.3, 1);font-family:var(--font);font-variant-numeric:tabular-nums;color:var(--ink);} .ds-search{position:relative;display:inline-flex;} .ds-search svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--mute);pointer-events:none;} .ds-search input{border:1px solid var(--line-2);border-radius:999px;background:var(--card);color:var(--ink);padding:6px 12px 6px 34px;font:600 13px var(--font);min-height:36px;width:220px;} .ds-search input::placeholder{color:var(--mute);} .ds-search input:focus-visible{outline:2.5px solid var(--focus);outline-offset:2px;}"
     },
     {
-      "name": "League Header",
+      "name": "Tabs",
       "kind": "nav",
-      "refersTo": "header-zone",
-      "description": "League-zone band with the wordmark, tabs cut into it (Tonight default, count badge on Tonight), and ruled stats ending in Beat the market.",
-      "html": "<header class=\"ds-top\"><b class=\"ds-brand\">TIP-OFF DESK</b><nav class=\"ds-tabs\"><a href=\"#\" aria-current=\"page\">Tonight <span>3</span></a><a href=\"#\">All markets</a><a href=\"#\">Player out</a><a href=\"#\">Ledger</a><a href=\"#\">Rulebook</a></nav><div class=\"ds-stat\"><small>Beat the market</small><b>+7.5%</b></div></header>",
-      "css": ".ds-top{display:flex;align-items:stretch;min-height:64px;padding-left:28px;background:#f28c28;color:#1b1d22;font-family:'Hanken Grotesk',system-ui,sans-serif}.ds-brand{align-self:center;font-size:21px;font-weight:800;letter-spacing:.16em;padding-right:32px}.ds-tabs{display:flex;align-items:flex-end;gap:2px}.ds-tabs a{display:flex;align-items:center;gap:8px;height:44px;padding:0 18px;font-weight:700;font-size:15px;color:#1b1d22;text-decoration:none}.ds-tabs a:hover{background:rgba(255,255,255,.22)}.ds-tabs a[aria-current=page]{background:#fff}.ds-tabs a:focus-visible{outline:2.5px solid #1f5fd6;outline-offset:2px}.ds-tabs span{display:grid;place-items:center;min-width:20px;height:20px;padding:0 5px;background:#1b1d22;color:#fff;font-size:12px;font-weight:800}.ds-stat{margin-left:auto;align-self:center;padding:0 22px;border-left:2px solid rgba(27,29,34,.45)}.ds-stat small{display:block;font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase}.ds-stat b{display:block;font-size:21px;font-weight:800;line-height:1.1}"
+      "refersTo": "tab-bar-item-active",
+      "description": "Desktop tabs: bold ink-2 labels, the current one in ink with a 3px mood underline and a mood count badge.",
+      "html": "<nav class=\"ds-tabs\"><a href=\"#\" aria-current=\"page\">Tonight <span class=\"ds-count\">3</span></a><a href=\"#\">All markets</a><a href=\"#\">Ledger</a><a href=\"#\">Rulebook</a></nav>",
+      "css": ":host{--bg:#f2f4f5;--card:#fff;--sunk:#f2f4f5;--ink:#0f1417;--ink-2:#48535a;--mute:#66717a;--line:#e4e8ea;--line-2:#d2d8db;--sil:#b9c1c5;--mood:#077a45;--mood-ink:#06733f;--mood-soft:#e2f5eb;--on-mood:#fff;--good:#06733f;--good-soft:#e2f5eb;--bad:#b8311c;--bad-soft:#fce9e5;--warn:#855600;--warn-soft:#fbf0d6;--focus:#2563eb;--nba:#f28c28;--shadow:0 1px 2px rgb(15 20 23 / 0.05), 0 6px 20px rgb(15 20 23 / 0.06);--shadow-up:0 2px 6px rgb(15 20 23 / 0.08), 0 14px 32px rgb(15 20 23 / 0.1);--r:14px;--r-sm:10px;--font:\"Archivo Variable\",\"Archivo\",system-ui,sans-serif;--ease:cubic-bezier(0.16, 1, 0.3, 1);font-family:var(--font);font-variant-numeric:tabular-nums;color:var(--ink);} .ds-tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);} .ds-tabs a{position:relative;display:flex;align-items:center;gap:8px;height:46px;padding:0 14px;font:700 15px var(--font);text-decoration:none;color:var(--ink-2);} .ds-tabs a:hover{color:var(--ink);} .ds-tabs a:focus-visible{outline:2.5px solid var(--focus);outline-offset:2px;} .ds-tabs a[aria-current=page]{color:var(--ink);} .ds-tabs a[aria-current=page]::after{content:'';position:absolute;left:14px;right:14px;bottom:-1px;height:3px;border-radius:3px 3px 0 0;background:var(--mood);} .ds-count{font-size:11px;font-weight:800;min-width:20px;height:20px;display:inline-grid;place-items:center;padding:0 6px;border-radius:999px;background:var(--mood);color:var(--on-mood);}"
     },
     {
-      "name": "League Rail Tile",
-      "kind": "nav",
-      "refersTo": "league-tile-active",
-      "description": "Pictogram tile; the live league is the full zone, waiting leagues a 22% mix marked soon.",
-      "html": "<div class=\"ds-rail\"><button class=\"ds-league\" aria-pressed=\"true\" style=\"--c:#f28c28\"><svg viewBox=\"0 0 32 32\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3.4\" stroke-linecap=\"square\" stroke-linejoin=\"miter\" aria-hidden=\"true\"><circle cx=\"14\" cy=\"5\" r=\"3\" fill=\"currentColor\" stroke=\"none\"/><circle cx=\"24\" cy=\"3.5\" r=\"2.6\" fill=\"currentColor\" stroke=\"none\"/><path d=\"M14 10v9M14 12l6-6M14 13l-4 4M14 19l4 4v6M14 19l-4 4v6\"/></svg>NBA</button><button class=\"ds-league\" disabled style=\"--c:#3a9a4a\"><svg viewBox=\"0 0 32 32\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3.4\" stroke-linecap=\"square\" stroke-linejoin=\"miter\" aria-hidden=\"true\"><circle cx=\"19\" cy=\"5\" r=\"3\" fill=\"currentColor\" stroke=\"none\"/><path d=\"M18 10l-5 5v5l-5 5v4M13 20l6 6h4M17 11l5 5\"/><rect x=\"21\" y=\"14\" width=\"6\" height=\"4\" transform=\"rotate(-45 24 16)\" fill=\"currentColor\" stroke=\"none\"/></svg>NFL<small>soon</small></button></div>",
-      "css": ".ds-rail{width:88px;border-right:2px solid #1b1d22}.ds-league{width:100%;height:92px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;border:0;border-bottom:1px solid #fff;border-radius:0;background:color-mix(in srgb,var(--c) 22%,#fff);color:#1b1d22;font:800 11px 'Hanken Grotesk',system-ui,sans-serif;letter-spacing:.1em;cursor:pointer}.ds-league svg{width:38px;height:38px}.ds-league[aria-pressed=true]{background:var(--c)}.ds-league:disabled{color:#474b54;cursor:not-allowed}.ds-league small{font-size:11px;font-weight:600;letter-spacing:.04em;margin-top:-4px}.ds-league:focus-visible{outline:2.5px solid #1f5fd6;outline-offset:-2.5px}"
+      "name": "Status Pills",
+      "kind": "chip",
+      "refersTo": "pill-ok",
+      "description": "Tinted status pills (ok, no, warn) and the dashed testing pill.",
+      "html": "<span class=\"ds-pill ds-ok\">Clears</span> <span class=\"ds-pill ds-no\">Out</span> <span class=\"ds-pill ds-warn\">Questionable</span> <span class=\"ds-pill ds-test\">Testing rule</span>",
+      "css": ":host{--bg:#f2f4f5;--card:#fff;--sunk:#f2f4f5;--ink:#0f1417;--ink-2:#48535a;--mute:#66717a;--line:#e4e8ea;--line-2:#d2d8db;--sil:#b9c1c5;--mood:#077a45;--mood-ink:#06733f;--mood-soft:#e2f5eb;--on-mood:#fff;--good:#06733f;--good-soft:#e2f5eb;--bad:#b8311c;--bad-soft:#fce9e5;--warn:#855600;--warn-soft:#fbf0d6;--focus:#2563eb;--nba:#f28c28;--shadow:0 1px 2px rgb(15 20 23 / 0.05), 0 6px 20px rgb(15 20 23 / 0.06);--shadow-up:0 2px 6px rgb(15 20 23 / 0.08), 0 14px 32px rgb(15 20 23 / 0.1);--r:14px;--r-sm:10px;--font:\"Archivo Variable\",\"Archivo\",system-ui,sans-serif;--ease:cubic-bezier(0.16, 1, 0.3, 1);font-family:var(--font);font-variant-numeric:tabular-nums;color:var(--ink);} .ds-pill{display:inline-flex;align-items:center;gap:4px;border-radius:999px;font:700 12px var(--font);padding:2px 9px;white-space:nowrap;background:var(--sunk);color:var(--ink-2);} .ds-ok{color:var(--good);background:var(--good-soft);} .ds-no{color:var(--bad);background:var(--bad-soft);} .ds-warn{color:var(--warn);background:var(--warn-soft);} .ds-test{color:var(--mute);background:transparent;border:1px dashed var(--sil);font-weight:600;}"
     },
     {
-      "name": "All Markets Row",
-      "kind": "custom",
-      "refersTo": "game-band",
-      "description": "Zone game band over a priced row: Hard Rock boxed in 2px ink rules, Worth beside it, reference muted, Value with the ramp.",
-      "html": "<table class=\"ds-board\"><tr class=\"ds-game\"><td colspan=\"5\">DEN @ MIA <span>7:30p</span></td></tr><tr class=\"ds-mk\" tabindex=\"0\"><td class=\"l\"><b>Devin Holloway</b> <small>MIA</small></td><td>+147</td><td class=\"ds-hr\">+181</td><td class=\"ds-ref\">+140</td><td class=\"ds-pos\">+13.6%<span class=\"ds-ramp\"><i class=\"on\"></i><i class=\"on\"></i><i class=\"on\"></i><i class=\"on\"></i></span></td></tr></table>",
-      "css": ".ds-board{border-collapse:collapse;font:400 14px/1.4 'Hanken Grotesk',system-ui,sans-serif;font-variant-numeric:tabular-nums;color:#1b1d22}.ds-board td{height:42px;padding:0 8px;text-align:right;border-bottom:1px solid #e3e4e5;white-space:nowrap}.ds-board .l{text-align:left}.ds-board small{color:#5f636c;font-size:12px}.ds-game td{height:32px;background:#f28c28;color:#1b1d22;font-weight:800;font-size:13px;letter-spacing:.04em;text-align:left;border:0}.ds-game span{font-weight:600;margin-left:10px;letter-spacing:0}.ds-hr{font-size:17px;font-weight:800;border-left:2px solid #1b1d22;border-right:2px solid #1b1d22;min-width:84px}.ds-ref{color:#5f636c;font-size:13px}.ds-pos{color:#0b6e5f;font-weight:700}.ds-ramp{display:inline-flex;gap:2px;margin-left:8px;vertical-align:middle}.ds-ramp i{width:5px;height:12px;background:#e3e4e5}.ds-ramp i.on{background:#0b6e5f}.ds-mk{cursor:pointer}.ds-mk:hover td:not(.ds-hr){background:#f4f5f5}.ds-mk:focus-visible{outline:2.5px solid #1f5fd6;outline-offset:-2.5px}"
+      "name": "League Pill",
+      "kind": "chip",
+      "refersTo": "league-pill",
+      "description": "League switch: card pill with a data-fed dot; selected gets an ink border.",
+      "html": "<button class=\"ds-league\" aria-pressed=\"true\"><i></i>NBA</button> <button class=\"ds-league\" disabled><i style=\"background:#3a9a4a\"></i>NFL <small>soon</small></button>",
+      "css": ":host{--bg:#f2f4f5;--card:#fff;--sunk:#f2f4f5;--ink:#0f1417;--ink-2:#48535a;--mute:#66717a;--line:#e4e8ea;--line-2:#d2d8db;--sil:#b9c1c5;--mood:#077a45;--mood-ink:#06733f;--mood-soft:#e2f5eb;--on-mood:#fff;--good:#06733f;--good-soft:#e2f5eb;--bad:#b8311c;--bad-soft:#fce9e5;--warn:#855600;--warn-soft:#fbf0d6;--focus:#2563eb;--nba:#f28c28;--shadow:0 1px 2px rgb(15 20 23 / 0.05), 0 6px 20px rgb(15 20 23 / 0.06);--shadow-up:0 2px 6px rgb(15 20 23 / 0.08), 0 14px 32px rgb(15 20 23 / 0.1);--r:14px;--r-sm:10px;--font:\"Archivo Variable\",\"Archivo\",system-ui,sans-serif;--ease:cubic-bezier(0.16, 1, 0.3, 1);font-family:var(--font);font-variant-numeric:tabular-nums;color:var(--ink);} .ds-league{display:inline-flex;align-items:center;gap:7px;height:32px;padding:0 12px;border:1px solid var(--line-2);border-radius:999px;background:var(--card);color:var(--ink);font:700 13px var(--font);cursor:pointer;} .ds-league i{width:8px;height:8px;border-radius:50%;background:var(--nba);} .ds-league[aria-pressed=true]{border-color:var(--ink);} .ds-league:focus-visible{outline:2.5px solid var(--focus);outline-offset:2px;} .ds-league:disabled{color:var(--mute);background:transparent;border-color:var(--line);cursor:not-allowed;} .ds-league:disabled i{opacity:.45;} .ds-league small{font-size:11px;font-weight:600;color:var(--mute);}"
     },
     {
-      "name": "Notice",
+      "name": "Quote Card",
       "kind": "card",
-      "refersTo": "notice",
-      "description": "Ruled ochre caveat box with the warning mark, 72ch max.",
-      "html": "<div class=\"ds-notice\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"square\" stroke-linejoin=\"miter\" aria-hidden=\"true\"><path d=\"M12 4l9 16H3z\"/><path d=\"M12 10v4M12 17v.5\"/></svg><p>These verdicts come from sample data, a fake world with planted edges.</p></div>",
-      "css": ".ds-notice{display:flex;gap:10px;align-items:flex-start;max-width:72ch;padding:10px 14px;border:1.5px solid #7a5c00;background:#f8efd3;color:#1b1d22;font:400 14px/1.4 'Hanken Grotesk',system-ui,sans-serif}.ds-notice svg{color:#7a5c00;flex:none;margin-top:2px}.ds-notice p{margin:0}"
+      "refersTo": "card",
+      "description": "The signature unit: player as ticker, the Hard Rock quote chip on the mood tint, worth and stake beside it, value meter, why, and actions.",
+      "html": "<article class=\"ds-bet\"><header><span>HOU @ CHA</span><span>7:30p</span></header><div class=\"ds-bet-body\"><h3>Bennedict Holloway</h3><p class=\"ds-pick\"><b>OVER</b> 12.5 rebounds</p><div class=\"ds-quote\"><div class=\"ds-hr\"><small>Hard Rock pays</small><b>+153</b></div><div><small>Worth</small><b>+105</b></div><div><small>Bet</small><b>$40</b></div></div><p class=\"ds-strength\"><span class=\"ds-ramp\"><i class=\"on\"></i><i class=\"on\"></i><i class=\"on\"></i><i class=\"on\"></i></span><b class=\"ds-edge\">+23.6%</b> Strong value</p><p class=\"ds-why\">About $24 profit per $100 bet, on average over many bets like it.</p></div><footer><button class=\"ds-soft\"><svg width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"square\" aria-hidden=\"true\"><path d=\"M12 5v14M5 12h14\"/></svg> Add to tonight&#39;s card</button><button class=\"ds-link\">Show the math</button></footer></article>",
+      "css": ":host{--bg:#f2f4f5;--card:#fff;--sunk:#f2f4f5;--ink:#0f1417;--ink-2:#48535a;--mute:#66717a;--line:#e4e8ea;--line-2:#d2d8db;--sil:#b9c1c5;--mood:#077a45;--mood-ink:#06733f;--mood-soft:#e2f5eb;--on-mood:#fff;--good:#06733f;--good-soft:#e2f5eb;--bad:#b8311c;--bad-soft:#fce9e5;--warn:#855600;--warn-soft:#fbf0d6;--focus:#2563eb;--nba:#f28c28;--shadow:0 1px 2px rgb(15 20 23 / 0.05), 0 6px 20px rgb(15 20 23 / 0.06);--shadow-up:0 2px 6px rgb(15 20 23 / 0.08), 0 14px 32px rgb(15 20 23 / 0.1);--r:14px;--r-sm:10px;--font:\"Archivo Variable\",\"Archivo\",system-ui,sans-serif;--ease:cubic-bezier(0.16, 1, 0.3, 1);font-family:var(--font);font-variant-numeric:tabular-nums;color:var(--ink);} .ds-bet{max-width:420px;background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);display:flex;flex-direction:column;overflow:hidden;transition:transform 220ms var(--ease),box-shadow 220ms var(--ease);} .ds-bet:hover{transform:translateY(-2px);box-shadow:var(--shadow-up);} .ds-bet>header{display:flex;justify-content:space-between;padding:14px 18px 0;font:700 12px var(--font);color:var(--mute);} .ds-bet>header span:first-child::before{content:'';display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--nba);margin-right:8px;vertical-align:1px;} .ds-bet-body{padding:8px 18px 14px;display:grid;gap:8px;} .ds-bet h3{margin:0;font:800 24px/1.1 var(--font);font-stretch:112%;letter-spacing:-0.015em;} .ds-pick{margin:-2px 0 0;font-size:15px;color:var(--ink-2);} .ds-pick b{font-weight:800;color:var(--ink);letter-spacing:.02em;} .ds-quote{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:8px;margin:6px 0 2px;} .ds-quote>div{border-radius:12px;background:var(--sunk);padding:8px 12px;display:grid;gap:1px;} .ds-quote small{font:600 11px var(--font);color:var(--mute);} .ds-quote b{font:800 17px/1.15 var(--font);font-stretch:112%;} .ds-quote .ds-hr{background:var(--mood-soft);} .ds-quote .ds-hr small,.ds-quote .ds-hr b{color:var(--mood-ink);} .ds-quote .ds-hr b{font-size:26px;} .ds-strength{margin:0;display:flex;align-items:center;gap:10px;font:700 13px var(--font);} .ds-ramp{display:inline-flex;gap:3px;} .ds-ramp i{width:14px;height:6px;border-radius:3px;background:var(--line-2);} .ds-ramp i.on{background:var(--good);} .ds-edge{color:var(--mood-ink);font-weight:800;font-stretch:112%;} .ds-why{margin:0;font-size:13px;color:var(--ink-2);} .ds-bet>footer{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 18px 16px;} .ds-soft{display:inline-flex;align-items:center;gap:7px;border:0;border-radius:999px;background:var(--mood-soft);color:var(--mood-ink);padding:7px 16px;font:700 13px var(--font);min-height:36px;cursor:pointer;} .ds-soft:hover{box-shadow:0 0 0 3px var(--mood-soft);} .ds-soft:focus-visible,.ds-link:focus-visible{outline:2.5px solid var(--focus);outline-offset:2px;} .ds-link{border:0;background:none;text-decoration:underline;color:var(--ink-2);font:600 13px var(--font);cursor:pointer;padding:6px 4px;} .ds-link:hover{color:var(--ink);}"
     },
     {
-      "name": "Bet Card",
-      "kind": "card",
-      "refersTo": "bet-card",
-      "description": "Tonight's unit: a zone band head, the bet read as a sentence, the strength word on the fixed ramp, a plain reason, Add and Show the math.",
-      "html": "<article class=\"ds-bet\"><header><span>DAL @ ATL</span><span>7:30p</span></header><div class=\"ds-bet-body\"><h3>Marcus Holloway</h3><p class=\"ds-pick\"><b>OVER</b> 2.5 blocks</p><p class=\"ds-ask\">Bet <b>$40</b> at Hard Rock <b class=\"ds-price\">+219</b></p><p class=\"ds-str\"><span class=\"ds-ramp\"><i class=\"on\"></i><i class=\"on\"></i><i class=\"on\"></i><i class=\"on\"></i></span><span>Strong <u>value</u></span></p><p class=\"ds-why\">Hard Rock pays +219; the rest of the market makes it worth about +169. That's about $19 profit per $100 bet, on average over many bets like it.</p></div><footer><button class=\"ds-add\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"square\" stroke-linejoin=\"miter\" aria-hidden=\"true\"><path d=\"M12 5v14M5 12h14\"/></svg>Add to tonight's card</button><button class=\"ds-link\">Show the math</button></footer></article>",
-      "css": ".ds-bet{width:320px;border:2px solid #1b1d22;background:#fff;color:#1b1d22;font:400 14px/1.4 'Hanken Grotesk',system-ui,sans-serif;font-variant-numeric:tabular-nums}.ds-bet>header{display:flex;justify-content:space-between;padding:7px 14px;background:#f28c28;color:#1b1d22;font-size:13px;font-weight:800;letter-spacing:.04em}.ds-bet-body{display:grid;gap:6px;padding:14px 16px 12px}.ds-bet p,.ds-bet h3{margin:0}.ds-bet h3{font-size:22px;font-weight:800;line-height:1.15}.ds-pick{font-size:16px}.ds-pick b{font-weight:800;letter-spacing:.04em}.ds-ask{font-size:15px;margin-top:4px}.ds-ask b{font-weight:800}.ds-price{font-size:20px}.ds-str{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700}.ds-str u{text-decoration:none;border-bottom:1.5px dotted currentColor}.ds-ramp{display:inline-flex;gap:2px}.ds-ramp i{width:7px;height:14px;background:#e3e4e5}.ds-ramp i.on{background:#0b6e5f}.ds-why{font-size:13px;color:#474b54}.ds-bet>footer{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:0 16px 14px}.ds-add{display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:6px 12px;border:1.5px solid #1b1d22;border-radius:0;background:#1b1d22;color:#fff;font:700 13px 'Hanken Grotesk',system-ui,sans-serif;cursor:pointer}.ds-add:hover{background:#33363d}.ds-link{border:0;background:none;padding:4px;color:#474b54;text-decoration:underline;font:600 13px 'Hanken Grotesk',system-ui,sans-serif;cursor:pointer}.ds-link:hover{color:#1b1d22}.ds-add:focus-visible,.ds-link:focus-visible{outline:2.5px solid #1f5fd6;outline-offset:2px}"
-    },
-    {
-      "name": "Term",
+      "name": "Score Chip",
       "kind": "custom",
-      "refersTo": "term-definition",
-      "description": "Tap-to-explain word: dotted underline, definition opens inline below on tap or keypress, never on hover.",
-      "html": "<p class=\"ds-term-p\">Hard Rock pays more than each one is <span class=\"ds-term\"><button type=\"button\" aria-expanded=\"true\">worth</button><span class=\"ds-term-def\" role=\"note\">What the bet is really worth: the other sportsbooks' prices with their built-in cut removed, nudged slightly by our own projection.</span></span></p>",
-      "css": ".ds-term-p{max-width:60ch;color:#474b54;font:400 13px/1.4 'Hanken Grotesk',system-ui,sans-serif}.ds-term button{all:unset;cursor:pointer;border-bottom:1.5px dotted currentColor}.ds-term button:focus-visible{outline:2.5px solid #1f5fd6;outline-offset:2px}.ds-term-def{display:block;margin:6px 0 2px;padding:8px 10px;max-width:46ch;background:#f4f5f5;border:1px solid #e3e4e5;color:#1b1d22;font-size:12px;line-height:1.45;letter-spacing:0;text-transform:none}"
-    },
-    {
-      "name": "Results Lead",
-      "kind": "custom",
-      "refersTo": "results-figure",
-      "description": "A graded night leads Tonight: the Display beat-the-market figure, its caption, one plain sentence, inside a calm state.",
-      "html": "<div class=\"ds-calm\"><h2 class=\"ds-fig\"><span class=\"pos\">+12.1%</span><small><u>beat the market</u>, on average</small></h2><p>3 of 3 bets beat the market, and your prices beat the close by this much on average. That's the number to watch: over a night or two, wins and losses are mostly luck.</p></div>",
-      "css": ".ds-calm{max-width:62ch;border-top:2px solid #1b1d22;padding:22px 0 8px;color:#1b1d22;font-family:'Hanken Grotesk',system-ui,sans-serif;font-variant-numeric:tabular-nums}.ds-calm h2,.ds-calm p{margin:0}.ds-fig{font-size:56px;font-weight:800;line-height:1;letter-spacing:-.02em;margin:4px 0 12px}.ds-fig .pos{color:#0b6e5f}.ds-fig small{display:block;margin-top:8px;font-size:20px;font-weight:700;letter-spacing:0;color:#1b1d22}.ds-fig u{text-decoration:none;border-bottom:1.5px dotted currentColor}.ds-calm p{font-size:15px;color:#474b54;line-height:1.4}"
-    },
-    {
-      "name": "Lock Bar",
-      "kind": "custom",
-      "refersTo": "lock-bar",
-      "description": "Phone only: fixed above the tab bar while the card holds unlocked bets; count and risk left, primary Lock right.",
-      "html": "<div class=\"ds-lockbar\" role=\"region\" aria-label=\"Your card\"><a href=\"#\"><b>2 on your card · $64</b><small>Review</small></a><button class=\"ds-lockbtn\"><svg width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"square\" stroke-linejoin=\"miter\" aria-hidden=\"true\"><rect x=\"5\" y=\"11\" width=\"14\" height=\"10\"/><path d=\"M8 11V7a4 4 0 0 1 8 0v4\"/></svg>Lock</button></div>",
-      "css": ".ds-lockbar{display:flex;align-items:center;gap:12px;width:360px;padding:8px 16px;background:#fff;border-top:2px solid #1b1d22;color:#1b1d22;font-family:'Hanken Grotesk',system-ui,sans-serif}.ds-lockbar a{flex:1;display:grid;align-content:center;min-height:44px;color:#1b1d22;text-decoration:none}.ds-lockbar b{font-weight:800;font-size:14px}.ds-lockbar small{font-size:12px;color:#474b54}.ds-lockbtn{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:8px 22px;border:1.5px solid #1b1d22;border-radius:0;background:#1b1d22;color:#fff;font:700 15px 'Hanken Grotesk',system-ui,sans-serif;cursor:pointer}.ds-lockbtn:hover{background:#33363d}.ds-lockbtn:disabled{background:#fff;border-color:#c7c9c8;color:#5f636c;cursor:not-allowed}.ds-lockbar a:focus-visible,.ds-lockbtn:focus-visible{outline:2.5px solid #1f5fd6;outline-offset:2px}"
+      "refersTo": "card",
+      "description": "Live score tile; a game in progress gets a pulsing dot.",
+      "html": "<div class=\"ds-score\"><span class=\"ds-row\"><b>HOU</b><span>54</span></span><span class=\"ds-row\"><b>CHA</b><span>49</span></span><small><i class=\"ds-live\"></i>Q3 4:12</small></div>",
+      "css": ":host{--bg:#f2f4f5;--card:#fff;--sunk:#f2f4f5;--ink:#0f1417;--ink-2:#48535a;--mute:#66717a;--line:#e4e8ea;--line-2:#d2d8db;--sil:#b9c1c5;--mood:#077a45;--mood-ink:#06733f;--mood-soft:#e2f5eb;--on-mood:#fff;--good:#06733f;--good-soft:#e2f5eb;--bad:#b8311c;--bad-soft:#fce9e5;--warn:#855600;--warn-soft:#fbf0d6;--focus:#2563eb;--nba:#f28c28;--shadow:0 1px 2px rgb(15 20 23 / 0.05), 0 6px 20px rgb(15 20 23 / 0.06);--shadow-up:0 2px 6px rgb(15 20 23 / 0.08), 0 14px 32px rgb(15 20 23 / 0.1);--r:14px;--r-sm:10px;--font:\"Archivo Variable\",\"Archivo\",system-ui,sans-serif;--ease:cubic-bezier(0.16, 1, 0.3, 1);font-family:var(--font);font-variant-numeric:tabular-nums;color:var(--ink);} .ds-score{display:inline-grid;gap:3px;min-width:132px;padding:10px 14px;border-radius:14px;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);} .ds-row{display:flex;justify-content:space-between;gap:14px;font:800 15px var(--font);font-stretch:112%;} .ds-row span{font-weight:700;} .ds-score small{display:flex;align-items:center;gap:6px;font:700 11px var(--font);color:var(--mute);} .ds-live{width:7px;height:7px;border-radius:50%;background:#d43c25;animation:ds-pulse 1.6s ease-in-out infinite;} @keyframes ds-pulse{50%{opacity:.35;}} @media (prefers-reduced-motion:reduce){.ds-live{animation:none;}}"
     }
   ],
   "narrative": {
-    "northStar": "The Games System",
-    "overview": "Tip-Off Desk is one identity built to hold every sport, in the tradition of the Munich 1972 Games: each league owns a geometric pictogram and a flat color zone, and everything else is ink on white on a strict grid. The active league's color runs from the left rail tile, through the header band, into the game bands of the board, so the room is always painted in the color of the sport in play. Nothing else in the interface is decorative; the zone is the only spectacle.\n\nThe desk answers first, then shows its work. Tonight, the home screen, reads each bet worth taking as a sentence on a zone-banded card (who, over or under what, how much to bet at which Hard Rock price, why it is value); the full priced table sits one link away under All markets. Beneath that answer the desk is dense and precise: the priced table is the working surface, structure comes from 1.5 to 2px ink rules rather than boxes or shadows, every corner is square, and every number sits in tabular figures from a single typeface, Hanken Grotesk. It refuses the category default of a dark odds terminal with glowing green and red numbers. State (pass, blocked, warning) has its own teal, red and ochre, never borrows a league color, and always carries a mark or a word.\n\nDark is a designed night theme, not an inversion: a near-black ground, light ink rules, and brightened state colors, while the league zone keeps its exact hue so the identity reads the same at midnight.",
+    "northStar": "Every Bet Is a Quote",
+    "overview": "The desk reads like a clean trading app for player props. The player is the ticker, Hard Rock's price is the quote you can take, the fair price is what it is worth, and value is the day's change. Surfaces are rounded raised panels on a quiet ground; controls are pills; one typeface, Archivo, does all the work, opening up to a wider stretch for the names and figures that matter. The look was pinned by the user as a clean modern sportsbook at Robinhood's level of polish, and it replaces the ink-ruled \"Games System\" entirely.\n\nThe single expressive device is the mood accent. Every primary action, the active tab, the brand mark, the card's risk bar and the headline quote chip share one accent that is green while the desk is beating the closing line (or has no record yet) and coral when it is not. The rest of the interface stays neutral so that the accent carries meaning, not decoration.\n\nDensity is a calm desk, not an odds screen: two columns of quote cards beside a docked card panel on laptops, one column with a lock bar and a bottom tab bar on phones. Both themes are designed; the app follows the system setting until the user picks one, and game nights are expected to run dark.",
     "keyCharacteristics": [
-      "White ground, ink #1b1d22, one flat league zone per sport (NBA orange live; NFL, MLB, NHL waiting).",
-      "Hanken Grotesk only, weights 400/600/700/800, tabular figures everywhere.",
-      "Ink rules (1.5px controls, 2px structure, 1px soft row dividers), square corners, no shadows, no gradients.",
-      "Geometric pictograms and icons on a 45/90 grid with square caps and miter joins.",
-      "State colors are reserved, always paired with a mark or word.",
-      "Plain words in the interface: Worth, Value, Beat the market, bets; every technical idea can be tapped for a definition.",
-      "Motion is small and functional: a ticket settling, a toast rising, a bar filling."
+      "One mood accent (green up, coral down) drives every primary action and headline figure.",
+      "Archivo variable only; names and figures at width 112, weight 800, tabular numerals everywhere.",
+      "Rounded raised panels (14px) and pill controls; soft shadow in light, none in dark.",
+      "League colour appears only as a small dot.",
+      "Calm motion: short, eased state changes; nothing celebratory."
     ],
     "rules": [
       {
-        "name": "The Zone Belongs To The League Rule",
-        "body": "The league color marks the sport in play and nothing else. It never signals good, bad, primary action or emphasis. A second league goes live by switching the zone variable, not by adding new accents.",
+        "name": "The Mood Rule",
+        "body": "There is one accent, and it means something: green while the desk beats the close, coral when it does not. Every primary action, the active tab and the headline quote take it; nothing else gets a second accent.",
         "section": "colors"
       },
       {
-        "name": "The State Never Borrows Rule",
-        "body": "Pass, blocked and warning use their own teal, red and ochre and always ship with a check, cross, warning mark or a word. Color alone never carries state.",
+        "name": "The Dot Rule",
+        "body": "Sport colour enters only as a small dot fed by data. The shell, palette and type stay sport-agnostic.",
         "section": "colors"
       },
       {
-        "name": "The Ink On Zone Rule",
-        "body": "Text on any league zone is ink (#1b1d22), in both themes.",
+        "name": "The Tint-Not-Fill Rule",
+        "body": "Status and accent text sit on their own soft tint (up-soft, down-soft, warn-soft) rather than on a saturated fill; saturated fills are reserved for the primary action.",
         "section": "colors"
       },
       {
-        "name": "The One Family Rule",
-        "body": "Hanken Grotesk is the only typeface. No monospace for numbers, no condensed display face.",
+        "name": "The Two Widths Rule",
+        "body": "Names and figures at width 112, everything else at 100. A wide setting on body copy, or a second family, breaks the ticker.",
         "section": "typography"
       },
       {
-        "name": "The Tabular Figures Rule",
-        "body": "Body sets `tabular-nums`; every price, stake, edge and CLV column aligns.",
+        "name": "The Tabular Rule",
+        "body": "Every number is set in tabular figures so prices, stakes and scores align in columns and do not jitter when they update.",
         "section": "typography"
       },
       {
-        "name": "The Plain Words Rule",
-        "body": "The interface speaks in a bettor's plain words: Worth (the fair price), Value (the edge), Beat the market (CLV), and bets (never legs). Each sits on a tappable Term where it first appears. A technical name may follow the plain word as a gloss (\"Beat the market · avg CLV\") or head an evidence table on the Ledger and Rulebook; it never replaces the plain word on Tonight, the card or All markets.",
-        "section": "typography"
-      },
-      {
-        "name": "The True Minus Rule",
-        "body": "Numbers are formatted once, in one way: American odds with a true minus sign (+181, −110), signed percents to one decimal (+7.5%, −1.9%), units with a \"u\" (+1.4u), money without cents unless settling ($124, +$12.40), profit per $100 in whole dollars (\"about $19 profit per $100 bet\"), tip times in Eastern as 7:30p, and an em dash for a missing value.",
-        "section": "typography"
-      },
-      {
-        "name": "The Rail-To-Band Rule",
-        "body": "The active league's color always runs continuously from the rail tile through the header into the game bands. Any new surface that groups by game or team uses a zone band, not a card; a bet card's head is that same band.",
-        "section": "layout"
-      },
-      {
-        "name": "The Rule Not Shadow Rule",
-        "body": "If something needs to separate, draw an ink rule or fill it solid. A shadow is never the answer.",
+        "name": "The Lift-on-Intent Rule",
+        "body": "Panels rest on the soft shadow; only something the user is pointing at or must act on now gets the lift. Hovered quote cards rise 2px.",
         "section": "elevation"
       },
       {
-        "name": "The Fixed Ramp Rule",
-        "body": "The strength word and the ramp come from one scale: Strong at 6% value and up, Solid at 4%, Small below that (nothing under 2% is suggested). The ramp lights its cells at 2, 4, 6 and 10%, the same on a bet card and in the table.",
-        "section": "components"
+        "name": "The Dark-Is-Flat Rule",
+        "body": "In dark, resting panels carry no shadow; separation comes from the ground, card and sunk values.",
+        "section": "elevation"
       }
     ],
     "dos": [
-      "Do paint the live league's zone from rail to header to game bands, with ink text on it.",
-      "Do set every number in Hanken Grotesk tabular figures, with the true minus sign and one formatting convention (format.ts).",
-      "Do show the Worth price beside every Hard Rock price, and box the Hard Rock column in 2px ink rules.",
-      "Do pair every state color with a check, cross, warning mark or word, and name the rule that blocks.",
-      "Do separate with ink rules: 2px for structure, 1.5px for controls, 1px Rule Soft for rows.",
-      "Do keep targets at 44px or more on phone, and the 2.5px Focus Blue outline on everything focusable.",
-      "Do label sample data with the silver Sample tag and keep 1-800-GAMBLER in the footer.",
-      "Do write short, plain, specific copy in a bettor's words (\"104 clear the rulebook\", \"Locking freezes these prices\"), sentence case except the brand and 11px labels.",
-      "Do say Worth, Value, Beat the market and bets, and wrap a technical idea in a Term the first time it appears on a screen.",
-      "Do lead Tonight with the answer: bet cards when there is value, a calm state when there is none, the Display beat-the-market figure once the night is graded.",
-      "Do read a bet as a sentence: \"Bet $40 at Hard Rock +219\", a Strong, Solid or Small word on the fixed ramp, and the profit per $100 in whole dollars.",
-      "Do draw new icons on the 24px grid with 2.4 strokes, square caps, miter joins and 45/90 angles; new league pictograms on the 32px grid at 3.4 strokes."
+      "**Do** route every primary action, active state and headline figure through the mood accent, and let `data-mood` decide green or coral.",
+      "**Do** set player names and figures in Archivo at width 112, weight 800, with tabular numerals.",
+      "**Do** put accent and status text on its own soft tint (up-soft, down-soft, warn-soft).",
+      "**Do** keep panels at 14px radius with a 1px line border and the Rest shadow in light, no resting shadow in dark.",
+      "**Do** make every interactive control a full pill at least 36px tall (44-48px for phone targets).",
+      "**Do** keep 11px as the type floor and the 2.5px focus-blue outline on everything focusable.",
+      "**Do** show league identity only as a 7-8px dot."
     ],
     "donts": [
-      "Don't use a league color to mean good, bad, primary or emphasis, and don't introduce any accent outside the league zones and the state triad.",
-      "Don't round corners, add shadows or use gradients.",
-      "Don't add a second typeface, a monospace for numbers, or a condensed display face.",
-      "Don't build a dark odds terminal with glowing green and red numbers, or any casino styling: confetti, streak flames, countdowns, hype words like \"lock of the day\".",
-      "Don't put sport-specific detail (team colors, sport names, stat vocabulary) into the shell, palette or type; it comes from data.",
-      "Don't set text smaller than 11px, or rely on color alone for state.",
-      "Don't add small uppercase labels above headings as decoration; uppercase 11px is for column heads, stat names and data labels only.",
-      "Don't animate view changes or celebrate wins.",
-      "Don't call a bet a leg, or put edge, fair or CLV in place of Value, Worth or Beat the market on Tonight, the card or All markets.",
-      "Don't describe strength with any word outside Strong, Solid and Small, or with excitement; no casino words."
+      "**Don't** introduce a second accent colour or a second typeface.",
+      "**Don't** colour surfaces, borders or type by league.",
+      "**Don't** add resting shadows in dark, or hard offset shadows anywhere.",
+      "**Don't** go back to the ink-ruled spreadsheet: no heavy black rules, no square-cornered panels.",
+      "**Don't** add celebration or pressure: no confetti, streak flames, countdowns or bouncing motion; state changes stay at 120-320ms on the house ease and stop under reduced motion."
     ]
   }
 }

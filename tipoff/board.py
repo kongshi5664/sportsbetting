@@ -8,9 +8,10 @@ from datetime import datetime, timezone
 
 from .backtest import _load_snapshot, _rule_matches
 from .features import MARKET_STAT
+from .leagues import NBA
 from .pricing import consensus, devig_pair, ev, kelly_stake, prob_over, to_american, to_decimal
 
-STAT_LABEL = {"pts": "Points", "reb": "Rebounds", "ast": "Assists", "fg3m": "Threes", "blk": "Blocks"}
+STAT_LABEL = NBA.stat_label  # each league's labels live in tipoff/leagues.py
 
 
 def rule_params(rules, rid, key, default):
@@ -26,6 +27,7 @@ def price_slate(con, fs, cfg, date, card=(), both_sides=False):
     """All priced markets on `date`, grouped by game. `card` is the list of open bets (dicts with
     name_key, market, event_id, side, point) so the per-player and per-night caps can be shown."""
     settings, rules = cfg["settings"], cfg["rules"]
+    lg = getattr(fs, "league", NBA)  # the FeatureStore knows which league it was built for
     targets = set(settings["target_books"])
     w = settings["model_weight"]
     sharp = dict(sharp=tuple(settings.get("sharp_books", ())), sharp_weight=settings.get("sharp_weight", 0.0))
@@ -53,7 +55,7 @@ def price_slate(con, fs, cfg, date, card=(), both_sides=False):
                            (e["event_id"], label)).fetchone()[0]
         best = {}
         for (market, key, point), books in lines.items():
-            stat = MARKET_STAT.get(market)
+            stat = lg.market_stat.get(market)
             refs = {b: s for b, s in books.items() if b not in targets}
             p_mkt_over = consensus(refs, **sharp)
             f = fs.player(key, date, stat) if stat else None
@@ -70,7 +72,7 @@ def price_slate(con, fs, cfg, date, card=(), both_sides=False):
                 fair = w * p_model + (1 - w) * p_mkt
                 m = {
                     "id": f"{e['event_id']}|{market}|{key}|{point:g}|{side}",
-                    "event_id": e["event_id"], "market": market, "stat": stat, "stat_label": STAT_LABEL[stat],
+                    "event_id": e["event_id"], "market": market, "stat": stat, "stat_label": lg.stat_label[stat],
                     "player": names.get(key, key), "name_key": key, "team": f["team"],
                     "side": side, "point": point, "book": book, "price": price,
                     "fair": fair, "fair_american": to_american(fair), "edge": ev(fair, price),

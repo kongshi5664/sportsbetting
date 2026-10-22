@@ -2,6 +2,7 @@
 
     python -m tipoff.journal --recap                 # recap yesterday (run after the morning grading)
     python -m tipoff.journal --recap --date 2026-10-22
+    python -m tipoff.journal --recap --league nfl    # the NFL's (skips quietly after a day without NFL games)
 
 Decision entries are written by tipoff.paper as it bets each game. The morning recap is written by
 Claude from the graded numbers only (when ANTHROPIC_API_KEY is set), otherwise from a template, and
@@ -13,7 +14,8 @@ import os
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
-from .features import MARKET_STAT
+from . import leagues
+from .leagues import stat_of, stat_words
 from .pricing import ev
 
 TABLE = """
@@ -26,7 +28,7 @@ CREATE TABLE IF NOT EXISTS journal (
     body    TEXT NOT NULL
 );
 """
-STAT = {"pts": "points", "reb": "rebounds", "ast": "assists", "fg3m": "threes", "blk": "blocks"}
+STAT = {s: leagues.NBA.words(s) for s in leagues.NBA.stat_label}  # NBA names; every league: stat_words()
 MIN_SAMPLE = 30
 
 
@@ -104,7 +106,7 @@ def night_numbers(con, day):
             dec = 1 + r["price"] / 100 if r["price"] > 0 else 1 + 100 / -r["price"]
             p = r["stake"] * (dec - 1) if r["result"] == "win" else (-r["stake"] if r["result"] == "loss" else 0)
             pnl += p
-            bets.append({"bet": f"{r['player']} {r['side'].lower()} {r['point']:g} {STAT[MARKET_STAT[r['market']]]}",
+            bets.append({"bet": f"{r['player']} {r['side'].lower()} {r['point']:g} {stat_words(stat_of(r['market']))}",
                          "price": american(r["price"]), "stake": round(r["stake"]), "result": r["result"],
                          "finished_with": r["actual"], "profit": round(p, 2),
                          "beat_the_close_by": None if r["clv"] is None else f"{r['clv'] * 100:+.1f}%"})
@@ -128,7 +130,7 @@ def night_numbers(con, day):
             "graded": len(marks),
             "value_2pct_or_more": avg([r for r in marks if ev(r[3], r[2]) >= 0.02]),
             "value_below_2pct": avg([r for r in marks if ev(r[3], r[2]) < 0.02]),
-            "by_stat": {STAT.get(s, s): avg([r for r in marks if r[0] == s]) for s in sorted({r[0] for r in marks})},
+            "by_stat": {stat_words(s): avg([r for r in marks if r[0] == s]) for s in sorted({r[0] for r in marks})},
             "overs": avg([r for r in marks if r[1] == "Over"]), "unders": avg([r for r in marks if r[1] == "Under"])}
     total = con.execute("SELECT COUNT(*) FROM bets WHERE paper=1 AND strategy='current' AND status='graded'"
                         ).fetchone()[0]
@@ -151,8 +153,14 @@ Write plain text, no markdown headings, in this shape:
 Keep it under 180 words. No hype, no betting advice beyond what the numbers show."""
 
 
-def recap(con, day, notify=True):
+def recap(con, day, notify=True, league=None):
+    """The morning recap for one league's paper trader. NBA plays nearly every night; the NFL plays
+    a few days a week, so for other leagues a day without games is skipped quietly (no entry, no push)."""
+    lg = leagues.get(league)
+    if lg.id != "nba" and not con.execute("SELECT 1 FROM events WHERE game_date=? LIMIT 1", (day,)).fetchone():
+        return None, f"No {lg.label} games on {day}; nothing to recap."
     nums = night_numbers(con, day)
+    nums["league"] = lg.label
     if not nums["strategies"]:
         text = f"No paper bets were graded for {day}."
     elif os.environ.get("ANTHROPIC_API_KEY"):
@@ -160,13 +168,19 @@ def recap(con, day, notify=True):
     else:
         text = template_recap(nums)
     cur = next((s for s in nums["strategies"] if s["id"] == "current"), None)
-    title = (f"Last night: {'+' if cur['profit'] >= 0 else '−'}${abs(cur['profit']):.0f} "
-             f"(bankroll ${cur['bankroll_now']:,.0f})") if cur else f"Recap for {day}"
+    when = "Last night" if lg.id == "nba" else f"{lg.label} {_weekday(day)}"
+    title = (f"{when}: {'+' if cur['profit'] >= 0 else '−'}${abs(cur['profit']):.0f} "
+             f"(bankroll ${cur['bankroll_now']:,.0f})") if cur else (
+             f"Recap for {day}" if lg.id == "nba" else f"{lg.label} recap for {day}")
     add(con, day, "recap", title, text)
     if notify:
         from .injuries import DESK_URL, notify as push
-        push(title, text[:900], f"{DESK_URL}/#/ledger")
+        push(title, text[:900], f"{DESK_URL}/#/ledger", lg.ntfy_tag)
     return title, text
+
+
+def _weekday(day):
+    return date.fromisoformat(day).strftime("%A")
 
 
 def claude_recap(nums):
@@ -213,15 +227,17 @@ if __name__ == "__main__":
     ap.add_argument("--recap", action="store_true")
     ap.add_argument("--date", default=str(datetime.now(ET).date() - timedelta(days=1)))
     ap.add_argument("--db", default=None)
+    leagues.add_argument(ap)
     a = ap.parse_args()
-    con = connect(a.db) if a.db else connect()
-    cfg = json.loads((Path(__file__).resolve().parent.parent / "rules.json").read_text(encoding="utf-8"))
+    lg = leagues.get(a.league)
+    con = connect(a.db, league=lg)
+    cfg = json.loads(lg.rules_path.read_text(encoding="utf-8"))
     ensure_table(con)
     grade_notes(con, cfg), grade_marks(con, cfg), grade_bets(con, cfg)
     sys.stdout.reconfigure(encoding="utf-8")
     if a.recap:
-        title, text = recap(con, a.date)
-        print(title, "\n", text, sep="")
+        title, text = recap(con, a.date, league=lg)
+        print(title or "", "\n", text, sep="")
     else:
         for e in entries(con, 10):
             print(f"[{e['day']} {e['kind']}] {e['title']}\n{e['body']}\n")

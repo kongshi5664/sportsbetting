@@ -14,7 +14,7 @@ from datetime import datetime, timezone
 
 import anthropic
 
-from .features import MARKET_STAT
+from .leagues import stat_of
 from .snapshot import load_env
 
 MODEL = "claude-opus-5-5"
@@ -90,7 +90,7 @@ class NotesError(Exception):
 
 def leg_context(con, fs, m, date):
     """What Claude reads for one leg: our numbers and the player's recent games before tonight."""
-    stat = MARKET_STAT[m["market"]]
+    stat = stat_of(m["market"])
     rows = [g for g in fs.by_player.get(m["name_key"], []) if g["game_date"] < date][-10:]
     return {
         "id": m["id"], "player": m["player"], "team": m["team"], "game": m["matchup"],
@@ -165,18 +165,23 @@ def load(con, date):
 
 if __name__ == "__main__":
     from .api import _candidates
-    from .db import DEFAULT_DB
+
 
     ap = argparse.ArgumentParser()
     ap.add_argument("--date", required=True)
-    ap.add_argument("--db", default=str(DEFAULT_DB))
+    ap.add_argument("--db", default=None)
+    from . import leagues
+    leagues.add_argument(ap)
     a = ap.parse_args()
-    os.environ["TIPOFF_DB"] = a.db
     from . import api
 
-    api.DB_PATH = api.Path(a.db)
+    lg = leagues.get(a.league)
+    api._league.set(lg.id)
+    if a.db:
+        os.environ["TIPOFF_DB" if lg.id == "nba" else f"{lg.env}_DB"] = a.db
+        api.DB_PATH = api.Path(a.db) if lg.id == "nba" else api.DB_PATH
     legs = _candidates(a.date)
-    notes = ask_claude([leg_context(api.con(), api.features(), m, a.date) for m in legs], a.date)
+    notes = ask_claude([leg_context(api.con(), api.features(), m, a.date) for m in legs], a.date, lg.label)
     save(api.con(), a.date, notes, {m["id"]: m["price"] for m in legs})
     for m in legs:
         n = notes.get(m["id"])

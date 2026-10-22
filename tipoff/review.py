@@ -1,6 +1,7 @@
 """Weekly review: what the graded bets say about the rules, the settings and Claude's calls.
 
     python -m tipoff.review            # writes reports/review-YYYY-MM-DD.md and .json
+    python -m tipoff.review --league nfl   # data/nfl.db and rules.nfl.json; writes reports/nfl/
 
 It judges everything by closing-line value (did the price move your way after you bet), never by
 wins and losses, and only proposes a change when there are enough bets on both sides of a
@@ -13,7 +14,9 @@ import math
 from datetime import datetime
 from pathlib import Path
 
-from .backtest import ROOT, _rule_matches
+from . import leagues
+from .backtest import ROOT, _rule_matches, reports_dir
+from .leagues import stat_name
 from .pricing import ev
 
 MIN_N = 30   # bets needed on each side of a comparison before proposing anything
@@ -141,7 +144,7 @@ def claude_findings(con):
              "groups": [(v, s) for v, s in by.items()], "gap": d, "z": z, "proposal": None}]
 
 
-STAT_NAMES = {"pts": "Points", "reb": "Rebounds", "ast": "Assists", "fg3m": "Threes", "blk": "Blocks"}
+STAT_NAMES = dict(leagues.NBA.stat_label)  # NBA names; every league's come from stat_name()
 
 
 def strategy_findings(con, cfg):
@@ -187,7 +190,7 @@ def marks_findings(con):
     value = lambda r: ev(r[3], r[2])
     by_value = [(name, stats([r[4] for r in rows if lo <= value(r) < hi]))
                 for name, lo, hi in [("below 0%", -9, 0.0), ("0–2%", 0.0, 0.02)] + BUCKETS]
-    by_stat = [(STAT_NAMES.get(s, s), stats([r[4] for r in rows if r[0] == s])) for s in sorted({r[0] for r in rows})]
+    by_stat = [(stat_name(s), stats([r[4] for r in rows if r[0] == s])) for s in sorted({r[0] for r in rows})]
     by_side = [(s, stats([r[4] for r in rows if r[1] == s])) for s in ("Over", "Under")]
     return [
         {"id": "marks:value", "area": "market", "title": "Every recorded prop, by value at decision time",
@@ -243,11 +246,13 @@ if __name__ == "__main__":
     from .notes import ensure_table
 
     ap = argparse.ArgumentParser()
-    ap.add_argument("--db", default=str(DEFAULT_DB))
-    ap.add_argument("--rules", default=str(ROOT / "rules.json"))
+    ap.add_argument("--db", default=None, help="default: the league's database")
+    ap.add_argument("--rules", default=None, help="default: the league's rules file")
+    leagues.add_argument(ap)
     a = ap.parse_args()
-    cfg = json.loads(Path(a.rules).read_text(encoding="utf-8"))
-    con = connect(a.db)
+    lg = leagues.get(a.league)
+    cfg = json.loads(Path(a.rules or lg.rules_path).read_text(encoding="utf-8"))
+    con = connect(a.db, league=lg)
     ensure_table(con)
     grade_notes(con, cfg)
     grade_marks(con, cfg)
@@ -255,4 +260,4 @@ if __name__ == "__main__":
     rep = run(con, cfg)
     sys.stdout.reconfigure(encoding="utf-8")
     print(markdown(rep))
-    print(f"\nSaved {save(rep)}")
+    print(f"\nSaved {save(rep, reports_dir(lg))}")

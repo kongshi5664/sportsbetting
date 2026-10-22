@@ -2,6 +2,7 @@
 
     python -m tipoff.backtest                 # uses data/tipoff.db and rules.json
     python -m tipoff.backtest --db data/sample.db
+    python -m tipoff.backtest --league nfl    # data/nfl.db and rules.nfl.json; reports in reports/nfl/
 
 For each game it uses only what was knowable at the 'bet' snapshot: odds at that moment
 and box scores from earlier dates. It grades every bet on the result AND on closing-line
@@ -17,6 +18,7 @@ from datetime import datetime
 from pathlib import Path
 
 from .db import DEFAULT_DB, connect
+from . import leagues
 from .features import MARKET_STAT, FeatureStore
 from .pricing import consensus, ev, kelly_stake, prob_over, to_american, to_decimal
 
@@ -67,7 +69,7 @@ def build_candidates(con, fs, settings):
         date = e["game_date"]
         best_per_player_market = {}
         for (market, key, point), books in bet.items():
-            stat = MARKET_STAT.get(market)
+            stat = fs.league.market_stat.get(market)
             if not stat:
                 continue
             others = {b: s for b, s in books.items() if b not in targets}
@@ -200,11 +202,17 @@ def pct(x):
     return "—" if x is None else f"{x:+.1%}"
 
 
-def run(db_path, rules_path, out_dir):
+def reports_dir(league=None):
+    """NBA reports stay in reports/; other leagues get their own folder so they never mix."""
+    lg = leagues.get(league)
+    return ROOT / "reports" if lg.id == "nba" else ROOT / "reports" / lg.id
+
+
+def run(db_path, rules_path, out_dir, league=None):
     cfg = json.loads(Path(rules_path).read_text(encoding="utf-8"))
     settings, rules = cfg["settings"], cfg["rules"]
-    con = connect(db_path)
-    fs = FeatureStore(con)
+    con = connect(db_path, league=league)
+    fs = FeatureStore(con, league)
     cands, calib = build_candidates(con, fs, settings)
     if not cands:
         raise SystemExit("No gradable lines found. Run the backfills first (or tipoff.sample_data).")
@@ -311,9 +319,12 @@ def render_md(r):
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("--db", default=str(DEFAULT_DB))
-    ap.add_argument("--rules", default=str(ROOT / "rules.json"))
-    ap.add_argument("--out", default=str(ROOT / "reports"))
+    ap.add_argument("--db", default=None, help="default: the league's database")
+    ap.add_argument("--rules", default=None, help="default: the league's rules file")
+    ap.add_argument("--out", default=None, help="default: reports/ (NBA) or reports/<league>/")
+    leagues.add_argument(ap)
     a = ap.parse_args()
+    lg = leagues.get(a.league)
     sys.stdout.reconfigure(encoding="utf-8")  # Windows consoles default to cp1252
-    run(a.db, a.rules, a.out)
+    run(a.db or (str(DEFAULT_DB) if lg.id == "nba" else str(lg.db_path)), a.rules or str(lg.rules_path),
+        a.out or str(reports_dir(lg)), lg)

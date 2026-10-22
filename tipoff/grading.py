@@ -1,10 +1,11 @@
 """Grading: results and closing-line value for locked bets, and for the legs Claude judged.
 
 Reads box scores straight from the database (not the projection cache), so a desk left running
-grades last night's games as soon as the morning backfill lands.
+grades last night's games as soon as the morning backfill lands. League-agnostic: each league's
+database holds its own player_games (NFL: nflverse weekly stats) and the market names the stat.
 """
 from .backtest import _load_snapshot
-from .features import MARKET_STAT
+from .leagues import stat_of
 from .pricing import consensus, ev, to_american
 
 
@@ -30,7 +31,7 @@ def box(con, key, date):
 
 
 def outcome(row, market, side, point):
-    stat = MARKET_STAT[market]
+    stat = stat_of(market)  # markets are unique across leagues, so this works for any league
     if row is None or row[stat] is None:
         return "void", None  # didn't play: the book voids the bet
     actual = row[stat]

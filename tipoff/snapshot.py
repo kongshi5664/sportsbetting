@@ -4,11 +4,12 @@
     python -m tipoff.snapshot                       # refresh every game that hasn't started
     python -m tipoff.snapshot --close               # closing snapshot for games tipping within 10 minutes
     python -m tipoff.snapshot --watch --every 30    # refresh every 30 min and take each close; stops after the last tip
+    python -m tipoff.snapshot --league nfl --estimate   # the same for the NFL (data/nfl.db)
 
 Each refresh replaces the 'live' snapshot for a game (the board always prices the latest one).
 The 'close' snapshot, taken just before tip, is what bets are graded against for CLV.
 Cost per game per refresh = markets x regions; our books fit in one region, so 5 credits with
-the default markets. Listing the night's games is free.
+the default NBA markets (6 for the NFL's). Listing the night's games is free.
 """
 import argparse
 import os
@@ -19,12 +20,14 @@ from zoneinfo import ZoneInfo
 
 import requests
 
+from . import leagues
 from .db import connect, name_key
+from .leagues import NBA
 
 BASE = "https://api.the-odds-api.com/v4/sports/basketball_nba"
 ET = ZoneInfo("America/New_York")
 ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_MARKETS = ["player_points", "player_rebounds", "player_assists", "player_threes", "player_blocks"]
+DEFAULT_MARKETS = list(NBA.markets)
 # hardrockbet is the one you can bet in Florida; the rest give a consensus fair price.
 DEFAULT_BOOKS = ["hardrockbet", "draftkings", "fanduel", "betmgm", "caesars", "espnbet", "betrivers",
                  "pinnacle", "betonlineag"]  # up to 10 books still bill as one region
@@ -32,22 +35,18 @@ CLOSE_MINUTES = 5
 
 # The Odds API names teams in full; box scores use NBA codes. Events are stored with codes so
 # grading can join a bet's game to its box score.
-TEAM_CODES = {
-    "Atlanta Hawks": "ATL", "Boston Celtics": "BOS", "Brooklyn Nets": "BKN", "Charlotte Hornets": "CHA",
-    "Chicago Bulls": "CHI", "Cleveland Cavaliers": "CLE", "Dallas Mavericks": "DAL", "Denver Nuggets": "DEN",
-    "Detroit Pistons": "DET", "Golden State Warriors": "GSW", "Houston Rockets": "HOU", "Indiana Pacers": "IND",
-    "Los Angeles Clippers": "LAC", "LA Clippers": "LAC", "Los Angeles Lakers": "LAL", "Memphis Grizzlies": "MEM",
-    "Miami Heat": "MIA", "Milwaukee Bucks": "MIL", "Minnesota Timberwolves": "MIN", "New Orleans Pelicans": "NOP",
-    "New York Knicks": "NYK", "Oklahoma City Thunder": "OKC", "Orlando Magic": "ORL", "Philadelphia 76ers": "PHI",
-    "Phoenix Suns": "PHX", "Portland Trail Blazers": "POR", "Sacramento Kings": "SAC", "San Antonio Spurs": "SAS",
-    "Toronto Raptors": "TOR", "Utah Jazz": "UTA", "Washington Wizards": "WAS",
-}
+TEAM_CODES = NBA.team_codes  # every league's codes live in tipoff/leagues.py
 
 
-def team_code(name):
-    code = TEAM_CODES.get(name)
+def base(league=None):
+    return f"https://api.the-odds-api.com/v4/sports/{leagues.get(league).sport_key}"
+
+
+def team_code(name, league=None):
+    lg = leagues.get(league)
+    code = lg.team_codes.get(name)
     if code is None:
-        print(f"   ! unknown team name '{name}': add it to TEAM_CODES in tipoff/snapshot.py")
+        print(f"   ! unknown {lg.label} team name '{name}': add it to team_codes in tipoff/leagues.py")
         return name
     return code
 
@@ -101,12 +100,12 @@ def _get(url, params, credits):
     return r.json()
 
 
-def games_on(day: date, key, credits):
+def games_on(day: date, key, credits, league=None):
     """Tonight's games (free call)."""
     start = datetime(day.year, day.month, day.day, tzinfo=ET)
     params = {"apiKey": key, "commenceTimeFrom": _iso(start), "commenceTimeTo": _iso(start + timedelta(days=1))}
     out = []
-    for e in _get(f"{BASE}/events", params, credits):
+    for e in _get(f"{base(league)}/events", params, credits):
         tip = _tip(e)
         if tip.astimezone(ET).date() == day:
             out.append(e)
@@ -127,22 +126,23 @@ def odds_rows(event_id, label, snap_ts, data):
     return rows
 
 
-def save_event(con, e):
+def save_event(con, e, league=None):
     tip = _tip(e)
     con.execute("INSERT OR REPLACE INTO events VALUES (?,?,?,?,?)",
                 (e["id"], e["commence_time"], str(tip.astimezone(ET).date()),
-                 team_code(e["home_team"]), team_code(e["away_team"])))
+                 team_code(e["home_team"], league), team_code(e["away_team"], league)))
 
 
-def snapshot(con, e, label, key, credits, markets=DEFAULT_MARKETS, books=DEFAULT_BOOKS):
+def snapshot(con, e, label, key, credits, markets=None, books=DEFAULT_BOOKS, league=None):
     """Pull one game's props now and replace its `label` snapshot. Returns rows saved.
 
     The day's first live pull is also kept as the game's 'open' snapshot (never overwritten), so
     the desk can show how far Hard Rock has moved since the morning. Costs nothing extra."""
+    markets = markets or list(leagues.get(league).markets)
     params = {"apiKey": key, "markets": ",".join(markets), "bookmakers": ",".join(books), "oddsFormat": "american"}
-    data = _get(f"{BASE}/events/{e['id']}/odds", params, credits)
+    data = _get(f"{base(league)}/events/{e['id']}/odds", params, credits)
     rows = odds_rows(e["id"], label, _iso(datetime.now(timezone.utc)), data)
-    save_event(con, e)
+    save_event(con, e, league)
     if label == "live" and not con.execute("SELECT 1 FROM prop_odds WHERE event_id=? AND label='open' LIMIT 1",
                                            (e["id"],)).fetchone():
         earlier = con.execute("SELECT 1 FROM prop_odds WHERE event_id=? AND label='live' LIMIT 1", (e["id"],)).fetchone()
@@ -159,21 +159,32 @@ def snapshot(con, e, label, key, credits, markets=DEFAULT_MARKETS, books=DEFAULT
 
 
 def report_unmatched(con, rows):
-    """Odds names that don't match any box-score name can't be projected; say so instead of dropping them."""
+    """Odds names that don't match any box-score name can't be projected; say so instead of dropping them.
+    Each one is also appended to unmatched-names.log beside the database, to fix later."""
     keys = {(r[6], r[5]) for r in rows}
     known = {k for (k,) in con.execute("SELECT DISTINCT name_key FROM player_games")}
     missing = sorted(name for k, name in keys if k not in known)
     if missing:
+        db_file = con.execute("PRAGMA database_list").fetchone()[2]
+        if db_file:
+            try:
+                with open(Path(db_file).parent / "unmatched-names.log", "a", encoding="utf-8") as f:
+                    stamp = _iso(datetime.now(timezone.utc))
+                    f.writelines(f"{stamp}\t{Path(db_file).name}\t{n}\t{name_key(n)}\n" for n in missing)
+            except OSError:
+                pass
         print(f"   ! {len(missing)} players have no box-score match (check db.name_key): {', '.join(missing[:8])}"
               + (" ..." if len(missing) > 8 else ""))
 
 
-def refresh(con, day, key, credits, close=False, markets=DEFAULT_MARKETS, books=DEFAULT_BOOKS, max_credits=None):
+def refresh(con, day, key, credits, close=False, markets=None, books=DEFAULT_BOOKS, max_credits=None,
+            league=None):
     """Refresh live odds for games that haven't tipped; with close=True, take closing snapshots for
     games tipping within the next 10 minutes. Returns the number of games pulled."""
+    markets = markets or list(leagues.get(league).markets)
     now = datetime.now(timezone.utc)
     pulled = 0
-    for e in games_on(day, key, credits):
+    for e in games_on(day, key, credits, league):
         tip = _tip(e)
         if tip <= now:
             continue
@@ -183,9 +194,9 @@ def refresh(con, day, key, credits, close=False, markets=DEFAULT_MARKETS, books=
             print(f"   stopping: the next call would pass the {max_credits}-credit limit for this run")
             break
         label = "close" if close else "live"
-        rows = snapshot(con, e, label, key, credits, markets, books)
+        rows = snapshot(con, e, label, key, credits, markets, books, league)
         hr = sum(r[3] == "hardrockbet" for r in rows)
-        print(f"   {team_code(e['away_team'])} @ {team_code(e['home_team'])} {tip.astimezone(ET):%I:%M%p} "
+        print(f"   {team_code(e['away_team'], league)} @ {team_code(e['home_team'], league)} {tip.astimezone(ET):%I:%M%p} "
               f"[{label}] {len(rows)} prices, {hr} at Hard Rock")
         if not hr:
             print("   ! no Hard Rock prices for this game yet: nothing on it is bettable")
@@ -194,26 +205,27 @@ def refresh(con, day, key, credits, close=False, markets=DEFAULT_MARKETS, books=
     return pulled
 
 
-def watch(con, day, key, every, markets, books, max_credits):
+def watch(con, day, key, every, markets, books, max_credits, league=None):
     """Refresh every `every` minutes and take each game's close; returns after the last tip."""
+    markets = markets or list(leagues.get(league).markets)
     credits = Credits()
     closed = set()
     next_refresh = datetime.now(timezone.utc)
     while True:
         now = datetime.now(timezone.utc)
-        games = games_on(day, key, credits)
+        games = games_on(day, key, credits, league)
         upcoming = [e for e in games if _tip(e) > now]
         if not upcoming:
             print(f"All games have tipped. Credits used this run: {credits.used}, remaining: {credits.remaining}")
             return
         for e in upcoming:
             if e["id"] not in closed and _tip(e) - now <= timedelta(minutes=CLOSE_MINUTES):
-                snapshot(con, e, "close", key, credits, markets, books)
+                snapshot(con, e, "close", key, credits, markets, books, league)
                 closed.add(e["id"])
-                print(f"   closed {team_code(e['away_team'])} @ {team_code(e['home_team'])}")
+                print(f"   closed {team_code(e['away_team'], league)} @ {team_code(e['home_team'], league)}")
         if now >= next_refresh:
             print(f"{now.astimezone(ET):%I:%M%p} refresh")
-            refresh(con, day, key, credits, markets=markets, books=books, max_credits=max_credits)
+            refresh(con, day, key, credits, markets=markets, books=books, max_credits=max_credits, league=league)
             print(f"   credits used this run: {credits.used}, remaining: {credits.remaining}")
             next_refresh = now + timedelta(minutes=every)
         if max_credits is not None and credits.used >= max_credits:
@@ -222,14 +234,15 @@ def watch(con, day, key, every, markets, books, max_credits):
         time.sleep(60)
 
 
-def estimate(day, key, markets):
+def estimate(day, key, markets, league=None):
+    markets = markets or list(leagues.get(league).markets)
     credits = Credits()
-    games = games_on(day, key, credits)
+    games = games_on(day, key, credits, league)
     now = datetime.now(timezone.utc)
     left = [e for e in games if _tip(e) > now]
     for e in games:
         tip = _tip(e)
-        print(f"   {team_code(e['away_team'])} @ {team_code(e['home_team'])} {tip.astimezone(ET):%I:%M%p}"
+        print(f"   {team_code(e['away_team'], league)} @ {team_code(e['home_team'], league)} {tip.astimezone(ET):%I:%M%p}"
               + ("" if tip > now else "  (started)"))
     per = len(left) * len(markets)
     print(f"\n{len(games)} games, {len(left)} not started -> about {per} credits per refresh "
@@ -253,19 +266,20 @@ if __name__ == "__main__":
     ap.add_argument("--watch", action="store_true", help="keep refreshing until the last game tips")
     ap.add_argument("--every", type=int, default=30, help="minutes between refreshes in --watch")
     ap.add_argument("--max-credits", type=int, default=600, help="stop refreshing past this many credits per run")
-    ap.add_argument("--markets", nargs="+", default=DEFAULT_MARKETS)
+    ap.add_argument("--markets", nargs="+", default=None, help="default: the league's prop markets")
     ap.add_argument("--books", nargs="+", default=DEFAULT_BOOKS)
     ap.add_argument("--db", default=None)
+    leagues.add_argument(ap)
     a = ap.parse_args()
     key = api_key()
     if a.estimate:
-        estimate(a.date, key, a.markets)
+        estimate(a.date, key, a.markets, a.league)
     else:
-        con = connect(a.db) if a.db else connect()
+        con = connect(a.db, league=a.league)
         if a.watch:
-            watch(con, a.date, key, a.every, a.markets, a.books, a.max_credits)
+            watch(con, a.date, key, a.every, a.markets, a.books, a.max_credits, a.league)
         else:
             c = Credits()
             n = refresh(con, a.date, key, c, close=a.close, markets=a.markets, books=a.books,
-                        max_credits=a.max_credits)
+                        max_credits=a.max_credits, league=a.league)
             print(f"{n} games pulled. Credits used: {c.used}, remaining: {c.remaining}")

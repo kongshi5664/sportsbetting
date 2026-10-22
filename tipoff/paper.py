@@ -2,9 +2,10 @@
 
     python -m tipoff.paper              # run tonight: decide each game an hour before tip, take closes
     python -m tipoff.paper --once       # decide every game that hasn't started, right now, then stop
+    python -m tipoff.paper --league nfl # the same for the NFL: data/nfl.db and rules.nfl.json
 
-For each game, about an hour before tip it:
-  1. re-pulls that game's odds (about 5 credits),
+For each game, about an hour before kickoff (any league) it:
+  1. re-pulls that game's odds (about 5 credits; 6 for the NFL),
   2. records every priced prop at that moment ("marks"), so tomorrow it can see which ones the
      market moved against Hard Rock, bet or not,
   3. places paper bets for each strategy in settings.paper_strategies (each with its own pretend
@@ -19,8 +20,8 @@ import json
 import os
 import time
 from datetime import date, datetime, timedelta, timezone
-from pathlib import Path
 
+from . import leagues
 from .board import price_slate, suggest
 from .db import connect
 from .features import FeatureStore
@@ -139,7 +140,7 @@ def all_sides(con, fs, cfg, day, event_ids):
     return games
 
 
-def claude_check(con, fs, day, picks):
+def claude_check(con, fs, day, picks, league=None):
     """Claude's news check on the night's new paper bets (one call per decision batch)."""
     if not os.environ.get("ANTHROPIC_API_KEY") or not picks:
         return 0
@@ -147,7 +148,7 @@ def claude_check(con, fs, day, picks):
     legs = {m["id"]: m for m in picks}.values()
     ctx = [claude_notes.leg_context(con, fs, m, day) for m in legs]
     try:
-        out = claude_notes.ask_claude(ctx, day)
+        out = claude_notes.ask_claude(ctx, day, leagues.get(league).label)
     except claude_notes.NotesError as e:
         print(f"   Claude check skipped: {e}")
         return 0
@@ -155,11 +156,17 @@ def claude_check(con, fs, day, picks):
     return len(out)
 
 
-def run(day, once=False, db=None):
+def load_cfg(league=None):
+    """The league's rules file: rules.json for the NBA, rules.nfl.json for the NFL."""
+    return json.loads(leagues.get(league).rules_path.read_text(encoding="utf-8"))
+
+
+def run(day, once=False, db=None, league=None):
+    lg = leagues.get(league)
     load_env()
     key = api_key()
-    con = connect(db) if db else connect()
-    cfg = json.loads((Path(__file__).resolve().parent.parent / "rules.json").read_text(encoding="utf-8"))
+    con = connect(db, league=lg)
+    cfg = load_cfg(lg)
     credits = Credits()
     decided, closed = set(), set()
     for (eid,) in con.execute("SELECT DISTINCT event_id FROM bets WHERE paper=1 AND slate_date=?", (str(day),)):
@@ -167,9 +174,10 @@ def run(day, once=False, db=None):
     from . import status
     while True:
         now = datetime.now(timezone.utc)
-        status.update(trader_at=status.now(), trader_day=str(day))  # the desk's "trader running" light
+        status.update(**{lg.status_key("trader_at"): status.now(),  # the desk's "trader running" light
+                          lg.status_key("trader_day"): str(day)})
         try:
-            games = games_on(day, key, credits)
+            games = games_on(day, key, credits, lg)
         except Exception as e:  # network blip: try again next minute
             print(f"{now.astimezone(ET):%I:%M%p} couldn't list games ({e}); retrying")
             time.sleep(60)
@@ -180,8 +188,8 @@ def run(day, once=False, db=None):
         if due:
             try:
                 for e in due:
-                    snapshot(con, e, "live", key, credits)
-                fs = FeatureStore(con)  # fresh: picks up this morning's box scores
+                    snapshot(con, e, "live", key, credits, league=lg)
+                fs = FeatureStore(con, lg)  # fresh: picks up this morning's box scores
                 ids = {e["id"] for e in due}
                 sides = all_sides(con, fs, cfg, str(day), ids)
                 n_marks = record_marks(con, sides, str(day))
@@ -189,7 +197,7 @@ def run(day, once=False, db=None):
                 names = ", ".join(f"{e['away_team']} @ {e['home_team']}" for e in due)
                 print(f"{now.astimezone(ET):%I:%M%p} decided {names}: {n_marks} props recorded; "
                       + "; ".join(f"{s}: {len(p)} bets" for s, p in placed.items()))
-                checked = claude_check(con, fs, str(day), placed.get("current", []))
+                checked = claude_check(con, fs, str(day), placed.get("current", []), lg)
                 if checked:
                     print(f"   Claude checked {checked} paper bets")
                 from . import journal, notes as claude_notes
@@ -209,7 +217,7 @@ def run(day, once=False, db=None):
         for e in upcoming:
             if e["id"] not in closed and _tip(e) - now <= timedelta(minutes=CLOSE_MINUTES):
                 try:
-                    snapshot(con, e, "close", key, credits)
+                    snapshot(con, e, "close", key, credits, league=lg)
                     closed.add(e["id"])
                     print(f"{now.astimezone(ET):%I:%M%p} closing prices for {e['away_team']} @ {e['home_team']}")
                 except SystemExit as err:
@@ -229,5 +237,6 @@ if __name__ == "__main__":
     ap.add_argument("--date", type=date.fromisoformat, default=datetime.now(ET).date())
     ap.add_argument("--once", action="store_true", help="decide every game that hasn't started now, then stop")
     ap.add_argument("--db", default=None)
+    leagues.add_argument(ap)
     a = ap.parse_args()
-    run(a.date, a.once, a.db)
+    run(a.date, a.once, a.db, a.league)

@@ -2,8 +2,9 @@
 
     python -m tipoff.injuries                # check once now
     python -m tipoff.injuries --watch        # every 3 minutes until the last tip tonight
+    python -m tipoff.injuries --league nfl --watch   # the NFL's feed, against data/nfl.db
 
-Source: ESPN's public NBA injuries feed (status, short note, timestamp; no key). Alerts go to
+Source: ESPN's public injuries feed for the league (status, short note, timestamp; no key). Alerts go to
 your phone through ntfy (free app: subscribe to a private topic name and put it in .env as
 NTFY_TOPIC); without a topic they print here. With an odds key, the game of the player in the
 news gets a fresh odds pull (about 5 credits) so the board shows current prices.
@@ -17,6 +18,7 @@ from datetime import date, datetime, timezone
 
 import requests
 
+from . import leagues
 from .db import connect, name_key
 from .snapshot import ET, TEAM_CODES, Credits, games_on, load_env, snapshot
 
@@ -35,13 +37,18 @@ CREATE TABLE IF NOT EXISTS injuries (
 DESK_URL = os.environ.get("TIPOFF_URL", "http://127.0.0.1:8000")
 
 
-def fetch():
-    """Every listed NBA injury: [{name_key, player, team, status, detail, updated}]."""
-    r = requests.get(FEED, timeout=20)
+def feed_url(league=None):
+    return f"https://site.api.espn.com/apis/site/v2/sports/{leagues.get(league).espn_path}/injuries"
+
+
+def fetch(league=None):
+    """Every listed injury in the league: [{name_key, player, team, status, detail, updated}]."""
+    lg = leagues.get(league)
+    r = requests.get(FEED if lg.id == "nba" else feed_url(lg), timeout=20)
     r.raise_for_status()
     out = []
     for team in r.json().get("injuries", []):
-        code = TEAM_CODES.get(team.get("displayName", ""), team.get("displayName", "?"))
+        code = lg.team_codes.get(team.get("displayName", ""), team.get("displayName", "?"))
         for inj in team.get("injuries", []):
             name = (inj.get("athlete") or {}).get("displayName")
             if not name:
@@ -105,29 +112,32 @@ def message(con, i, info, day):
     return lines
 
 
-def notify(title, body, url):
+def notify(title, body, url, tag="basketball"):
     topic = os.environ.get("NTFY_TOPIC")
     if not topic:
         print(f"[alert] {title}\n        {body}")
         return
     requests.post(f"https://ntfy.sh/{topic}", data=body.encode("utf-8"), timeout=15,
-                  headers={"Title": title.encode("utf-8"), "Tags": "basketball", "Click": url, "Priority": "high"})
+                  headers={"Title": title.encode("utf-8"), "Tags": tag, "Click": url, "Priority": "high"})
 
 
-def check(con, day: str, refresh_key=None, credits=None, max_credits=60):
+def check(con, day: str, refresh_key=None, credits=None, max_credits=60, league=None):
     """One pass: fetch, diff, alert on slate players, refresh odds for affected games."""
+    lg = leagues.get(league)
     tonight = slate(con, day)
-    news = [i for i in changes(con, fetch(), day) if i["name_key"] in tonight]
+    news = [i for i in changes(con, fetch(lg), day) if i["name_key"] in tonight]
     refreshed = set()
     for i in news:
         info = tonight[i["name_key"]]
         lines = message(con, i, info, day)
-        notify(lines[0], "\n".join(lines[1:]), f"{DESK_URL}/#/out")
+        title = lines[0] if lg.id == "nba" else f"{lg.label}: {lines[0]}"
+        notify(title, "\n".join(lines[1:]), f"{DESK_URL}/#/out", lg.ntfy_tag)
         event_id = info[1]
-        if refresh_key and event_id not in refreshed and credits.used + 5 <= max_credits:
-            game = next((e for e in games_on(date.fromisoformat(day), refresh_key, credits) if e["id"] == event_id), None)
+        if refresh_key and event_id not in refreshed and credits.used + len(lg.markets) <= max_credits:
+            game = next((e for e in games_on(date.fromisoformat(day), refresh_key, credits, lg)
+                         if e["id"] == event_id), None)
             if game and datetime.fromisoformat(game["commence_time"].replace("Z", "+00:00")) > datetime.now(timezone.utc):
-                snapshot(con, game, "live", refresh_key, credits)
+                snapshot(con, game, "live", refresh_key, credits, league=lg)
                 refreshed.add(event_id)
                 print(f"   refreshed odds for {info[2]} after the news ({credits.used} credits this run)")
     return news
@@ -142,12 +152,13 @@ if __name__ == "__main__":
     ap.add_argument("--no-refresh", action="store_true", help="don't re-pull odds when news hits")
     ap.add_argument("--max-credits", type=int, default=60, help="odds credits this run may spend on refreshes")
     ap.add_argument("--db", default=None)
+    leagues.add_argument(ap)
     a = ap.parse_args()
-    con = connect(a.db) if a.db else connect()
+    con = connect(a.db, league=a.league)
     key = None if a.no_refresh else os.environ.get("ODDS_API_KEY")
     credits = Credits()
     while True:
-        news = check(con, a.date, key, credits, a.max_credits)
+        news = check(con, a.date, key, credits, a.max_credits, a.league)
         print(f"{datetime.now(ET):%I:%M%p} checked: {len(news)} change(s) for tonight's players")
         tips = [r[0] for r in con.execute("SELECT commence_time FROM events WHERE game_date=?", (a.date,))]
         if not a.watch or not tips or max(tips) < datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"):

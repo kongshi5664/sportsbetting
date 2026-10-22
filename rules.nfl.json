@@ -1,0 +1,35 @@
+{
+  "settings": {
+    "target_books": ["hardrockbet"],
+    "model_weight": 0.0,
+    "bankroll": 15000,
+    "kelly_fraction": 0.25,
+    "stake_cap_units": 2,
+    "nightly_risk_cap": 0.08,
+    "holdout_season": "latest",
+    "suggest_max_per_game": 3,
+    "sharp_books": ["pinnacle"],
+    "sharp_weight": 0.5
+  },
+  "rules": [
+    {"id": "min_edge", "name": "Minimum edge vs. fair price", "status": "confirmed",
+     "kind": "gate", "params": {"min": 0.02},
+     "note": "Only bet when the blended fair price beats the offered price by this much."},
+    {"id": "min_ref_books", "name": "At least 2 other books price the line", "status": "confirmed",
+     "kind": "gate", "params": {"min": 2},
+     "note": "One soft book is not a market. Fair prices need at least two reference books (Pinnacle counts)."},
+    {"id": "max_per_player", "name": "Max bets per player per day", "status": "confirmed",
+     "kind": "gate", "params": {"max": 2}},
+    {"id": "max_per_night", "name": "Max bets per day (best edges first)", "status": "confirmed",
+     "kind": "gate", "params": {"max": 12}},
+
+    {"id": "skip_early_season", "name": "Skip players with under 3 games this season", "status": "testing",
+     "kind": "avoid", "params": {"min_games": 3},
+     "note": "Roles are unsettled in the first weeks. The NFL plays about 17 games, so 3 is the NBA's 8."},
+    {"id": "model_disagrees", "name": "Avoid bets where our projection disagrees with the market side",
+     "status": "testing", "kind": "avoid", "params": {},
+     "note": "If the market edge says Over but our own projection leans Under, skip."},
+    {"id": "soft_matchup_over", "name": "Prefer overs against bottom-third defenses", "status": "testing",
+     "kind": "prefer", "params": {"min_opp_factor": 1.03}}
+  ]
+}

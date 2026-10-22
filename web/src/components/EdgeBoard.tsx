@@ -422,7 +422,8 @@ export function Proof({ m }: { m: Market }) {
       </div>
       <div className="math">
         <h3>How the value is worked out</h3>
-        The other books (middle of them) say it hits <b>{(p.p_market * 100).toFixed(1)}%</b> of the time
+        The other books say it hits <b>{(p.p_market * 100).toFixed(1)}%</b> of the time
+        {p.books.pinnacle ? " (Pinnacle, the sharpest book, counts for half)" : " (the middle of them)"}
         <br />
         Our projection ({p.projection}) says <b>{(p.p_model * 100).toFixed(1)}%</b>, counted at{" "}
         {Math.round(p.model_weight * 100)}%

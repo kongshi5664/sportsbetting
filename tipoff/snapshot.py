@@ -26,7 +26,8 @@ ET = ZoneInfo("America/New_York")
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_MARKETS = ["player_points", "player_rebounds", "player_assists", "player_threes", "player_blocks"]
 # hardrockbet is the one you can bet in Florida; the rest give a consensus fair price.
-DEFAULT_BOOKS = ["hardrockbet", "draftkings", "fanduel", "betmgm", "caesars", "espnbet", "betrivers"]
+DEFAULT_BOOKS = ["hardrockbet", "draftkings", "fanduel", "betmgm", "caesars", "espnbet", "betrivers",
+                 "pinnacle", "betonlineag"]  # up to 10 books still bill as one region
 CLOSE_MINUTES = 5
 
 # The Odds API names teams in full; box scores use NBA codes. Events are stored with codes so

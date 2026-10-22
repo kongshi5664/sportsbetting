@@ -58,6 +58,7 @@ def _load_snapshot(con, event_id, label):
 def build_candidates(con, fs, settings):
     targets = set(settings["target_books"])
     w = settings["model_weight"]
+    sharp = dict(sharp=tuple(settings.get("sharp_books", ())), sharp_weight=settings.get("sharp_weight", 0.0))
     cands, calib = [], []
     events = con.execute("SELECT * FROM events ORDER BY commence_time").fetchall()
     for e in events:
@@ -70,7 +71,7 @@ def build_candidates(con, fs, settings):
             if not stat:
                 continue
             others = {b: s for b, s in books.items() if b not in targets}
-            p_mkt_over = consensus(others) if others else consensus(books)
+            p_mkt_over = consensus(others, **sharp) if others else consensus(books, **sharp)
             f = fs.player(key, date, stat)
             row = fs.game_row(key, date)
             if p_mkt_over is None or f is None or row is None or row[stat] is None:
@@ -80,7 +81,7 @@ def build_candidates(con, fs, settings):
             if actual != point:
                 calib.append((p_mkt_over, p_over / max(1e-9, 1 - p_push), 1 if actual > point else 0))
             close_over = consensus({b: s for b, s in close.get((market, key, point), {}).items()
-                                    if b not in targets}) if (market, key, point) in close else None
+                                    if b not in targets}, **sharp) if (market, key, point) in close else None
             for side in ("Over", "Under"):
                 offers = [(s[side], b) for b, s in books.items() if b in targets and side in s]
                 if not offers:

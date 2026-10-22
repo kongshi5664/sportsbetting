@@ -409,7 +409,9 @@ def grade():
     for b in [dict(r) for r in con().execute("SELECT * FROM bets WHERE status='locked'")]:
         close, _ = _load_snapshot(con(), b["event_id"], "close")
         books = close.get((b["market"], b["name_key"], b["point"]))
-        p_over = consensus({k: v for k, v in books.items() if k not in targets}) if books else None
+        s = c["settings"]
+        p_over = consensus({k: v for k, v in books.items() if k not in targets},
+                           sharp=tuple(s.get("sharp_books", ())), sharp_weight=s.get("sharp_weight", 0.0)) if books else None
         has_box = con().execute("SELECT 1 FROM team_games t JOIN events e ON e.game_date=t.game_date"
                                 " AND t.team=e.home_team WHERE e.event_id=?", (b["event_id"],)).fetchone()
         if p_over is None or not has_box:

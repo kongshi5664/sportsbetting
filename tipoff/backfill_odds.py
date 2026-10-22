@@ -28,7 +28,8 @@ BASE = "https://api.the-odds-api.com/v4/historical/sports/basketball_nba"
 ET = ZoneInfo("America/New_York")
 DEFAULT_MARKETS = ["player_points", "player_rebounds", "player_assists", "player_threes", "player_blocks"]
 # hardrockbet is the one you can actually bet in Florida; the rest give a consensus fair price.
-DEFAULT_BOOKS = ["hardrockbet", "draftkings", "fanduel", "betmgm", "caesars", "espnbet", "betrivers"]
+DEFAULT_BOOKS = ["hardrockbet", "draftkings", "fanduel", "betmgm", "caesars", "espnbet", "betrivers",
+                 "pinnacle", "betonlineag"]  # up to 10 books still bill as one region
 
 
 def _get(url, params):

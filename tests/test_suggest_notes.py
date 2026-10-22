@@ -80,5 +80,20 @@ class NotesTest(unittest.TestCase):
                 notes.ask_claude([{"id": "a"}], "2026-10-20")
 
 
+
+class SharpConsensusTest(unittest.TestCase):
+    def test_sharp_book_weighted_and_off_by_default(self):
+        from tipoff.pricing import consensus
+        books = {"draftkings": {"Over": -110, "Under": -110}, "fanduel": {"Over": -110, "Under": -110},
+                 "pinnacle": {"Over": -150, "Under": 130}}
+        plain = consensus(books)
+        self.assertAlmostEqual(plain, 0.5, places=6, msg="weight 0 keeps the plain median")
+        weighted = consensus(books, sharp=("pinnacle",), sharp_weight=0.5)
+        self.assertGreater(weighted, 0.5)
+        self.assertLess(weighted, consensus({"pinnacle": books["pinnacle"]}))
+        self.assertEqual(consensus({"draftkings": books["draftkings"]}, sharp=("pinnacle",), sharp_weight=0.5), 0.5,
+                         "no sharp price on the line: nothing changes")
+
+
 if __name__ == "__main__":
     unittest.main()

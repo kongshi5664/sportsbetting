@@ -28,6 +28,7 @@ def price_slate(con, fs, cfg, date, card=()):
     settings, rules = cfg["settings"], cfg["rules"]
     targets = set(settings["target_books"])
     w = settings["model_weight"]
+    sharp = dict(sharp=tuple(settings.get("sharp_books", ())), sharp_weight=settings.get("sharp_weight", 0.0))
     bankroll = settings["bankroll"]
     min_edge = rule_params(rules, "min_edge", "min", 0.02)
     per_player = rule_params(rules, "max_per_player", "max", 2)
@@ -52,7 +53,7 @@ def price_slate(con, fs, cfg, date, card=()):
         for (market, key, point), books in lines.items():
             stat = MARKET_STAT.get(market)
             refs = {b: s for b, s in books.items() if b not in targets}
-            p_mkt_over = consensus(refs)
+            p_mkt_over = consensus(refs, **sharp)
             f = fs.player(key, date, stat) if stat else None
             if p_mkt_over is None or f is None:
                 continue  # no reference price to de-vig, or too little history to project

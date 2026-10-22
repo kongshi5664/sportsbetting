@@ -18,12 +18,21 @@ def devig_pair(over_price: int, under_price: int):
     return a / (a + b), b / (a + b)
 
 
-def consensus(prices_by_book: dict, exclude=()):
+def consensus(prices_by_book: dict, exclude=(), sharp=(), sharp_weight=0.0):
     """prices_by_book: {book: {"Over": price, "Under": price}} at ONE line.
-    Median of each book's de-vigged Over probability. None if no book has both sides."""
-    ps = [devig_pair(s["Over"], s["Under"])[0]
-          for b, s in prices_by_book.items() if b not in exclude and "Over" in s and "Under" in s]
-    return median(ps) if ps else None
+    Median of each book's de-vigged Over probability. When sharp books (e.g. Pinnacle) price the
+    line, their average counts for `sharp_weight` and the median of the rest for the remainder:
+    sharp books move first and are wrong less often. None if no book has both sides."""
+    p = {b: devig_pair(s["Over"], s["Under"])[0]
+         for b, s in prices_by_book.items() if b not in exclude and "Over" in s and "Under" in s}
+    if not p:
+        return None
+    sharp_ps = [v for b, v in p.items() if b in sharp]
+    rest = [v for b, v in p.items() if b not in sharp]
+    if not sharp_ps or sharp_weight <= 0:
+        return median(p.values())
+    s_avg = sum(sharp_ps) / len(sharp_ps)
+    return s_avg if not rest else sharp_weight * s_avg + (1 - sharp_weight) * median(rest)
 
 
 def ev(p_win: float, american: int) -> float:

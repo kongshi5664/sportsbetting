@@ -7,7 +7,9 @@
     "stake_cap_units": 2,
     "nightly_risk_cap": 0.08,
     "holdout_season": "latest",
-    "suggest_max_per_game": 3
+    "suggest_max_per_game": 3,
+    "sharp_books": ["pinnacle"],
+    "sharp_weight": 0.5
   },
   "rules": [
     {"id": "min_edge", "name": "Minimum edge vs. fair price", "status": "confirmed",

@@ -48,4 +48,6 @@ export const BOOK_SHORT: Record<string, string> = {
   caesars: "CZR",
   espnbet: "ESPN",
   betrivers: "BR",
+  pinnacle: "Pinnacle",
+  betonlineag: "BetOnline",
 };

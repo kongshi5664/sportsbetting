@@ -75,12 +75,15 @@ def _normal_cdf(x: float) -> float:
 
 
 def prob_over(line: float, mu: float, sd: float, stat: str):
-    """Returns (p_over, p_push). Points use a normal; counting stats use negative binomial."""
+    """Returns (p_over, p_push). Big-number stats (NBA points, NFL yards) use a normal with an sd
+    floor set per stat in tipoff/leagues.py; counting stats use a negative binomial."""
+    from .leagues import NORMAL_STATS
     if mu <= 0:
         return 0.0, 0.0
     is_int = float(line).is_integer()
-    if stat == "pts":
-        sd = max(sd, 0.35 * mu, 2.0)
+    if stat in NORMAL_STATS:
+        share, floor = NORMAL_STATS[stat]
+        sd = max(sd, share * mu, floor)
         if is_int:
             p_push = _normal_cdf((line + 0.5 - mu) / sd) - _normal_cdf((line - 0.5 - mu) / sd)
             return 1 - _normal_cdf((line + 0.5 - mu) / sd), p_push

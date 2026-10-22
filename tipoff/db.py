@@ -4,6 +4,8 @@ from pathlib import Path
 
 DEFAULT_DB = Path(__file__).resolve().parent.parent / "data" / "tipoff.db"
 
+# The NBA tables, exactly as they have always been. Other leagues swap in their own stat
+# columns for player_games and team_games (see LEAGUE_TABLES); every other table is shared.
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS player_games (
     season      TEXT NOT NULL,
@@ -91,12 +93,59 @@ CREATE INDEX IF NOT EXISTS ix_bets_date ON bets(slate_date, status);
 """
 
 
-def connect(path=DEFAULT_DB, **kwargs):
-    path = Path(path)
+LEAGUE_TABLES = """
+CREATE TABLE IF NOT EXISTS player_games (
+    season      TEXT NOT NULL,
+    game_id     TEXT NOT NULL,
+    game_date   TEXT NOT NULL,          -- YYYY-MM-DD, US Eastern
+    player_id   TEXT NOT NULL,
+    player_name TEXT NOT NULL,
+    name_key    TEXT NOT NULL,
+    team        TEXT NOT NULL,
+    opponent    TEXT NOT NULL,
+    home        INTEGER NOT NULL,
+    minutes     REAL,                   -- not every league has minutes; NULL then
+    position    TEXT,
+    {player_stats},
+    PRIMARY KEY (game_id, player_id)
+);
+CREATE INDEX IF NOT EXISTS ix_pg_name_date ON player_games(name_key, game_date);
+
+CREATE TABLE IF NOT EXISTS team_games (
+    season    TEXT NOT NULL,
+    game_id   TEXT NOT NULL,
+    game_date TEXT NOT NULL,
+    team      TEXT NOT NULL,
+    opponent  TEXT NOT NULL,
+    home      INTEGER NOT NULL,
+    {team_stats},
+    PRIMARY KEY (game_id, team)
+);
+CREATE INDEX IF NOT EXISTS ix_tg_team_date ON team_games(team, game_date);
+"""
+
+
+def schema(league=None):
+    """CREATE statements for one league's database. NBA's is the original SCHEMA, unchanged."""
+    from .leagues import get
+    lg = get(league)
+    if lg.id == "nba":
+        return SCHEMA
+    shared = SCHEMA[SCHEMA.index("CREATE TABLE IF NOT EXISTS events"):]
+    return LEAGUE_TABLES.format(player_stats=", ".join(f"{c} INTEGER" for c in lg.stat_columns),
+                                team_stats=", ".join(f"{c} INTEGER" for c in lg.team_columns)) + shared
+
+
+def connect(path=None, league=None, **kwargs):
+    """Open (and create if needed) a league's database. Without a path, the league's own file:
+    data/tipoff.db for the NBA, data/nfl.db for the NFL."""
+    from .leagues import get
+    lg = get(league)
+    path = Path(path if path is not None else (DEFAULT_DB if lg.id == "nba" else lg.db_path))
     path.parent.mkdir(parents=True, exist_ok=True)
     con = sqlite3.connect(path, **kwargs)
     con.row_factory = sqlite3.Row
-    con.executescript(SCHEMA)
+    con.executescript(schema(lg))
     cols = {r[1] for r in con.execute("PRAGMA table_info(bets)")}
     if "context" not in cols:  # what was true when the bet was taken: features, prices, rules matched
         con.execute("ALTER TABLE bets ADD COLUMN context TEXT")

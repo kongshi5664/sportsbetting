@@ -138,6 +138,25 @@ python -m tipoff.backtest --league nfl                 # once there are historic
 - `scripts\morning-nfl.bat` daily around 10am: this season's NFL box scores, grading, and the recap.
 - `scripts\weekly-review-nfl.bat` weekly (Tuesday suits the NFL week).
 
+## 11. NFL spreads model (a helper that flags games; it never bets)
+
+A point-spread model for NFL sides, built to be tested one factor at a time. Free nflverse data only (no Odds API credits); everything lives in `data/nfl.db` next to the props tables and never touches them.
+
+```bash
+python -m tipoff.nfl_spreads.load --seasons 2006-2026      # schedules, closing lines, team-game EPA (~1 min, caches under data/raw/nflverse/)
+python -m tipoff.nfl_spreads.load --seasons 2026           # weekly refresh of the current season
+python -m tipoff.nfl_spreads.backtest                      # walk-forward baseline -> reports/nfl/spreads-baseline-DATE.md/.json/-predictions.csv
+python -m tipoff.nfl_spreads.experiment rest qb_change     # baseline vs +rest, +qb_change, +both -> reports/nfl/experiment-*.md
+python -m tipoff.nfl_spreads.experiment --list             # registered factors
+```
+
+- **Sign convention:** nflverse's `spread_line` is the market's expected *home* margin (+ = home favoured: `8.5` means "home -8.5"); `result` = home score − away score. The home side covers when `result > spread_line`. The model's fair spread is a predicted home margin in the same units.
+- **Baseline:** EPA/play power ratings (offence and defence), recency-weighted within the season and anchored to last season's rating pulled toward the mean; predicted margin = HFA + scale × (home net rating − away net rating). The rating parameters, scale and HFA (last three training seasons, because it has shrunk) are fitted on earlier seasons only.
+- **Walk-forward:** each test season is predicted by a model fitted on the seasons before it, and each game only uses games dated before it. P(cover) and P(push) come from the training seasons' margin distribution with key numbers (3, 7, 10, 14...).
+- **Scoreboard:** results are judged against the **closing** spread, which is the hardest test because real bets go in earlier at Hard Rock. The report shows model vs market MAE, ATS by edge tier (<1.5, 1.5–2.5, 2.5–4, 4+ points) and by P(cover), with 95% CIs and units at −110 (break-even 52.38%), and whether blending the model into the close (`w` picked on earlier seasons) beats the close alone.
+- **Factors** live in `tipoff/nfl_spreads/factors.py`: a factor is a small function that gets the game's pre-game fields (no scores, no lines) and a view of earlier games only. Register it, add a no-look-ahead test, and run `experiment <name>`. Factor coefficients are always fitted on training seasons, never the seasons they are scored on.
+- The backtest report ends with **upcoming games**: fair spread vs the latest nflverse line, edge tier and P(side). That line is not Hard Rock's, so check the real price first.
+
 ## How it avoids fooling itself
 
 - Projections only use games before the bet date (no look-ahead).
@@ -152,6 +171,7 @@ tipoff/leagues.py         one config per league (markets, stats, teams, feeds, d
 tipoff/db.py              SQLite schema + name matching
 tipoff/backfill_stats.py  nba_api box scores (NFL: --league nfl, see backfill_nfl.py)
 tipoff/backfill_nfl.py    nflverse weekly player and team stats for the NFL
+tipoff/nfl_spreads/       NFL point-spread model: load, ratings, factors, cover model, walk-forward backtest, experiments
 tipoff/backfill_odds.py   The Odds API historical props
 tipoff/pricing.py         de-vig, EV, Kelly, P(over) from a projection
 tipoff/features.py        point-in-time player features and projection
